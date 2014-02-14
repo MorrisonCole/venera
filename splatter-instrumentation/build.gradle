@@ -1,0 +1,18 @@
+apply plugin: 'java'
+apply plugin:'application'
+
+mainClassName = "com.heisentest.splatter.Splatter"
+
+dependencies {
+    compile project(":axml")
+    compile project(":android")
+    compile files('libs/asmdex-1.0.jar')
+    compile files('libs/tools.jar')
+    compile 'org.ow2.asm:asm:4.+'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.google.android.tools:dx:1.7'
+    compile 'org.scala-lang:scala-library:2.10.3'
+    compile 'log4j:log4j:1.2.17'
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
