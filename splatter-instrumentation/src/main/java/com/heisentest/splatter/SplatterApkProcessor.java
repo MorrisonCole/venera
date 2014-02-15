@@ -1,5 +1,6 @@
 package com.heisentest.splatter;
 
+import com.heisentest.splatter.transform.dex.SplatterDexTransformer;
 import org.apache.log4j.Logger;
 import sun.security.tools.JarSigner;
 
@@ -19,12 +20,14 @@ public class SplatterApkProcessor {
 
     public void process(File inputApkFile, File outputApkFile) {
         try {
-            outputApkFile.createNewFile();
-
             FileInputStream fileInputStream = new FileInputStream(inputApkFile);
             FileOutputStream fileOutputStream = new FileOutputStream(outputApkFile);
 
             processApk(fileInputStream, fileOutputStream, new SplatterDexTransformer(asmApiLevel));
+
+            fileInputStream.close();
+            fileOutputStream.flush();
+            fileOutputStream.close();
 
             signApk(outputApkFile);
         } catch (IOException e) {
@@ -66,6 +69,7 @@ public class SplatterApkProcessor {
                 zipInputStream.closeEntry();
             }
 
+            zipInputStream.close();
             zipOutputStream.flush();
             zipOutputStream.close();
         } catch (IOException e) {

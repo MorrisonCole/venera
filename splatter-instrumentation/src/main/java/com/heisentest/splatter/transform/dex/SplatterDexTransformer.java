@@ -1,5 +1,8 @@
-package com.heisentest.splatter;
+package com.heisentest.splatter.transform.dex;
 
+import com.heisentest.splatter.AnnotationRulesManager;
+import com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor;
+import com.heisentest.splatter.transform.dex.visitor.SplatterFirstPassApplicationVisitor;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.ApplicationReader;
 import org.ow2.asmdex.ApplicationVisitor;
@@ -11,7 +14,7 @@ import java.util.zip.ZipOutputStream;
 
 public class SplatterDexTransformer {
 
-    private static final boolean TRANSFORM_DISABLED = true;
+    private static final boolean TRANSFORM_DISABLED = false;
     private final int asmApiLevel;
     private final Logger logger = Logger.getLogger(SplatterDexTransformer.class);
 
@@ -28,12 +31,12 @@ public class SplatterDexTransformer {
             return;
         }
 
-        // First pass. Unsure why this is required.
+        // First pass in case we want to save any information before generating the new dex file
         SplatterFirstPassApplicationVisitor splatterFirstPassApplicationVisitor = new SplatterFirstPassApplicationVisitor(asmApiLevel);
         applicationReader.accept(splatterFirstPassApplicationVisitor, 0);
 
-        // Second pass.
-        ApplicationWriter applicationWriter = new ApplicationWriter();
+        // Second pass
+        ApplicationWriter applicationWriter = new ApplicationWriter(applicationReader);
         ApplicationVisitor splatterApplicationVisitor = new SplatterApplicationVisitor(asmApiLevel, applicationWriter, new AnnotationRulesManager());
 
         applicationReader.accept(splatterApplicationVisitor, 0);

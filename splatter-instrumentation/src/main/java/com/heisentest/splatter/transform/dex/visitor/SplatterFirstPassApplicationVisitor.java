@@ -1,4 +1,4 @@
-package com.heisentest.splatter;
+package com.heisentest.splatter.transform.dex.visitor;
 
 import org.ow2.asmdex.ApplicationVisitor;
 import org.ow2.asmdex.ClassVisitor;

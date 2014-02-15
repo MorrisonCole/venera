@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.ow2.asmdex.Opcodes;
 
 import java.io.File;
+import java.io.IOException;
 
 public class Splatter {
 
@@ -16,6 +17,12 @@ public class Splatter {
 
         File inputApkFile = new File(TEST_APK_LOCATION);
         File outputApkFile = new File(inputApkFile.getAbsolutePath().replaceFirst("\\.apk", ".splatter.apk"));
+
+        try {
+            outputApkFile.createNewFile();
+        } catch (IOException e) {
+            logger.error(e);
+        }
 
         SplatterApkProcessor splatterApkProcessor = new SplatterApkProcessor(ASM_API_LEVEL);
         splatterApkProcessor.process(inputApkFile, outputApkFile);
