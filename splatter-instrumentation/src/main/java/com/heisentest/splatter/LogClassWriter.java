@@ -11,26 +11,26 @@ public class LogClassWriter  {
     public static final String LOG_CLASS_NAME = "Lcom/heisentest/skeletonandroidapp/HeisentestLogger;";
 
     public void addLogClass(ApplicationVisitor applicationVisitor) {
-        ClassVisitor classVisitor = applicationVisitor.visitClass(ACC_PUBLIC, LOG_CLASS_NAME, null, "Ljava/lang/Object;", null);
-        classVisitor.visit(0, ACC_PUBLIC, LOG_CLASS_NAME, null, "Ljava/lang/Object;", null);
-        classVisitor.visitSource("HeisentestLogger.java", null);
+        ClassVisitor cv = applicationVisitor.visitClass(ACC_PUBLIC + ACC_FINAL, "Lcom/heisentest/skeletonandroidapp/HeisentestLogger;", null, "Ljava/lang/Object;", null);
+        cv.visit(0, ACC_PUBLIC + ACC_FINAL, "Lcom/heisentest/skeletonandroidapp/HeisentestLogger;", null, "Ljava/lang/Object;", null);
+        cv.visitSource("HeisentestLogger.java", null);
         {
-            MethodVisitor methodVisitor = classVisitor.visitMethod(ACC_PUBLIC + ACC_CONSTRUCTOR, "<init>", "V", null, null);
-            methodVisitor.visitCode();
-            methodVisitor.visitMaxs(1, 0);
-            methodVisitor.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Object;", "<init>", "V", new int[]{0});
-            methodVisitor.visitInsn(INSN_RETURN_VOID);
-            methodVisitor.visitEnd();
+            MethodVisitor mv = cv.visitMethod(ACC_PUBLIC + ACC_CONSTRUCTOR, "<init>", "V", null, null);
+            mv.visitCode();
+            mv.visitMaxs(1, 0);
+            mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Object;", "<init>", "V", new int[] { 0 });
+            mv.visitInsn(INSN_RETURN_VOID);
+            mv.visitEnd();
         }
         {
-            MethodVisitor methodVisitor = classVisitor.visitMethod(ACC_PUBLIC, "log", "VLjava/lang/String;", null, null);
-            methodVisitor.visitCode();
-            methodVisitor.visitMaxs(3, 0);
-            methodVisitor.visitStringInsn(INSN_CONST_STRING, 0, "HeisentestInstrument");
-            methodVisitor.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;", new int[]{0, 1});
-            methodVisitor.visitInsn(INSN_RETURN_VOID);
-            methodVisitor.visitEnd();
+            MethodVisitor mv = cv.visitMethod(ACC_PUBLIC + ACC_STATIC, "log", "VLjava/lang/String;", null, null);
+            mv.visitCode();
+            mv.visitMaxs(2, 0);
+            mv.visitStringInsn(INSN_CONST_STRING, 0, "HeisentestInstrument");
+            mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;", new int[] { 0, 1 });
+            mv.visitInsn(INSN_RETURN_VOID);
+            mv.visitEnd();
         }
-        classVisitor.visitEnd();
+        cv.visitEnd();
     }
 }

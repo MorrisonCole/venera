@@ -4,9 +4,8 @@ apply plugin:'application'
 mainClassName = "com.heisentest.splatter.Splatter"
 
 dependencies {
-    compile files('libs/asmdex-1.0.jar')
+    compile files('libs/asmdex-latest.jar')
     compile files('libs/tools.jar')
-    compile 'org.ow2.asm:asm:4.+'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.google.android.tools:dx:1.7'
     compile 'log4j:log4j:1.2.17'

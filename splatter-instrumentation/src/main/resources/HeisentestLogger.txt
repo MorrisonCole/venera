@@ -1,0 +1,94 @@
+## Begin HeisentestLogger ##
+
+package com.heisentest.skeletonandroidapp;
+
+import android.util.Log;
+
+public class HeisentestLogger {
+
+    public static void log(String log) {
+        Log.d("HeisentestInstrument", log);
+    }
+}
+
+## End HeisentestLogger ##
+
+## Begin HeisentestLogger Dexifier output ##
+
+public static void dumpHeisentestLogger(ApplicationWriter aw) {
+	ClassVisitor cv;
+	FieldVisitor fv;
+	MethodVisitor mv;
+	AnnotationVisitor av0;
+
+	cv = aw.visitClass(ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/HeisentestLogger;", null, "Ljava/lang/Object;", null);
+	cv.visit(0, ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/HeisentestLogger;", null, "Ljava/lang/Object;", null);
+	cv.visitSource("HeisentestLogger.java", null);
+	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_CONSTRUCTOR, "<init>", "V", null, null);
+		mv.visitCode();
+		mv.visitMaxs(1, 0);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Object;", "<init>", "V", new int[] { 0 });
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_STATIC, "log", "VLjava/lang/String;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitStringInsn(INSN_CONST_STRING, 0, "HeisentestInstrument");
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;", new int[] { 0, 1 });
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	cv.visitEnd();
+}
+
+## End HeisentestLogger Dexifier output ##
+
+## Begin MainActivity ##
+
+package com.heisentest.skeletonandroidapp;
+
+import android.app.Activity;
+import android.util.Log;
+
+public class MainActivity extends Activity {
+
+    public MainActivity() {
+        HeisentestLogger.log("A log");
+        Log.d("A tag", "A message");
+    }
+}
+
+
+## End MainActivity ##
+
+## Begin dexifier MainActivity output ##
+
+public static void dumpMainActivity(ApplicationWriter aw) {
+	ClassVisitor cv;
+	FieldVisitor fv;
+	MethodVisitor mv;
+	AnnotationVisitor av0;
+
+	cv = aw.visitClass(ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/MainActivity;", null, "Landroid/app/Activity;", null);
+	cv.visit(0, ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/MainActivity;", null, "Landroid/app/Activity;", null);
+	cv.visitSource("MainActivity.java", null);
+	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_CONSTRUCTOR, "<init>", "V", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Landroid/app/Activity;", "<init>", "V", new int[] { 2 });
+		mv.visitStringInsn(INSN_CONST_STRING, 0, "A log");
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestLogger;", "log", "VLjava/lang/String;", new int[] { 0 });
+		mv.visitStringInsn(INSN_CONST_STRING, 0, "A tag");
+		mv.visitStringInsn(INSN_CONST_STRING, 1, "A message");
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;", new int[] { 0, 1 });
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	cv.visitEnd();
+}
+
+## End dexifier MainActivity output ##

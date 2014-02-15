@@ -1,0 +1,126 @@
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'getTitle' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'getTitle' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'getTitle' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'restoreActionBar' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'restoreActionBar' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'restoreActionBar' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'restoreActionBar' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'restoreActionBar' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'restoreActionBar' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'restoreActionBar' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'restoreActionBar' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'restoreActionBar' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'restoreActionBar' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'restoreActionBar' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'getTitle' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'getTitle' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'getTitle' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'getTitle' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'getTitle' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'getTitle' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
+DEBUG main com.heisentest.splatter.Splatter - Starting up Splatter!
+DEBUG main com.heisentest.splatter.SplatterApkProcessor - Transforming classes.dex
+DEBUG main com.heisentest.splatter.transform.dex.visitor.SplatterMethodVisitor - Adding Splatter logger to method 'getTitle' (owner: 'Lcom/heisentest/skeletonandroidapp/MainActivity;')
+INFO main com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor - Finishing second pass, writing classes.dex
+INFO main com.heisentest.splatter.SplatterApkProcessor - Resigning apk (at /home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.splatter.apk)
