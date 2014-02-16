@@ -1,14 +1,14 @@
 package com.heisentest.splatter.transform.dex.visitor;
 
 import com.heisentest.splatter.AnnotationRulesManager;
+import org.apache.log4j.Logger;
 import org.ow2.asmdex.ClassVisitor;
-import org.ow2.asmdex.ClassWriter;
 import org.ow2.asmdex.MethodVisitor;
-import org.ow2.asmdex.MethodWriter;
 
 public class SplatterClassVisitor extends ClassVisitor {
 
     private final AnnotationRulesManager annotationRulesManager;
+    private final Logger logger = Logger.getLogger(SplatterLoggingClassVisitor.class);
 
     public SplatterClassVisitor(int asmApiLevel, ClassVisitor classVisitor, AnnotationRulesManager annotationRulesManager) {
         super(asmApiLevel, classVisitor);
