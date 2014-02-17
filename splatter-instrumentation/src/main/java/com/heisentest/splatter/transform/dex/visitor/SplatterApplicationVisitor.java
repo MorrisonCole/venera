@@ -20,7 +20,7 @@ public class SplatterApplicationVisitor extends ApplicationVisitor {
         ClassVisitor classVisitor = av.visitClass(access, name, signature, superName, interfaces);
 
         if (name.startsWith("Lcom/heisentest/skeletonandroidapp/")) {
-            return new SplatterLoggingClassVisitor(api, classVisitor);
+            return new SplatterLoggingClassVisitor(api, classVisitor, name);
         } else {
             return new SplatterClassVisitor(api, classVisitor);
         }

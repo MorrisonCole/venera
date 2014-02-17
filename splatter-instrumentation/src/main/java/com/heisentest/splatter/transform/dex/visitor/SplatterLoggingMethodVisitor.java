@@ -23,11 +23,13 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
     private int additionalNeeded;
     private int totalRequiredRegisters;
     private boolean isStatic;
+    private String className;
 
-    public SplatterLoggingMethodVisitor(int api, MethodVisitor methodVisitor, String desc, String methodName, boolean isStatic) {
+    public SplatterLoggingMethodVisitor(int api, MethodVisitor methodVisitor, String desc, String methodName, String className, boolean isStatic) {
         super(api, methodVisitor);
         this.desc = desc;
         this.name = methodName;
+        this.className = className;
         this.isStatic = isStatic;
         this.numberOfParameterRegisters = Descriptors.numParams(desc);
     }
@@ -44,9 +46,9 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
         int register2 = totalRequiredRegisters - numberOfParameterRegisters - (additionalNeeded + 1);
 
         if (isStatic) {
-            applyBasicInstrumentation(register1, register2);
+            applyStaticInstrumentation(register1, register2);
         } else {
-            applyComplexInstrumentation(register1, register2, totalRequiredRegisters - numberOfParameterRegisters - 1);
+            applyRegularInstrumentation(register1, register2, totalRequiredRegisters - numberOfParameterRegisters - 1);
         }
 
         int sourceRegister = totalRequiredRegisters - numberOfParameterRegisters - 1;
@@ -81,13 +83,15 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
         }
     }
 
-    private void applyBasicInstrumentation(int register1, int register2) {
-        mv.visitStringInsn(INSN_CONST_STRING, register1, "A heisentest log");
-        mv.visitStringInsn(INSN_CONST_STRING, register2, name);
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;", new int[]{register1, register2});
+    private void applyStaticInstrumentation(int register1, int register2) {
+        // Class name is in the form "Lcom/heisentest/skeletonandroidapp/MainActivity$PlaceholderFragment;", so we
+        // just grab the last bit.
+        mv.visitStringInsn(INSN_CONST_STRING, register1, className.substring(className.lastIndexOf('/') + 1, className.lastIndexOf(';')));
+        mv.visitStringInsn(INSN_CONST_STRING, register2, "(static) " + name);
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestLogger;", "log", "VLjava/lang/String;Ljava/lang/String;", new int[] { register1, register2 });
     }
 
-    private void applyComplexInstrumentation(int register1, int register2, int thisRegister) {
+    private void applyRegularInstrumentation(int register1, int register2, int thisRegister) {
         mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "toString", "Ljava/lang/String;", new int[] { thisRegister });
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, register1);
         mv.visitStringInsn(INSN_CONST_STRING, register2, name);
