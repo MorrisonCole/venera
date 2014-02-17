@@ -1,5 +1,9 @@
 package com.heisentest.splatter;
 
+import com.google.common.collect.ArrayListMultimap;
+
+import java.util.HashMap;
+
 public class Descriptors {
 
     // Insert a new parameter as the first parameter
@@ -14,7 +18,7 @@ public class Descriptors {
     }
 
     // Get number of parameters from method description string
-    public static int numParams(String desc) {
+    public static int numParamRegisters(String desc) {
         int index = 0;
         int params = 0;
 
@@ -27,6 +31,23 @@ public class Descriptors {
         }
 
         return params - 1;
+    }
+
+    // Get number of parameters from method description string
+    public static int numPrimitiveParams(String desc) {
+        int index = advanceOne(desc, 0); // Skip the return type.
+        int primitiveParams = 0;
+
+        while (index < desc.length()) {
+            char c = desc.charAt(index);
+            if (c != 'L') {
+                primitiveParams++;
+            }
+
+            index = advanceOne(desc, index);
+        }
+
+        return primitiveParams - 1;
     }
 
     // Get index of next parameter in description string
@@ -44,5 +65,37 @@ public class Descriptors {
         index++;
 
         return index;
+    }
+
+    public static ArrayListMultimap<Character, Integer> mappedParams(String desc) {
+        int index = advanceOne(desc, 0); // Skip the return type.
+        int relativeParameterIndex = 0;
+        ArrayListMultimap<Character, Integer> map = ArrayListMultimap.create();
+
+        while (index < desc.length()) {
+            char c = desc.charAt(index);
+            map.put(c, relativeParameterIndex);
+
+            relativeParameterIndex++;
+            if (c == 'J' || c == 'D') {
+                relativeParameterIndex++; // Extra register for longs and doubles
+            }
+
+            index = advanceOne(desc, index);
+        }
+
+        return map;
+    }
+
+    public static int numParams(String desc) {
+        int index = advanceOne(desc, 0); // Skip the return type.
+        int params = 0;
+
+        while (index < desc.length()) {
+            params++;
+            index = advanceOne(desc, index);
+        }
+
+        return params;
     }
 }
