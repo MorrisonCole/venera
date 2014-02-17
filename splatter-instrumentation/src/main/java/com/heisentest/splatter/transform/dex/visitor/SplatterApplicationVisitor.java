@@ -1,6 +1,5 @@
 package com.heisentest.splatter.transform.dex.visitor;
 
-import com.heisentest.splatter.AnnotationRulesManager;
 import com.heisentest.splatter.LogClassWriter;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.ApplicationVisitor;
@@ -8,13 +7,11 @@ import org.ow2.asmdex.ClassVisitor;
 
 public class SplatterApplicationVisitor extends ApplicationVisitor {
 
-    private final AnnotationRulesManager annotationRulesManager;
     private final LogClassWriter logClassWriter;
     private final Logger logger = Logger.getLogger(SplatterApplicationVisitor.class);
 
-    public SplatterApplicationVisitor(int asmApiLevel, ApplicationVisitor applicationVisitor, AnnotationRulesManager annotationRulesManager) {
+    public SplatterApplicationVisitor(int asmApiLevel, ApplicationVisitor applicationVisitor) {
         super(asmApiLevel, applicationVisitor);
-        this.annotationRulesManager = annotationRulesManager;
         logClassWriter = new LogClassWriter();
     }
 
@@ -23,9 +20,9 @@ public class SplatterApplicationVisitor extends ApplicationVisitor {
         ClassVisitor classVisitor = av.visitClass(access, name, signature, superName, interfaces);
 
         if (name.startsWith("Lcom/heisentest/skeletonandroidapp/")) {
-            return new SplatterLoggingClassVisitor(api, classVisitor, annotationRulesManager);
+            return new SplatterLoggingClassVisitor(api, classVisitor);
         } else {
-            return new SplatterClassVisitor(api, classVisitor, annotationRulesManager);
+            return new SplatterClassVisitor(api, classVisitor);
         }
     }
 

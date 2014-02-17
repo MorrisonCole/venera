@@ -1,6 +1,5 @@
 package com.heisentest.splatter.transform.dex;
 
-import com.heisentest.splatter.AnnotationRulesManager;
 import com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor;
 import com.heisentest.splatter.transform.dex.visitor.SplatterFirstPassApplicationVisitor;
 import org.apache.log4j.Logger;
@@ -37,7 +36,7 @@ public class SplatterDexTransformer {
 
         // Second pass
         ApplicationWriter applicationWriter = new ApplicationWriter(applicationReader);
-        ApplicationVisitor splatterApplicationVisitor = new SplatterApplicationVisitor(asmApiLevel, applicationWriter, new AnnotationRulesManager());
+        ApplicationVisitor splatterApplicationVisitor = new SplatterApplicationVisitor(asmApiLevel, applicationWriter);
 
         applicationReader.accept(splatterApplicationVisitor, 0);
 
