@@ -148,7 +148,7 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
             int currentParameterRegister = parametersStartRegister + entry.getValue();
 
             mv.visitVarInsn(INSN_CONST_4, 3, currentParamNumber); // Set register 3 to a value of 0
-            if (entry.getKey() == 'L') {
+            if (entry.getKey() == 'L' || entry.getKey() == '[') {
                 mv.visitArrayOperationInsn(INSN_APUT_OBJECT, currentParameterRegister, 2, 3); // Put the value at the parameter register into the array at the current parameter index
             } else {
                 // Convert our primitive param to an object.
@@ -178,9 +178,6 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
                     case 'D':
                         mv.visitMethodInsn(INSN_INVOKE_STATIC_RANGE, "Ljava/lang/Double;", "toString", "Ljava/lang/String;D", new int[] { currentParameterRegister, currentParameterRegister + 1 });
                         break;
-                    case '[':
-//                        mv.visitMethodInsn(INSN_INVOKE_STATIC_RANGE, "Ljava/lang/Integer;", "valueOf", "Ljava/lang/Integer;I", new int[] { currentParameterRegister });
-                        // fall through for now.
                     default:
                         logger.error(String.format("Unsupported primitive argument: %s", argumentCharacter));
                 }
