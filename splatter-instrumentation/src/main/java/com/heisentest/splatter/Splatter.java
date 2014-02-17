@@ -9,7 +9,8 @@ import java.io.IOException;
 public class Splatter {
 
     private static final Logger logger = Logger.getLogger(Splatter.class);
-    public static final String TEST_APK_LOCATION = "/home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.apk";
+    public static final String TEST_APK_LOCATION_SKELETON = "/home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.apk";
+    public static final String TEST_APK_LOCATION = "/home/morrison//code/shazam/android/android_shazam/shazam-android/target/shazam-android-free-debug.apk";
     private static final int ASM_API_LEVEL = Opcodes.ASM4;
 
     public static void main(String args[]) {

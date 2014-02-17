@@ -27,7 +27,10 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
         // TODO: Is there a way to figure out the runtime type name of the object at this point?
         // TODO: If not, we could probably deal with these similarly to static methods (don't rely on 'this'
         // TODO: for the class name (although that would suck a bit).
-        ArrayList<String> blacklistedNames = new ArrayList<String>(Arrays.asList("<init>", "<clinit>"));
+        // Ignoring 'run' since runnables seem to generate bad dex files for some reason. need to fix this.
+        // Ignoring 'toString' since calling 'this.toString' then causes a stack overflow :D
+        // Ignoring 'hashCode' as it's causing stack overflows for some reason.
+        ArrayList<String> blacklistedNames = new ArrayList<String>(Arrays.asList("<init>", "<clinit>", "run", "toString", "hashCode"));
 
         // We don't want to instrument any auto-generated enclosing accessor methods (signature access$0,
         // access$1 etc.), so we ignore any methods with '$' in their name.
@@ -36,11 +39,22 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
         // TODO: specific 'access$' signature if so.
         String bannedAutoAccessMethodCharacter = "$";
 
-        if ((access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter)) {
-            logger.debug(String.format("Adding HeisentestLogger to method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
+        boolean instrument = false;
+        ArrayList<String> allowedPrefixes = new ArrayList<String>(Arrays.asList("get", "set", "tile", "on", "create", ""));
+        for (String prefix : allowedPrefixes) {
+            if (name.startsWith(prefix)) {
+                instrument = true;
+                break;
+            }
+        }
+
+        if (instrument && (access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter)) {
+//            logger.debug(String.format("Adding HeisentestLogger to method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
 
             boolean isStatic = (access & Opcodes.ACC_STATIC) > 0;
             return new SplatterLoggingMethodVisitor(api, methodVisitor, desc, name, className, isStatic);
+        } else if ((access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter)) {
+            logger.debug(String.format("SKIPPING method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
         }
 
         return new SplatterMethodVisitor(api, methodVisitor);

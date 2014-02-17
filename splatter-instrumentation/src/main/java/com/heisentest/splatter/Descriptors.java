@@ -19,7 +19,7 @@ public class Descriptors {
 
     // Get number of parameters from method description string
     public static int numParamRegisters(String desc) {
-        int index = 0;
+        int index = advanceOne(desc, 0); // Skip the return type
         int params = 0;
 
         while (index < desc.length()) {
@@ -30,7 +30,7 @@ public class Descriptors {
             index = advanceOne(desc, index);
         }
 
-        return params - 1;
+        return params;
     }
 
     // Get number of parameters from method description string
@@ -47,7 +47,7 @@ public class Descriptors {
             index = advanceOne(desc, index);
         }
 
-        return primitiveParams - 1;
+        return primitiveParams;
     }
 
     // Get index of next parameter in description string
@@ -61,6 +61,10 @@ public class Descriptors {
                 index++;
                 c = desc.charAt(index);
             } while (c == '[');
+        }
+
+        if (c == 'L') {
+            index = desc.indexOf(';', index);
         }
         index++;
 

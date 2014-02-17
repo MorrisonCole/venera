@@ -112,30 +112,8 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
      * Any primitive arguments need to be converted into their respective object
      * representations.
      */
-    private void applyParameterCollectingInstrumentationFake(int thisRegister) {
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "toString", "Ljava/lang/String;", new int[] { thisRegister });
-        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0); // put 'this' into register 0
-        mv.visitStringInsn(INSN_CONST_STRING, 1, name); // put our method name into register 1
-        mv.visitVarInsn(INSN_CONST_4, 2, 3); // Set register 2 to a value of 3
-        mv.visitTypeInsn(INSN_NEW_ARRAY, 2, 0, 2, "[Ljava/lang/Object;"); // Initialize an Object[] at register 2 with size whatever value is at 2 already (3)
-        mv.visitVarInsn(INSN_CONST_4, 3, 0); // Set register 3 to a value of 0
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Ljava/lang/Integer;", "valueOf", "Ljava/lang/Integer;I", new int[] { 6 }); // Convert our primitive int param to an object.
-        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4); // Put our int object in register 4
-        mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 4, 2, 3); // Put the value at register 4 into the array at register 2 at index (value of register 3)
-        mv.visitVarInsn(INSN_CONST_4, 3, 1); // Set register 3 to a value of 1
-        mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 7, 2, 3); // Put the value at register 7 into the array at register 2 at index (value of register 3)
-        mv.visitVarInsn(INSN_CONST_4, 3, 2); // Set register 3 to a value of 2
-        mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 8, 2, 3); // Put the value at register 8 into the array at register 2 at index (value of register 3)
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestLogger;", "log", "VLjava/lang/String;Ljava/lang/String;[Ljava/lang/Object;", new int[] { 0, 1, 2 });
-    }
-
-    /**
-     * We create a new Object[] and fill it with the parameters to be logged.
-     * Any primitive arguments need to be converted into their respective object
-     * representations.
-     */
     private void applyParameterCollectingInstrumentation(int thisRegister) {
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "toString", "Ljava/lang/String;", new int[] { thisRegister });
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL_RANGE, "Ljava/lang/Object;", "toString", "Ljava/lang/String;", new int[] { thisRegister }); //TODO: should not always use range!!!
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0); // put 'this' into register 0
         mv.visitStringInsn(INSN_CONST_STRING, 1, name); // put our method name into register 1
 
