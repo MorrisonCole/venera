@@ -32,10 +32,12 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
         // We don't want to instrument any auto-generated enclosing accessor methods (signature access$0,
         // access$1 etc.), so we ignore any methods with '$' in their name.
         // See: http://www.retrologic.com/innerclasses.doc7.html
+        // TODO: Are there legitimate usages of '$' in method names? We should only ban methods with a
+        // TODO: specific 'access$' signature if so.
         String bannedAutoAccessMethodCharacter = "$";
 
         if ((access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter)) {
-            logger.debug(String.format("Adding Splatter logger to method (name: '%s') (desc: '%s') (access (opcode): '%s')", name, desc, access));
+            logger.debug(String.format("Adding HeisentestLogger to method (name: '%s') (desc: '%s') (access (opcode): '%s')", name, desc, access));
 
             boolean isStatic = (access & Opcodes.ACC_STATIC) > 0;
             return new SplatterLoggingMethodVisitor(api, methodVisitor, desc, name, className, isStatic);
