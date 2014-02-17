@@ -20,7 +20,7 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
     public MethodVisitor visitMethod(int access, String name, String desc, String[] signature, String[] exceptions) {
         MethodVisitor methodVisitor = cv.visitMethod(access, name, desc, signature, exceptions);
 
-        ArrayList<String> blacklistedNames = new ArrayList<String>(Arrays.asList(""));
+        ArrayList<String> blacklistedNames = new ArrayList<String>(Arrays.asList("<init>", "<clinit>"));
 
         if ((access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains("$")) {
             logger.debug(String.format("Adding Splatter logger to method (name: '%s') (desc: '%s') (access (opcode): '%s')", name, desc, access));

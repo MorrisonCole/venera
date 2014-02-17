@@ -18,10 +18,8 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
      * so require more than 1 register.
       */
     private final int numberOfParameterRegisters;
-    private final char returnType;
     private int maxStack;
     private int maxLocals;
-    private int numRegs;
     private int additionalNeeded;
     private int totalRequiredRegisters;
     private boolean isStatic;
@@ -32,14 +30,12 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
         this.name = methodName;
         this.isStatic = isStatic;
         this.numberOfParameterRegisters = Descriptors.numParams(desc);
-        this.returnType = desc.charAt(0);
     }
 
     @Override
     public void visitMaxs(int maxStack, int maxLocals) {
         this.maxStack = maxStack;
         this.maxLocals = maxLocals;
-        this.numRegs = maxStack - numberOfParameterRegisters;
 
 
         requireTwoRegisters();
@@ -47,9 +43,11 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
         int register1 = totalRequiredRegisters - numberOfParameterRegisters - additionalNeeded;
         int register2 = totalRequiredRegisters - numberOfParameterRegisters - (additionalNeeded + 1);
 
-        mv.visitStringInsn(INSN_CONST_STRING, register1, "A heisentest log");
-        mv.visitStringInsn(INSN_CONST_STRING, register2, name);
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;", new int[]{register1, register2});
+        if (isStatic) {
+            applyBasicInstrumentation(register1, register2);
+        } else {
+            applyComplexInstrumentation(register1, register2, totalRequiredRegisters - numberOfParameterRegisters - 1);
+        }
 
         int sourceRegister = totalRequiredRegisters - numberOfParameterRegisters - 1;
         int destinationRegister = totalRequiredRegisters - numberOfParameterRegisters - 1 - additionalNeeded;
@@ -81,6 +79,19 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
                 }
             }
         }
+    }
+
+    private void applyBasicInstrumentation(int register1, int register2) {
+        mv.visitStringInsn(INSN_CONST_STRING, register1, "A heisentest log");
+        mv.visitStringInsn(INSN_CONST_STRING, register2, name);
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;", new int[]{register1, register2});
+    }
+
+    private void applyComplexInstrumentation(int register1, int register2, int thisRegister) {
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "toString", "Ljava/lang/String;", new int[] { thisRegister });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, register1);
+        mv.visitStringInsn(INSN_CONST_STRING, register2, name);
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestLogger;", "log", "VLjava/lang/String;Ljava/lang/String;", new int[] { register1, register2 });
     }
 
     private char typeOfParameterAt(int parameterPosition) {
@@ -119,36 +130,5 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
         additionalNeeded = 2;
         totalRequiredRegisters = maxStack + 2;
         mv.visitMaxs(totalRequiredRegisters, maxLocals);
-    }
-
-    private void shiftParameters() {
-        if (additionalNeeded > 0) { // Downshift all the parameter registers so that the existing code will work
-            int index = 0;
-            index = Descriptors.advanceOne(desc, index); // Skip past the return type
-            int pdest = totalRequiredRegisters - numberOfParameterRegisters;
-            int psrc = totalRequiredRegisters;
-
-            while (index < desc.length()) {
-                char c = desc.charAt(index);
-                switch (c) {
-                    case 'J': // long
-                    case 'D': // double
-                        mv.visitVarInsn(INSN_MOVE_WIDE_16, pdest, psrc);
-                        // Extra register for longs and doubles
-                        pdest++;
-                        psrc++;
-                        break;
-                    case '[': // array
-                    case 'L': // object
-                        mv.visitVarInsn(INSN_MOVE_OBJECT_16, pdest, psrc);
-                    default:
-                        mv.visitVarInsn(INSN_MOVE_16, pdest, psrc);
-                        break;
-                }
-                pdest++;
-                psrc++;
-                index = Descriptors.advanceOne(desc, index);
-            }
-        }
     }
 }
