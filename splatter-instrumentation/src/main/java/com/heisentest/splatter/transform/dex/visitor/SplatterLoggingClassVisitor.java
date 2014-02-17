@@ -36,7 +36,7 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
         // TODO: specific 'access$' signature if so.
         String bannedAutoAccessMethodCharacter = "$";
 
-        if ((access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter) && name.equals("onCreateView")) {
+        if ((access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter)) {
             logger.debug(String.format("Adding HeisentestLogger to method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
 
             boolean isStatic = (access & Opcodes.ACC_STATIC) > 0;

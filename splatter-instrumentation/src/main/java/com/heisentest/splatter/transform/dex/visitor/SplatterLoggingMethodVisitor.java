@@ -55,7 +55,7 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
         int register2 = totalRequiredRegisters - totalParameterRegisters - (additionalNeeded + 1);
 
         if (isStatic) {
-            applyStaticInstrumentation(register1, register2);
+//            applyStaticInstrumentation(register1, register2);
         } else {
             applyParameterCollectingInstrumentation(totalRequiredRegisters - totalParameterRegisters - 1);
         }
@@ -150,9 +150,40 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
             mv.visitVarInsn(INSN_CONST_4, 3, currentParamNumber); // Set register 3 to a value of 0
             if (entry.getKey() == 'L') {
                 mv.visitArrayOperationInsn(INSN_APUT_OBJECT, currentParameterRegister, 2, 3); // Put the value at the parameter register into the array at the current parameter index
-            }
-            if (entry.getKey() == 'I') {
-                mv.visitMethodInsn(INSN_INVOKE_STATIC_RANGE, "Ljava/lang/Integer;", "valueOf", "Ljava/lang/Integer;I", new int[] { currentParameterRegister }); // Convert our primitive int param to an object.
+            } else {
+                // Convert our primitive param to an object.
+                Character argumentCharacter = entry.getKey();
+                switch (argumentCharacter) {
+                    case 'Z':
+                        mv.visitMethodInsn(INSN_INVOKE_STATIC_RANGE, "Ljava/lang/Boolean;", "toString", "Ljava/lang/String;Z", new int[] { currentParameterRegister });
+                        break;
+                    case 'B':
+                        mv.visitMethodInsn(INSN_INVOKE_STATIC_RANGE, "Ljava/lang/Byte;", "toString", "Ljava/lang/String;B", new int[] { currentParameterRegister });
+                        break;
+                    case 'S':
+                        mv.visitMethodInsn(INSN_INVOKE_STATIC_RANGE, "Ljava/lang/Short;", "toString", "Ljava/lang/String;S", new int[] { currentParameterRegister });
+                        break;
+                    case 'C':
+                        mv.visitMethodInsn(INSN_INVOKE_STATIC_RANGE, "Ljava/lang/Character;", "toString", "Ljava/lang/String;C", new int[] { currentParameterRegister });
+                        break;
+                    case 'I':
+                        mv.visitMethodInsn(INSN_INVOKE_STATIC_RANGE, "Ljava/lang/Integer;", "toString", "Ljava/lang/String;I", new int[] { currentParameterRegister });
+                        break;
+                    case 'J':
+                        mv.visitMethodInsn(INSN_INVOKE_STATIC_RANGE, "Ljava/lang/Long;", "toString", "Ljava/lang/String;J", new int[] { currentParameterRegister, currentParameterRegister + 1 });
+                        break;
+                    case 'F':
+                        mv.visitMethodInsn(INSN_INVOKE_STATIC_RANGE, "Ljava/lang/Float;", "toString", "Ljava/lang/String;F", new int[] { currentParameterRegister });
+                        break;
+                    case 'D':
+                        mv.visitMethodInsn(INSN_INVOKE_STATIC_RANGE, "Ljava/lang/Double;", "toString", "Ljava/lang/String;D", new int[] { currentParameterRegister, currentParameterRegister + 1 });
+                        break;
+                    case '[':
+//                        mv.visitMethodInsn(INSN_INVOKE_STATIC_RANGE, "Ljava/lang/Integer;", "valueOf", "Ljava/lang/Integer;I", new int[] { currentParameterRegister });
+                        // fall through for now.
+                    default:
+                        logger.error(String.format("Unsupported primitive argument: %s", argumentCharacter));
+                }
                 mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4); // Put our int object in register 4
                 mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 4, 2, 3); // Put the value at register 4 into the array at register 2 at index (value of register 3)
             }
