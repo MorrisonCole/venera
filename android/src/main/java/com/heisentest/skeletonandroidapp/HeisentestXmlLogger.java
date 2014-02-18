@@ -16,17 +16,16 @@ public final class HeisentestXmlLogger {
     private static XmlSerializer serializer;
     private static FileWriter fileWriter;
     private static StringWriter stringWriter;
+    private static File file;
 
     public static void init(File fileDirectory) {
         serializer = Xml.newSerializer();
         try {
             String filename = fileDirectory.getAbsolutePath() + DEFAULT_OUTPUT_LOCATION;
-            File file = new File(filename);
-            file.setReadable(true, false); // Not a security risk since we're just debugging.
-            fileWriter = new FileWriter(file);
+            file = new File(filename);
+            fileWriter = new FileWriter(file, false);
             stringWriter = new StringWriter();
             serializer.setOutput(stringWriter);
-            beginLogging();
         } catch (IOException e) {
             Log.e(HEISENTEST_LOGGER_TAG, "Failed to create output file", e);
         }
@@ -34,6 +33,7 @@ public final class HeisentestXmlLogger {
 
     public static void beginLogging() {
         try {
+            Log.i(HEISENTEST_LOGGER_TAG, "Trying to begin log...");
             serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
             serializer.startDocument("UTF-8", true);
             serializer.startTag(NO_NAMESPACE, "log");
@@ -45,11 +45,28 @@ public final class HeisentestXmlLogger {
 
     public static void endLogging() {
         try {
+            Log.d(HEISENTEST_LOGGER_TAG, "Trying to end log...");
             serializer.endTag(NO_NAMESPACE, "log");
             serializer.endDocument();
-            Log.d(HEISENTEST_LOGGER_TAG, String.format("Ending log: \n %s", stringWriter.toString()));
             fileWriter.append(stringWriter.toString());
+            fileWriter.flush();
             fileWriter.close();
+            Log.d(HEISENTEST_LOGGER_TAG, "Ended log.");
+
+            Log.d(HEISENTEST_LOGGER_TAG, String.format("Setting output file (at '%s') readable...", file.getAbsolutePath()));
+            boolean setReadable = file.setReadable(true, false);
+            if (!setReadable) {
+                Log.e(HEISENTEST_LOGGER_TAG, "Failed to make output file readable!");
+            }
+
+            // TODO: For debugging only. This could be massive!
+            Log.d(HEISENTEST_LOGGER_TAG, "Successfully made output file readable. Printing final output:");
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            String line = null;
+            while ((line = bufferedReader.readLine()) != null) {
+                Log.i(HEISENTEST_LOGGER_TAG, line);
+            }
+            bufferedReader.close();
         } catch (IOException e) {
             Log.e(HEISENTEST_LOGGER_TAG, "Failed to end logging", e);
         }

@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
     }
 
     public void startLogging() {
-        File fileDirectory = getApplicationContext().getDir("Skeleton Android App", MODE_PRIVATE);
+        File fileDirectory = getApplicationContext().getDir("heisentest", MODE_WORLD_READABLE);
         HeisentestXmlLogger.init(fileDirectory);
         HeisentestXmlLogger.beginLogging();
         HeisentestXmlLogger.endLogging();

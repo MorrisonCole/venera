@@ -104,8 +104,8 @@ public class SplatterLoggingInitializationMethodVisitor extends MethodVisitor {
     private void addHeisentestLoggerInitializationInstrumentation(int thisRegister) {
         mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/MainActivity;", "getApplicationContext", "Landroid/content/Context;", new int[] { thisRegister });
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
-        mv.visitStringInsn(INSN_CONST_STRING, 2, "Skeleton Android App");
-        mv.visitVarInsn(INSN_CONST_4, 3, 0);
+        mv.visitStringInsn(INSN_CONST_STRING, 2, "heisentest");
+        mv.visitVarInsn(INSN_CONST_4, 3, 1);
         mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Landroid/content/Context;", "getDir", "Ljava/io/File;Ljava/lang/String;I", new int[]{1, 2, 3});
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
 
