@@ -1,8 +1,8 @@
 package com.heisentest.splatter;
 
-import org.ow2.asmdex.ApplicationVisitor;
+import org.ow2.asmdex.ApplicationWriter;
 
 public interface LoggerClassWriter {
 
-    public void addLogClass(ApplicationVisitor applicationVisitor);
+    public void addLogClass(ApplicationWriter applicationWriter);
 }

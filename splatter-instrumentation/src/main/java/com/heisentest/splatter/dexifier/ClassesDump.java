@@ -1,3 +1,5 @@
+package com.heisentest.splatter.dexifier;
+
 import java.util.*;
 import org.ow2.asmdex.*;
 import org.ow2.asmdex.structureCommon.*;

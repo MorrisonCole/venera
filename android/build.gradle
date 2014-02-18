@@ -36,6 +36,6 @@ task dexify(type: Exec, dependsOn: 'build') {
 
     doLast {
         ext.dexifyOutputFile = new File("${project(':splatter-instrumentation').projectDir}/src/main/java/com/heisentest/splatter/dexifier", "ClassesDump.java")
-        dexifyOutputFile.text = standardOutput.toString()
+        dexifyOutputFile.text = "package com.heisentest.splatter.dexifier;\n\n" + standardOutput.toString()
     }
 }
