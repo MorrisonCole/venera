@@ -1,18 +1,18 @@
 package com.heisentest.splatter.transform.dex.visitor;
 
-import com.heisentest.splatter.LogClassWriter;
+import com.heisentest.splatter.HeisentestLoggerClassWriter;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.ApplicationVisitor;
 import org.ow2.asmdex.ClassVisitor;
 
 public class SplatterApplicationVisitor extends ApplicationVisitor {
 
-    private final LogClassWriter logClassWriter;
+    private final HeisentestLoggerClassWriter heisentestLoggerClassWriter;
     private final Logger logger = Logger.getLogger(SplatterApplicationVisitor.class);
 
     public SplatterApplicationVisitor(int asmApiLevel, ApplicationVisitor applicationVisitor) {
         super(asmApiLevel, applicationVisitor);
-        logClassWriter = new LogClassWriter();
+        heisentestLoggerClassWriter = new HeisentestLoggerClassWriter();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class SplatterApplicationVisitor extends ApplicationVisitor {
     @Override
     public void visitEnd() {
         logger.info("Finishing second pass, writing classes.dex");
-        logClassWriter.addLogClass(av);
+        heisentestLoggerClassWriter.addLogClass(av);
         super.visitEnd();
     }
 }

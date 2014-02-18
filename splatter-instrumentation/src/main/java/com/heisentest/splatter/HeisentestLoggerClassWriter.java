@@ -7,7 +7,7 @@ import org.ow2.asmdex.structureCommon.Label;
 
 import static org.ow2.asmdex.Opcodes.*;
 
-public class LogClassWriter  {
+public class HeisentestLoggerClassWriter {
 
     public void addLogClass(ApplicationVisitor applicationVisitor) {
         ClassVisitor cv = applicationVisitor.visitClass(ACC_PUBLIC + ACC_FINAL, "Lcom/heisentest/skeletonandroidapp/HeisentestLogger;", null, "Ljava/lang/Object;", null);
