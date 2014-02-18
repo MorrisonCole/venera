@@ -12,7 +12,7 @@ public final class HeisentestXmlLogger {
     public static final String DEFAULT_OUTPUT_LOCATION = "/heisentestoutput.xml";
     public static final String HEISENTEST_LOGGER_TAG = "HeisentestLogger";
     public static final String HEISENTEST_NAMESPACE = "heisentest";
-    public static final String NO_NAMESPACE = "";
+    public static final String NO_NAMESPACE = null;
     private static XmlSerializer serializer;
     private static FileWriter fileWriter;
     private static StringWriter stringWriter;
@@ -36,7 +36,7 @@ public final class HeisentestXmlLogger {
             Log.i(HEISENTEST_LOGGER_TAG, "Trying to begin log...");
             serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
             serializer.startDocument("UTF-8", true);
-            serializer.startTag(NO_NAMESPACE, "log");
+            serializer.startTag(HEISENTEST_NAMESPACE, "log");
             serializer.attribute(NO_NAMESPACE, "version", "0.0.1");
         } catch (IOException e) {
             Log.e(HEISENTEST_LOGGER_TAG, "Failed to begin logging", e);
@@ -46,9 +46,11 @@ public final class HeisentestXmlLogger {
     public static void endLogging() {
         try {
             Log.d(HEISENTEST_LOGGER_TAG, "Trying to end log...");
-            serializer.endTag(NO_NAMESPACE, "log");
+            serializer.endTag(HEISENTEST_NAMESPACE, "log");
             serializer.endDocument();
+            serializer.flush();
             fileWriter.append(stringWriter.toString());
+            stringWriter.getBuffer().setLength(0);
             fileWriter.flush();
             fileWriter.close();
             Log.d(HEISENTEST_LOGGER_TAG, "Ended log.");
@@ -77,8 +79,7 @@ public final class HeisentestXmlLogger {
             serializer.startTag(NO_NAMESPACE, "event");
 
             serializer.startTag(NO_NAMESPACE, "class");
-            serializer.text(calleeClass);
-            serializer.endTag(NO_NAMESPACE, "class");
+            serializer.attribute(NO_NAMESPACE, "name", calleeClass);
 
             serializer.startTag(NO_NAMESPACE, "method");
             serializer.attribute(NO_NAMESPACE, "name", calleeMethodName);
@@ -93,9 +94,13 @@ public final class HeisentestXmlLogger {
             }
             serializer.endTag(NO_NAMESPACE, "method");
 
+            serializer.endTag(NO_NAMESPACE, "class");
+
             serializer.endTag(NO_NAMESPACE, "event");
 
+            serializer.flush();
             fileWriter.append(stringWriter.toString());
+            stringWriter.getBuffer().setLength(0); // TODO: hacky way to 'clear' the StringWriter...
         } catch (IOException e) {
             Log.d(HEISENTEST_LOGGER_TAG, "Failed to write event to XML", e);
         }

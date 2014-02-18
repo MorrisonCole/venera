@@ -414,7 +414,7 @@ public static void dumpHeisentestXmlLogger(ApplicationWriter aw) {
 		fv.visitEnd();
 	}
 	{
-		fv = cv.visitField(ACC_PUBLIC + ACC_STATIC + ACC_FINAL, "NO_NAMESPACE", "Ljava/lang/String;", null, "");
+		fv = cv.visitField(ACC_PUBLIC + ACC_STATIC + ACC_FINAL, "NO_NAMESPACE", "Ljava/lang/String;", null, null);
 		fv.visitEnd();
 	}
 	{
@@ -432,6 +432,15 @@ public static void dumpHeisentestXmlLogger(ApplicationWriter aw) {
 	{
 		fv = cv.visitField(ACC_PRIVATE + ACC_STATIC, "stringWriter", "Ljava/io/StringWriter;", null, null);
 		fv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_CONSTRUCTOR, "<clinit>", "V", null, null);
+		mv.visitCode();
+		mv.visitMaxs(1, 0);
+		mv.visitVarInsn(INSN_CONST_4, 0, 0);
+		mv.visitFieldInsn(INSN_SPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "NO_NAMESPACE", "Ljava/lang/String;", 0, 0);
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
 	}
 	{
 		mv = cv.visitMethod(ACC_PUBLIC + ACC_CONSTRUCTOR, "<init>", "V", null, null);
@@ -464,11 +473,11 @@ public static void dumpHeisentestXmlLogger(ApplicationWriter aw) {
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
 		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "startDocument", "VLjava/lang/String;Ljava/lang/Boolean;", new int[] { 1, 2, 3 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 1, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 2, "");
+		mv.visitStringInsn(INSN_CONST_STRING, 2, "heisentest");
 		mv.visitStringInsn(INSN_CONST_STRING, 3, "log");
 		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "startTag", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;Ljava/lang/String;", new int[] { 1, 2, 3 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 1, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 2, "");
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "NO_NAMESPACE", "Ljava/lang/String;", 2, 0);
 		mv.visitStringInsn(INSN_CONST_STRING, 3, "version");
 		mv.visitStringInsn(INSN_CONST_STRING, 4, "0.0.1");
 		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "attribute", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;", new int[] { 1, 2, 3, 4 });
@@ -495,16 +504,23 @@ public static void dumpHeisentestXmlLogger(ApplicationWriter aw) {
 		mv.visitStringInsn(INSN_CONST_STRING, 5, "Trying to end log...");
 		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;", new int[] { 4, 5 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 4, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 5, "");
+		mv.visitStringInsn(INSN_CONST_STRING, 5, "heisentest");
 		mv.visitStringInsn(INSN_CONST_STRING, 6, "log");
 		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "endTag", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;Ljava/lang/String;", new int[] { 4, 5, 6 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 4, 0);
 		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "endDocument", "V", new int[] { 4 });
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 4, 0);
+		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "flush", "V", new int[] { 4 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "fileWriter", "Ljava/io/FileWriter;", 4, 0);
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "stringWriter", "Ljava/io/StringWriter;", 5, 0);
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/io/StringWriter;", "toString", "Ljava/lang/String;", new int[] { 5 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 5);
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/io/FileWriter;", "append", "Ljava/io/Writer;Ljava/lang/CharSequence;", new int[] { 4, 5 });
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "stringWriter", "Ljava/io/StringWriter;", 4, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/io/StringWriter;", "getBuffer", "Ljava/lang/StringBuffer;", new int[] { 4 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4);
+		mv.visitVarInsn(INSN_CONST_4, 5, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/StringBuffer;", "setLength", "VI", new int[] { 4, 5 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "fileWriter", "Ljava/io/FileWriter;", 4, 0);
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/io/FileWriter;", "flush", "V", new int[] { 4 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "fileWriter", "Ljava/io/FileWriter;", 4, 0);
@@ -627,25 +643,23 @@ public static void dumpHeisentestXmlLogger(ApplicationWriter aw) {
 		Label l2 = new Label();
 		mv.visitTryCatchBlock(l0, l1, l2, "Ljava/io/IOException;");
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 5, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 6, "");
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "NO_NAMESPACE", "Ljava/lang/String;", 6, 0);
 		mv.visitStringInsn(INSN_CONST_STRING, 7, "event");
 		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "startTag", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;Ljava/lang/String;", new int[] { 5, 6, 7 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 5, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 6, "");
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "NO_NAMESPACE", "Ljava/lang/String;", 6, 0);
 		mv.visitStringInsn(INSN_CONST_STRING, 7, "class");
 		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "startTag", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;Ljava/lang/String;", new int[] { 5, 6, 7 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 5, 0);
-		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "text", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;", new int[] { 5, 8 });
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "NO_NAMESPACE", "Ljava/lang/String;", 6, 0);
+		mv.visitStringInsn(INSN_CONST_STRING, 7, "name");
+		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "attribute", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;", new int[] { 5, 6, 7, 8 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 5, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 6, "");
-		mv.visitStringInsn(INSN_CONST_STRING, 7, "class");
-		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "endTag", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;Ljava/lang/String;", new int[] { 5, 6, 7 });
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 5, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 6, "");
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "NO_NAMESPACE", "Ljava/lang/String;", 6, 0);
 		mv.visitStringInsn(INSN_CONST_STRING, 7, "method");
 		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "startTag", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;Ljava/lang/String;", new int[] { 5, 6, 7 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 5, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 6, "");
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "NO_NAMESPACE", "Ljava/lang/String;", 6, 0);
 		mv.visitStringInsn(INSN_CONST_STRING, 7, "name");
 		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "attribute", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;", new int[] { 5, 6, 7, 9 });
 		mv.visitArrayLengthInsn(5, 10);
@@ -661,7 +675,7 @@ public static void dumpHeisentestXmlLogger(ApplicationWriter aw) {
 		Label l5 = new Label();
 		mv.visitJumpInsn(INSN_IF_EQZ, l5, 4, 0);
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 5, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 6, "");
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "NO_NAMESPACE", "Ljava/lang/String;", 6, 0);
 		mv.visitStringInsn(INSN_CONST_STRING, 7, "parameter");
 		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "startTag", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;Ljava/lang/String;", new int[] { 5, 6, 7 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 5, 0);
@@ -669,7 +683,7 @@ public static void dumpHeisentestXmlLogger(ApplicationWriter aw) {
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 6);
 		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "text", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;", new int[] { 5, 6 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 5, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 6, "");
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "NO_NAMESPACE", "Ljava/lang/String;", 6, 0);
 		mv.visitStringInsn(INSN_CONST_STRING, 7, "parameter");
 		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "endTag", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;Ljava/lang/String;", new int[] { 5, 6, 7 });
 		mv.visitLabel(l5);
@@ -677,18 +691,29 @@ public static void dumpHeisentestXmlLogger(ApplicationWriter aw) {
 		mv.visitJumpInsn(INSN_GOTO, l4, 0, 0);
 		mv.visitLabel(l3);
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 5, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 6, "");
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "NO_NAMESPACE", "Ljava/lang/String;", 6, 0);
 		mv.visitStringInsn(INSN_CONST_STRING, 7, "method");
 		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "endTag", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;Ljava/lang/String;", new int[] { 5, 6, 7 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 5, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 6, "");
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "NO_NAMESPACE", "Ljava/lang/String;", 6, 0);
+		mv.visitStringInsn(INSN_CONST_STRING, 7, "class");
+		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "endTag", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;Ljava/lang/String;", new int[] { 5, 6, 7 });
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 5, 0);
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "NO_NAMESPACE", "Ljava/lang/String;", 6, 0);
 		mv.visitStringInsn(INSN_CONST_STRING, 7, "event");
 		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "endTag", "Lorg/xmlpull/v1/XmlSerializer;Ljava/lang/String;Ljava/lang/String;", new int[] { 5, 6, 7 });
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "serializer", "Lorg/xmlpull/v1/XmlSerializer;", 5, 0);
+		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lorg/xmlpull/v1/XmlSerializer;", "flush", "V", new int[] { 5 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "fileWriter", "Ljava/io/FileWriter;", 5, 0);
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "stringWriter", "Ljava/io/StringWriter;", 6, 0);
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/io/StringWriter;", "toString", "Ljava/lang/String;", new int[] { 6 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 6);
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/io/FileWriter;", "append", "Ljava/io/Writer;Ljava/lang/CharSequence;", new int[] { 5, 6 });
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "stringWriter", "Ljava/io/StringWriter;", 5, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/io/StringWriter;", "getBuffer", "Ljava/lang/StringBuffer;", new int[] { 5 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 5);
+		mv.visitVarInsn(INSN_CONST_4, 6, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/StringBuffer;", "setLength", "VI", new int[] { 5, 6 });
 		mv.visitLabel(l1);
 		mv.visitInsn(INSN_RETURN_VOID);
 		mv.visitLabel(l2);
