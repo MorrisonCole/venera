@@ -48,9 +48,16 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
             }
         }
 
-        if (instrument && (access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter)) {
-//            logger.debug(String.format("Adding HeisentestLogger to method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
-
+        if (className.substring(className.lastIndexOf('/') + 1, className.length()).equals("MainActivity;") && name.equals("onCreate")) {
+            // TODO: MainActivity / onCreate should be in some config ('entry point class / method').
+            logger.debug(String.format("Adding HeisentestLogger initialization to method (name: '%s') (desc: '%s') (class: '%s')", name, desc, className));
+            return new SplatterLoggingInitializationMethodVisitor(api, methodVisitor, desc);
+        } else if (className.substring(className.lastIndexOf('/') + 1, className.length()).equals("MainActivity;") && name.equals("onDestroy")) {
+            // TODO: As above, this should not be hardcoded.
+            logger.debug(String.format("Adding HeisentestLogger cleanup to method (name: '%s') (desc: '%s') (class: '%s')", name, desc, className));
+            return new SplatterLoggingCleanupMethodVisitor(api, methodVisitor);
+        } else if (instrument && (access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter)) {
+            logger.debug(String.format("Adding HeisentestLogger to method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
             boolean isStatic = (access & Opcodes.ACC_STATIC) > 0;
             return new SplatterLoggingMethodVisitor(api, methodVisitor, desc, name, className, isStatic);
         } else if ((access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter)) {

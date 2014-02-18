@@ -1,1 +1,2 @@
 include 'splatter-instrumentation'
+include 'android'

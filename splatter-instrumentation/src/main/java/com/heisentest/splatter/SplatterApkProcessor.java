@@ -13,9 +13,11 @@ public class SplatterApkProcessor {
 
     private final Logger logger = Logger.getLogger(SplatterApkProcessor.class);
     private final int asmApiLevel;
+    private final String applicationRootNamespace;
 
-    public SplatterApkProcessor(int asmApiLevel) {
+    public SplatterApkProcessor(int asmApiLevel, String applicationRootNamespace) {
         this.asmApiLevel = asmApiLevel;
+        this.applicationRootNamespace = applicationRootNamespace;
     }
 
     public void process(File inputApkFile, File outputApkFile) {
@@ -23,7 +25,7 @@ public class SplatterApkProcessor {
             FileInputStream fileInputStream = new FileInputStream(inputApkFile);
             FileOutputStream fileOutputStream = new FileOutputStream(outputApkFile);
 
-            processApk(fileInputStream, fileOutputStream, new SplatterDexTransformer(asmApiLevel));
+            processApk(fileInputStream, fileOutputStream, new SplatterDexTransformer(asmApiLevel, applicationRootNamespace));
 
             fileInputStream.close();
             fileOutputStream.flush();

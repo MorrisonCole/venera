@@ -12,8 +12,6 @@ import static org.ow2.asmdex.Opcodes.*;
 
 public class SplatterLoggingMethodVisitor extends MethodVisitor {
 
-    private static final int[] reg = {0, 1};
-
     private final Logger logger = Logger.getLogger(SplatterLoggingMethodVisitor.class);
     private final String desc;
     private final String name;
@@ -50,9 +48,6 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
         this.maxLocals = maxLocals;
 
         forceRequiredRegisters();
-
-        int register1 = totalRequiredRegisters - totalParameterRegisters - additionalNeeded;
-        int register2 = totalRequiredRegisters - totalParameterRegisters - (additionalNeeded + 1);
 
         if (isStatic) {
 //            applyStaticInstrumentation(register1, register2);
@@ -97,14 +92,14 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
         // just grab the last bit.
         mv.visitStringInsn(INSN_CONST_STRING, register1, className.substring(className.lastIndexOf('/') + 1, className.lastIndexOf(';')));
         mv.visitStringInsn(INSN_CONST_STRING, register2, "(static) " + name);
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestLogger;", "log", "VLjava/lang/String;Ljava/lang/String;", new int[] { register1, register2 });
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "log", "VLjava/lang/String;Ljava/lang/String;", new int[] { register1, register2 });
     }
 
     private void applyRegularInstrumentation(int register1, int register2, int thisRegister) {
         mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "toString", "Ljava/lang/String;", new int[] { thisRegister });
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, register1);
         mv.visitStringInsn(INSN_CONST_STRING, register2, name);
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestLogger;", "log", "VLjava/lang/String;Ljava/lang/String;", new int[] { register1, register2 });
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "log", "VLjava/lang/String;Ljava/lang/String;", new int[] { register1, register2 });
     }
 
     /**
@@ -164,7 +159,7 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
             }
             currentParamNumber++;
         }
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestLogger;", "log", "VLjava/lang/String;Ljava/lang/String;[Ljava/lang/Object;", new int[] { 0, 1, 2 });
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "log", "VLjava/lang/String;Ljava/lang/String;[Ljava/lang/Object;", new int[] { 0, 1, 2 });
     }
 
     private char typeOfParameterAt(int parameterPosition) {

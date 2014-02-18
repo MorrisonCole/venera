@@ -16,9 +16,11 @@ public class SplatterDexTransformer {
     private static final boolean TRANSFORM_DISABLED = false;
     private final int asmApiLevel;
     private final Logger logger = Logger.getLogger(SplatterDexTransformer.class);
+    private final String applicationRootNamespace;
 
-    public SplatterDexTransformer(int asmApiLevel) {
+    public SplatterDexTransformer(int asmApiLevel, String applicationRootNamespace) {
         this.asmApiLevel = asmApiLevel;
+        this.applicationRootNamespace = applicationRootNamespace;
     }
 
     public void transform(FileInputStream fileInputStream, ZipOutputStream zipOutputStream) throws IOException {
@@ -36,7 +38,7 @@ public class SplatterDexTransformer {
 
         // Second pass
         ApplicationWriter applicationWriter = new ApplicationWriter(applicationReader);
-        ApplicationVisitor splatterApplicationVisitor = new SplatterApplicationVisitor(asmApiLevel, applicationWriter);
+        ApplicationVisitor splatterApplicationVisitor = new SplatterApplicationVisitor(asmApiLevel, applicationWriter, applicationRootNamespace);
 
         applicationReader.accept(splatterApplicationVisitor, 0);
 
