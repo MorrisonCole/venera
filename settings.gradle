@@ -1,2 +1,1 @@
-include 'splatter-instrumentation'
-include 'android'
+include 'splatter-instrumentation', 'dexifier', 'skeleton-android-app'

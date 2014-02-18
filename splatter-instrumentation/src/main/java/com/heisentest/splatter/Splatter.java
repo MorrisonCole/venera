@@ -9,7 +9,7 @@ import java.io.IOException;
 public class Splatter {
 
     private static final Logger logger = Logger.getLogger(Splatter.class);
-    public static final String TEST_APK_LOCATION_SKELETON = "/home/morrison/code/ucl/heisentest/skeleton-android-app/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.apk";
+    public static final String TEST_APK_LOCATION_SKELETON = "/home/morrison/code/ucl/heisentest/splatter/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.apk";
     public static final String HEISENTEST_SKELETON_APP_NAMESPACE = "Lcom/heisentest/skeletonandroidapp/";
     public static final String TEST_APK_LOCATION = "/home/morrison//code/shazam/android/android_shazam/shazam-android/target/shazam-android-free-debug.apk";
     public static final String SHAZAM_ANDROID_NAMESPACE = "Lcom/shazam/android/";
