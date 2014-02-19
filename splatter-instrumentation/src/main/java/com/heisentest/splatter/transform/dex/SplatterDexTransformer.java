@@ -33,8 +33,11 @@ public class SplatterDexTransformer {
         }
 
         // First pass in case we want to save any information before generating the new dex file
-        SplatterFirstPassApplicationVisitor splatterFirstPassApplicationVisitor = new SplatterFirstPassApplicationVisitor(asmApiLevel);
+        InstrumentationSpy instrumentationSpy = new InstrumentationSpy();
+        SplatterFirstPassApplicationVisitor splatterFirstPassApplicationVisitor = new SplatterFirstPassApplicationVisitor(asmApiLevel, instrumentationSpy);
         applicationReader.accept(splatterFirstPassApplicationVisitor, 0);
+
+        logger.debug(String.format("Found %s instrumentation points", instrumentationSpy.getAvailableInstrumentationPoints()));
 
         // Second pass
         ApplicationWriter applicationWriter = new ApplicationWriter(applicationReader);
