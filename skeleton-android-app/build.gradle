@@ -38,4 +38,5 @@ evaluationDependsOn(':splatter-instrumentation')
 
 afterEvaluate {
     installDebug.dependsOn project(':splatter-instrumentation').tasks.run
+    connectedInstrumentTest.dependsOn project(':splatter-instrumentation').tasks.run
 }

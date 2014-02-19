@@ -35,7 +35,10 @@ public class SplatterApplicationVisitor extends ApplicationVisitor {
     @Override
     public void visitEnd() {
         logger.info("Finishing second pass, writing classes.dex");
-        loggerClassWriter.addLogClass(applicationWriter);
+        // TODO: should not be hardcoded!!!
+        if (!applicationRootNamespace.contains("/test")) {
+            loggerClassWriter.addLogClass(applicationWriter);
+        }
         super.visitEnd();
     }
 }

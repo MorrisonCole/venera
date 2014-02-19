@@ -15,3 +15,19 @@ dependencies {
 }
 
 compileJava.dependsOn project(':dexifier').tasks.dexify
+
+task dumpDex(type: Exec) {
+    workingDir project.projectDir
+
+    commandLine 'scripts/dump.sh', "${project(':skeleton-android-app').buildDir}/apk"
+
+    //store the output instead of printing to the console:
+    standardOutput = new ByteArrayOutputStream()
+
+    doLast {
+        ext.outputFile = new File("${project.projectDir}/scripts", "dump.output")
+        outputFile.text = standardOutput.toString()
+    }
+}
+
+run.finalizedBy dumpDex

@@ -9,7 +9,7 @@ import java.io.*;
 
 public final class HeisentestXmlLogger {
 
-    public static final String DEFAULT_OUTPUT_LOCATION = "/heisentestoutput.xml";
+    public static final String DEFAULT_OUTPUT_LOCATION = "/heisentestoutput";
     public static final String HEISENTEST_LOGGER_TAG = "HeisentestLogger";
     public static final String HEISENTEST_NAMESPACE = "heisentest";
     public static final String NO_NAMESPACE = null;
@@ -18,10 +18,10 @@ public final class HeisentestXmlLogger {
     private static StringWriter stringWriter;
     private static File file;
 
-    public static void init(File fileDirectory) {
+    public static void init(File fileDirectory, String methodName) {
         serializer = Xml.newSerializer();
         try {
-            String filename = fileDirectory.getAbsolutePath() + DEFAULT_OUTPUT_LOCATION;
+            String filename = fileDirectory.getAbsolutePath() + DEFAULT_OUTPUT_LOCATION + methodName + ".xml";
             file = new File(filename);
             fileWriter = new FileWriter(file, false);
             stringWriter = new StringWriter();
@@ -93,16 +93,15 @@ public final class HeisentestXmlLogger {
                 }
             }
             serializer.endTag(NO_NAMESPACE, "method");
-
             serializer.endTag(NO_NAMESPACE, "class");
-
             serializer.endTag(NO_NAMESPACE, "event");
 
             serializer.flush();
             fileWriter.append(stringWriter.toString());
             stringWriter.getBuffer().setLength(0); // TODO: hacky way to 'clear' the StringWriter...
         } catch (IOException e) {
-            Log.d(HEISENTEST_LOGGER_TAG, "Failed to write event to XML", e);
+            // TODO: this happens a lot; need a better way to drive the event logging.
+//            Log.d(HEISENTEST_LOGGER_TAG, "Failed to write event to XML", e);
         }
     }
 }

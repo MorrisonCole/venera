@@ -37,4 +37,9 @@ public class SkeletonInstrumentationTestCase<T extends Activity> extends Activit
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
+
+    @Override
+    public void tearDown() throws Exception {
+        super.tearDown();
+    }
 }

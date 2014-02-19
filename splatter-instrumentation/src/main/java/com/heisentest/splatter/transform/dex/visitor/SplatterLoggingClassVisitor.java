@@ -30,7 +30,7 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
         // Ignoring 'run' since runnables seem to generate bad dex files for some reason. need to fix this.
         // Ignoring 'toString' since calling 'this.toString' then causes a stack overflow :D
         // Ignoring 'hashCode' as it's causing stack overflows for some reason.
-        ArrayList<String> blacklistedNames = new ArrayList<String>(Arrays.asList("<init>", "<clinit>", "run", "toString", "hashCode"));
+        ArrayList<String> blacklistedNames = new ArrayList<String>(Arrays.asList("<init>", "<clinit>", "run", "toString", "hashCode", "wakeUpDevice"));
 
         // We don't want to instrument any auto-generated enclosing accessor methods (signature access$0,
         // access$1 etc.), so we ignore any methods with '$' in their name.
@@ -48,11 +48,11 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
             }
         }
 
-        if (className.substring(className.lastIndexOf('/') + 1, className.length()).equals("MainActivity;") && name.equals("onCreate")) {
+        if (className.contains("SkeletonInstrumentationTestCase") && name.equals("setUp")) {
             // TODO: MainActivity / onCreate should be in some config ('entry point class / method').
             logger.debug(String.format("Adding HeisentestLogger initialization to method (name: '%s') (desc: '%s') (class: '%s')", name, desc, className));
             return new SplatterLoggingInitializationMethodVisitor(api, methodVisitor, desc);
-        } else if (className.substring(className.lastIndexOf('/') + 1, className.length()).equals("MainActivity;") && name.equals("onStop")) {
+        } else if (className.contains("SkeletonInstrumentationTestCase") && name.equals("tearDown")) {
             // TODO: As above, this should not be hardcoded.
             logger.debug(String.format("Adding HeisentestLogger cleanup to method (name: '%s') (desc: '%s') (class: '%s')", name, desc, className));
             return new SplatterLoggingCleanupMethodVisitor(api, methodVisitor);

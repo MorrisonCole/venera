@@ -4,6 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.heisentest.splatter.Descriptors;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.MethodVisitor;
+import org.ow2.asmdex.structureCommon.Label;
 
 import static org.ow2.asmdex.Opcodes.*;
 
@@ -102,15 +103,38 @@ public class SplatterLoggingInitializationMethodVisitor extends MethodVisitor {
     }
 
     private void addHeisentestLoggerInitializationInstrumentation(int thisRegister) {
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/MainActivity;", "getApplicationContext", "Landroid/content/Context;", new int[] { thisRegister });
+        // TODO: the testcase class should *not* be hard coded!
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/test/acceptance/SkeletonInstrumentationTestCase;", "getInstrumentation", "Landroid/app/Instrumentation;", new int[] { thisRegister });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Landroid/app/Instrumentation;", "getTargetContext", "Landroid/content/Context;", new int[] { 3 });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
+        mv.visitStringInsn(INSN_CONST_STRING, 4, "heisentest");
+        mv.visitVarInsn(INSN_CONST_4, 5, 1);
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Landroid/content/Context;", "getDir", "Ljava/io/File;Ljava/lang/String;I", new int[] { 3, 4, 5 });
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
-        mv.visitStringInsn(INSN_CONST_STRING, 2, "heisentest");
-        mv.visitVarInsn(INSN_CONST_4, 3, 1);
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Landroid/content/Context;", "getDir", "Ljava/io/File;Ljava/lang/String;I", new int[]{1, 2, 3});
-        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
-
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "init", "VLjava/io/File;", new int[] { 0 });
+        Label l0 = new Label();
+        mv.visitLabel(l0);
+        Label l1 = new Label();
+        Label l2 = new Label();
+        mv.visitTryCatchBlock(l0, l1, l2, "Ljava/lang/NoSuchMethodException;");
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "getClass", "Ljava/lang/Class;", new int[] { thisRegister });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4);
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/test/acceptance/SkeletonInstrumentationTestCase;", "getName", "Ljava/lang/String;", new int[] { thisRegister });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 5);
+        mv.visitVarInsn(INSN_CONST_4, 3, 0);
+        mv.visitTypeInsn(INSN_CHECK_CAST, 0, 3, 0, "[Ljava/lang/Class;");
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "getMethod", "Ljava/lang/reflect/Method;Ljava/lang/String;[Ljava/lang/Class;", new int[] { 4, 5, 3 });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 2);
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Method;", "getName", "Ljava/lang/String;", new int[] { 2 });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "init", "VLjava/io/File;Ljava/lang/String;", new int[] { 1, 3 });
         mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "beginLogging", "V", new int[] {  });
+        mv.visitLabel(l1);
+        mv.visitInsn(INSN_RETURN_VOID);
+        mv.visitLabel(l2);
+        mv.visitIntInsn(INSN_MOVE_EXCEPTION, 0);
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/NoSuchMethodException;", "printStackTrace", "V", new int[] { 0 });
+        mv.visitJumpInsn(INSN_GOTO, l1, 0, 0);
     }
 
     /**
@@ -118,7 +142,7 @@ public class SplatterLoggingInitializationMethodVisitor extends MethodVisitor {
      * - 4
      */
     private void forceRequiredRegisters() {
-        additionalNeeded = 4;
+        additionalNeeded = 5;
         totalRequiredRegisters = maxStack + additionalNeeded;
         mv.visitMaxs(totalRequiredRegisters, maxLocals);
     }

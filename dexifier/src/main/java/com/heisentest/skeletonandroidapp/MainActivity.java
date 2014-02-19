@@ -1,11 +1,8 @@
 package com.heisentest.skeletonandroidapp;
 
 import android.app.Activity;
-import android.util.Log;
-import com.example.android_source.R;
 
 import java.io.File;
-import java.util.zip.ZipEntry;
 
 public class MainActivity extends Activity {
 
@@ -24,10 +21,10 @@ public class MainActivity extends Activity {
     }
 
     public void startLogging() {
-        File fileDirectory = getApplicationContext().getDir("heisentest", MODE_WORLD_READABLE);
-        HeisentestXmlLogger.init(fileDirectory);
-        HeisentestXmlLogger.beginLogging();
-        HeisentestXmlLogger.endLogging();
+//        File fileDirectory = getApplicationContext().getDir("heisentest", MODE_WORLD_READABLE);
+//        HeisentestXmlLogger.init(fileDirectory, method.getName());
+//        HeisentestXmlLogger.beginLogging();
+//        HeisentestXmlLogger.endLogging();
     }
 
 //    private void aMethodWithNoBullshit() {
