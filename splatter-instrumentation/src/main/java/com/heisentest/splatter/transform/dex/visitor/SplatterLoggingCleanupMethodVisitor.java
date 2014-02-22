@@ -21,6 +21,6 @@ public class SplatterLoggingCleanupMethodVisitor extends MethodVisitor {
     }
 
     private void addHeisentestLoggerCleanupInstrumentation() {
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "endLogging", "V", new int[] {  });
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "endLogging", "V", new int[] {  });
     }
 }

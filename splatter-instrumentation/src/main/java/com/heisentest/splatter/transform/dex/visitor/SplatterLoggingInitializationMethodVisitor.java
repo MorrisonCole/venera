@@ -120,8 +120,8 @@ public class SplatterLoggingInitializationMethodVisitor extends MethodVisitor {
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 2);
         mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Method;", "getName", "Ljava/lang/String;", new int[] { 2 });
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "init", "VLjava/io/File;Ljava/lang/String;", new int[] { 1, 3 });
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestXmlLogger;", "beginLogging", "V", new int[] {  });
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "init", "VLjava/io/File;Ljava/lang/String;", new int[] { 1, 3 });
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "beginLogging", "V", new int[] {  });
         mv.visitLabel(l1);
         mv.visitInsn(INSN_RETURN_VOID);
         mv.visitLabel(l2);

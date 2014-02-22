@@ -1,6 +1,6 @@
 package com.heisentest.splatter.transform.dex.visitor;
 
-import com.heisentest.splatter.HeisentestXmlLoggerClassWriter;
+import com.heisentest.splatter.HeisentestJsonLoggerClassWriter;
 import com.heisentest.splatter.LoggerClassWriter;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.ApplicationVisitor;
@@ -18,7 +18,7 @@ public class SplatterApplicationVisitor extends ApplicationVisitor {
         super(asmApiLevel, applicationWriter);
         this.applicationWriter = applicationWriter;
         this.applicationRootNamespace = applicationRootNamespace;
-        loggerClassWriter = new HeisentestXmlLoggerClassWriter();
+        loggerClassWriter = new HeisentestJsonLoggerClassWriter();
     }
 
     @Override
