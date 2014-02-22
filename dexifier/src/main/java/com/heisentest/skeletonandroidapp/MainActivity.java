@@ -7,29 +7,15 @@ import java.io.File;
 public class MainActivity extends Activity {
 
     public MainActivity() {
-        HeisentestLogger.log(this.toString(), "A string argument");
-        int[] someArray = new int[3];
-        aMethodWithArguments(someArray);
+        aStaticMethod();
+        anInstanceMethod();
     }
 
-    private void aMethodWithArguments(int[] anArray) {
-        HeisentestLogger.log(this.toString(), "aMethodWithArguments", anArray);
+    private static void aStaticMethod() {
+        HeisentestJsonLogger.log("method name", "class name", "a parameter");
     }
 
-    private void aMethodWithNoArguments() {
-        HeisentestLogger.log(this.toString(), "aMethodWithArguments");
+    private void anInstanceMethod() {
+        HeisentestJsonLogger.log("method name", this, "a parameter");
     }
-
-    public void startLogging() {
-//        File fileDirectory = getApplicationContext().getDir("heisentest", MODE_WORLD_READABLE);
-//        HeisentestXmlLogger.init(fileDirectory, method.getName());
-//        HeisentestXmlLogger.beginLogging();
-//        HeisentestXmlLogger.endLogging();
-    }
-
-//    private void aMethodWithNoBullshit() {
-//        HeisentestLogger.log("this class", "aMethodWithArguments", "an arg");
-//        aMethodWithArguments("some things");
-//        onCreate(null);
-//    }
 }

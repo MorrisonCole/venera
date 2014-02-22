@@ -108,21 +108,19 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
      * representations.
      */
     private void applyParameterCollectingInstrumentation(int thisRegister) {
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL_RANGE, "Ljava/lang/Object;", "toString", "Ljava/lang/String;", new int[] { thisRegister }); //TODO: should not always use range!!!
-        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0); // put 'this' into register 0
-        mv.visitStringInsn(INSN_CONST_STRING, 1, name); // put our method name into register 1
+        mv.visitStringInsn(INSN_CONST_STRING, 0, name); // put our method name into register 0
 
-        mv.visitVarInsn(INSN_CONST_4, 2, totalNumberParameters); // Set register 2 to a value representing our total number of parameters
-        mv.visitTypeInsn(INSN_NEW_ARRAY, 2, 0, 2, "[Ljava/lang/Object;"); // Initialize an Object[] at register 2 with size whatever value is at 2
+        mv.visitVarInsn(INSN_CONST_4, 1, totalNumberParameters); // Set register 1 to a value representing our total number of parameters
+        mv.visitTypeInsn(INSN_NEW_ARRAY, 1, 0, 1, "[Ljava/lang/Object;"); // Initialize an Object[] at register 1 with size whatever value is at 1
 
         int parametersStartRegister = totalRequiredRegisters - totalParameterRegisters;
         int currentParamNumber = 0;
         for (Map.Entry<Character, Integer> entry : parameterMap.entries()) {
             int currentParameterRegister = parametersStartRegister + entry.getValue();
 
-            mv.visitVarInsn(INSN_CONST_4, 3, currentParamNumber); // Set register 3 to a value of 0
+            mv.visitVarInsn(INSN_CONST_4, 2, currentParamNumber); // Set register 2 to a value of 0
             if (entry.getKey() == 'L' || entry.getKey() == '[') {
-                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, currentParameterRegister, 2, 3); // Put the value at the parameter register into the array at the current parameter index
+                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, currentParameterRegister, 1, 2); // Put the value at the parameter register into the array at the current parameter index
             } else {
                 // Convert our primitive param to an object.
                 Character argumentCharacter = entry.getKey();
@@ -154,12 +152,13 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
                     default:
                         logger.error(String.format("Unsupported primitive argument: %s", argumentCharacter));
                 }
-                mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4); // Put our int object in register 4
-                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 4, 2, 3); // Put the value at register 4 into the array at register 2 at index (value of register 3)
+                mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3); // Put our int object in register 3
+                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 3, 1, 2); // Put the value at register 3 into the array at register 1 at index (value of register 2)
             }
             currentParamNumber++;
         }
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "log", "VLjava/lang/String;Ljava/lang/String;[Ljava/lang/Object;", new int[] { 0, 1, 2 });
+
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "log", "VLjava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", new int[] { 0, thisRegister, 1 });
     }
 
     private char typeOfParameterAt(int parameterPosition) {
@@ -197,12 +196,12 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
 
     /**
      * Number of extra registers needed:
-     * - 2 (class name / method name)
+     * - 1 (method name)
      * - 2 (object array / array index)
      * - totalPrimitiveParams (object representation)
      */
     private void forceRequiredRegisters() {
-        additionalNeeded = 4 + totalNumberPrimitiveParameters;
+        additionalNeeded = 3 + totalNumberPrimitiveParameters;
         totalRequiredRegisters = maxStack + additionalNeeded;
         mv.visitMaxs(totalRequiredRegisters, maxLocals);
     }
