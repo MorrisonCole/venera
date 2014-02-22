@@ -34,9 +34,16 @@ dependencies {
     instrumentTestCompile files('libs/espresso-contrib-1.1-bundled.jar')
 }
 
+task pullResults(type: Exec) {
+    workingDir project.projectDir
+
+    commandLine 'scripts/pull-results.sh', "${project.projectDir}/scripts/results"
+}
+
 evaluationDependsOn(':splatter-instrumentation')
 
 afterEvaluate {
     installDebug.dependsOn project(':splatter-instrumentation').tasks.run
     connectedInstrumentTest.dependsOn project(':splatter-instrumentation').tasks.run
+    connectedInstrumentTest.finalizedBy pullResults
 }

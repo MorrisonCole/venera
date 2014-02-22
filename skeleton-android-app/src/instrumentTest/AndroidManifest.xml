@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.heisentest.skeletonandroidapp" >
 
-    <application>
-        <uses-library android:name="android.test.runner" />
+	<application>
+	    <uses-library android:name="android.test.runner" />
     </application>
 
     <instrumentation

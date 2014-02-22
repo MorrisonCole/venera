@@ -103,14 +103,7 @@ public class SplatterLoggingInitializationMethodVisitor extends MethodVisitor {
     }
 
     private void addHeisentestLoggerInitializationInstrumentation(int thisRegister) {
-        // TODO: the testcase class should *not* be hard coded!
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/test/acceptance/SkeletonInstrumentationTestCase;", "getInstrumentation", "Landroid/app/Instrumentation;", new int[] { thisRegister });
-        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Landroid/app/Instrumentation;", "getTargetContext", "Landroid/content/Context;", new int[] { 3 });
-        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
-        mv.visitStringInsn(INSN_CONST_STRING, 4, "heisentest");
-        mv.visitVarInsn(INSN_CONST_4, 5, 1);
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Landroid/content/Context;", "getDir", "Ljava/io/File;Ljava/lang/String;I", new int[] { 3, 4, 5 });
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/os/Environment;", "getExternalStorageDirectory", "Ljava/io/File;", new int[] {  });
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
         Label l0 = new Label();
         mv.visitLabel(l0);

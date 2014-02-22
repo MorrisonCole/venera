@@ -2,6 +2,7 @@ package com.heisentest.skeletonandroidapp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,7 +26,7 @@ public class AnInstrumentationTestCase<T extends Activity> extends ActivityInstr
     }
 
     public void startLogging() {
-        File fileDirectory = getInstrumentation().getTargetContext().getDir("heisentest", MODE_WORLD_READABLE);
+        File fileDirectory = Environment.getExternalStorageDirectory();
         try {
             Method method = getClass().getMethod(getName(), (Class[]) null);
             HeisentestXmlLogger.init(fileDirectory, method.getName());

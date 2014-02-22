@@ -1,8 +1,8 @@
 package com.heisentest.skeletonandroidapp;
 
+import android.os.Environment;
 import android.util.Log;
 import android.util.Xml;
-import com.example.android_source.R;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.*;
@@ -16,18 +16,27 @@ public final class HeisentestXmlLogger {
     private static XmlSerializer serializer;
     private static FileWriter fileWriter;
     private static StringWriter stringWriter;
-    private static File file;
+    private static File outputFile;
 
     public static void init(File fileDirectory, String methodName) {
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            Log.e(HEISENTEST_LOGGER_TAG, "MEDIA NOT MOUNTED!");
+        }
+
         serializer = Xml.newSerializer();
         try {
-            String filename = fileDirectory.getAbsolutePath() + DEFAULT_OUTPUT_LOCATION + methodName + ".xml";
-            file = new File(filename);
-            fileWriter = new FileWriter(file, false);
+            File outputDirectory = new File(fileDirectory + "/heisentest");
+            outputDirectory.mkdirs();
+
+            Log.d(HEISENTEST_LOGGER_TAG, String.format("Heisentest output directory: %s", outputDirectory.getAbsolutePath()));
+
+            outputFile = new File(outputDirectory, methodName + ".xml");
+
+            fileWriter = new FileWriter(outputFile, false);
             stringWriter = new StringWriter();
             serializer.setOutput(stringWriter);
         } catch (IOException e) {
-            Log.e(HEISENTEST_LOGGER_TAG, "Failed to create output file", e);
+            Log.e(HEISENTEST_LOGGER_TAG, "Failed to create output outputDirectory", e);
         }
     }
 
@@ -55,15 +64,15 @@ public final class HeisentestXmlLogger {
             fileWriter.close();
             Log.d(HEISENTEST_LOGGER_TAG, "Ended log.");
 
-            Log.d(HEISENTEST_LOGGER_TAG, String.format("Setting output file (at '%s') readable...", file.getAbsolutePath()));
-            boolean setReadable = file.setReadable(true, false);
+            Log.d(HEISENTEST_LOGGER_TAG, String.format("Setting output outputFile (at '%s') readable...", outputFile.getAbsolutePath()));
+            boolean setReadable = outputFile.setReadable(true, false);
             if (!setReadable) {
-                Log.e(HEISENTEST_LOGGER_TAG, "Failed to make output file readable!");
+                Log.e(HEISENTEST_LOGGER_TAG, "Failed to make output outputDirectory readable!");
             }
 
             // TODO: For debugging only. This could be massive!
-            Log.d(HEISENTEST_LOGGER_TAG, "Successfully made output file readable. Printing final output:");
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            Log.d(HEISENTEST_LOGGER_TAG, "Successfully made output outputDirectory readable. Printing final output:");
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(outputFile));
             String line = null;
             while ((line = bufferedReader.readLine()) != null) {
                 Log.i(HEISENTEST_LOGGER_TAG, line);
