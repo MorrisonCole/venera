@@ -1,8 +1,11 @@
 package com.heisentest.skeletonandroidapp;
 
 import android.os.Environment;
-import android.util.JsonWriter;
 import android.util.Log;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.stream.JsonWriter;
+import org.json.JSONObject;
 
 import java.io.*;
 
@@ -14,6 +17,7 @@ public final class HeisentestJsonLogger {
     private static File outputFile;
     private static JsonWriter jsonWriter;
     private static boolean currentlyLogging = false;
+    private static final Gson gson = new Gson();
 
     public static void init(File fileDirectory, String methodName) {
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -87,20 +91,26 @@ public final class HeisentestJsonLogger {
             jsonWriter.name("class").value(calleeClass);
 
             jsonWriter.name("method").value(calleeMethodName);
-            jsonWriter.name("parameters");
             if (parameters.length > 0) {
+                jsonWriter.name("parameters");
                 jsonWriter.beginArray();
                 for (Object parameter : parameters) {
                     if (parameter != null) {
-                        jsonWriter.value(parameter.toString());
+                        try {
+                            JsonElement element = gson.toJsonTree(parameter);
+                            gson.toJson(element, jsonWriter);
+                        }
+                        catch (Throwable e) {
+                            String jsonParameter = parameter.toString();
+                            Log.d(HEISENTEST_LOGGER_TAG, String.format("Failed to convert parameter '%s' to JSON at method %s", jsonParameter, calleeMethodName), e);
+                            jsonWriter.value(jsonParameter);
+                        }
                     }
                     else {
                         jsonWriter.nullValue();
                     }
                 }
                 jsonWriter.endArray();
-            } else {
-                jsonWriter.nullValue(); // TODO: remove this if unnecessary.
             }
 
             jsonWriter.endObject();

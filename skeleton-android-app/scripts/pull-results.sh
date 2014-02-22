@@ -15,3 +15,5 @@ correctedOutputDir=$(echo ${outputDir/$badPart/$goodPart} | tr -d '\r')
 echo "Pulling results from '$correctedOutputDir' to '$1'"
 
 adb pull $correctedOutputDir $1
+
+adb shell rm -r $correctedOutputDir

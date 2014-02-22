@@ -26,6 +26,10 @@ android {
     }
 }
 
+dependencies {
+    compile 'com.google.code.gson:gson:2.2.4'
+}
+
 task dexify(type: Exec, dependsOn: 'build') {
     workingDir project.projectDir
 

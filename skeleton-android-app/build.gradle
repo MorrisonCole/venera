@@ -30,8 +30,16 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
+    compile 'com.google.code.gson:gson:2.2.4'
 
     instrumentTestCompile files('libs/espresso-contrib-1.1-bundled.jar')
+}
+
+task removeStaleResults(type: Delete) {
+    FileTree tree = fileTree (dir: "${project.projectDir}/scripts/results");
+    tree.each { File file ->
+        delete(file)
+    }
 }
 
 task pullResults(type: Exec) {
@@ -45,5 +53,6 @@ evaluationDependsOn(':splatter-instrumentation')
 afterEvaluate {
     installDebug.dependsOn project(':splatter-instrumentation').tasks.run
     connectedInstrumentTest.dependsOn project(':splatter-instrumentation').tasks.run
+    connectedInstrumentTest.dependsOn removeStaleResults
     connectedInstrumentTest.finalizedBy pullResults
 }

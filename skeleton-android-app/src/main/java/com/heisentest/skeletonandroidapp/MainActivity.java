@@ -45,6 +45,12 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        aMethodWithSerializableParameters("A string", 42, new int[] {1, 2, 3, 4, 5});
+    }
+
+    private void aMethodWithSerializableParameters(String s, int i, int[] ints) {
+        // Do nothing.
     }
 
     @Override
