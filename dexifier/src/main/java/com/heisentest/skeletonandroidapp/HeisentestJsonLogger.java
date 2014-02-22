@@ -150,22 +150,24 @@ public final class HeisentestJsonLogger {
                 jsonWriter.name("fields");
                 jsonWriter.beginArray();
                 for (Field field : fields) {
-                    jsonWriter.beginObject();
                     if (field != null) {
+                        jsonWriter.beginObject();
+
+                        // TODO: This can be done after the tests have run. Needless overhead.
+                        jsonWriter.name(field.toString().substring(field.toString().lastIndexOf('.') + 1));
                         field.setAccessible(true);
                         try {
                             Object fieldObject = field.get(callee);
                             if (fieldObject != null) {
-                                jsonWriter.name(field.toString());
                                 writeSerializedObjectWithFallback(fieldObject, fieldObject.toString());
+                            } else {
+                                jsonWriter.nullValue();
                             }
                         } catch (IllegalAccessException e) {
                             Log.d(HEISENTEST_LOGGER_TAG, String.format("Field '%s' could not be accessed", field.toString()), e);
                         }
-                    } else {
-                        jsonWriter.nullValue();
+                        jsonWriter.endObject();
                     }
-                    jsonWriter.endObject();
                 }
                 jsonWriter.endArray();
             }
