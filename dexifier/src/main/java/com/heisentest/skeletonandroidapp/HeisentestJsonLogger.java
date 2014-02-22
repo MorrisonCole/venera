@@ -150,11 +150,13 @@ public final class HeisentestJsonLogger {
                 jsonWriter.name("fields");
                 jsonWriter.beginArray();
                 for (Field field : fields) {
+                    jsonWriter.beginObject();
                     if (field != null) {
                         field.setAccessible(true);
                         try {
                             Object fieldObject = field.get(callee);
                             if (fieldObject != null) {
+                                jsonWriter.name(field.toString());
                                 writeSerializedObjectWithFallback(fieldObject, fieldObject.toString());
                             }
                         } catch (IllegalAccessException e) {
@@ -163,6 +165,7 @@ public final class HeisentestJsonLogger {
                     } else {
                         jsonWriter.nullValue();
                     }
+                    jsonWriter.endObject();
                 }
                 jsonWriter.endArray();
             }

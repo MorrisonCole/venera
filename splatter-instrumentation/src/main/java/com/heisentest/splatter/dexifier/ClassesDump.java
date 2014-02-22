@@ -12824,6 +12824,8 @@ public static void dumpHeisentestJsonLogger(ApplicationWriter aw) {
 		Label l11 = new Label();
 		mv.visitJumpInsn(INSN_IF_GE, l11, 5, 6);
 		mv.visitArrayOperationInsn(INSN_AGET_OBJECT, 2, 0, 5);
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "beginObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 8 });
 		Label l12 = new Label();
 		mv.visitJumpInsn(INSN_IF_EQZ, l12, 2, 0);
 		mv.visitVarInsn(INSN_CONST_4, 8, 1);
@@ -12836,18 +12838,22 @@ public static void dumpHeisentestJsonLogger(ApplicationWriter aw) {
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Field;", "get", "Ljava/lang/Object;Ljava/lang/Object;", new int[] { 2, 14 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
 		mv.visitJumpInsn(INSN_IF_EQZ, l13, 3, 0);
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Field;", "toString", "Ljava/lang/String;", new int[] { 2 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 9);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 8, 9 });
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "toString", "Ljava/lang/String;", new int[] { 3 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 8);
 		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "writeSerializedObjectWithFallback", "VLjava/lang/Object;Ljava/lang/String;", new int[] { 3, 8 });
 		mv.visitLabel(l13);
+		Label l15 = new Label();
+		mv.visitTryCatchBlock(l13, l15, l3, "Ljava/io/IOException;");
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "endObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 8 });
 		mv.visitOperationInsn(INSN_ADD_INT_LIT8, 5, 5, 0, 1);
 		mv.visitJumpInsn(INSN_GOTO, l10, 0, 0);
 		mv.visitLabel(l14);
 		mv.visitIntInsn(INSN_MOVE_EXCEPTION, 1);
-		Label l15 = new Label();
-		mv.visitLabel(l15);
-		Label l16 = new Label();
-		mv.visitTryCatchBlock(l15, l16, l3, "Ljava/io/IOException;");
 		mv.visitStringInsn(INSN_CONST_STRING, 8, "HeisentestLogger");
 		mv.visitStringInsn(INSN_CONST_STRING, 9, "Field '%s' could not be accessed");
 		mv.visitVarInsn(INSN_CONST_4, 10, 1);
@@ -12882,7 +12888,7 @@ public static void dumpHeisentestJsonLogger(ApplicationWriter aw) {
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 8);
 		mv.visitVarInsn(INSN_CONST_4, 9, 0);
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/StringBuffer;", "setLength", "VI", new int[] { 8, 9 });
-		mv.visitLabel(l16);
+		mv.visitLabel(l15);
 		mv.visitJumpInsn(INSN_GOTO_16, l1, 0, 0);
 		mv.visitEnd();
 	}
