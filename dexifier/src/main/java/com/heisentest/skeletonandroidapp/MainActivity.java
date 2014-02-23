@@ -16,6 +16,7 @@ public class MainActivity extends Activity {
     }
 
     private void anInstanceMethod() {
-        HeisentestJsonLogger.log("method name", this, "a parameter");
+        String[] parameterNames = new String[] { "string 1", "string 2" };
+        HeisentestJsonLogger.log("method name", parameterNames, this, "a parameter");
     }
 }

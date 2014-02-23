@@ -122,7 +122,7 @@ public final class HeisentestJsonLogger {
     /**
      * Logs an instance method call.
      */
-    public static void log(String calleeMethodName, Object callee, Object... parameters) {
+    public static void log(String calleeMethodName, String[] parameterNames, Object callee, Object... parameters) {
         if (!currentlyLogging) {
             return;
         }
@@ -135,13 +135,19 @@ public final class HeisentestJsonLogger {
             if (parameters.length > 0) {
                 jsonWriter.name("parameters");
                 jsonWriter.beginArray();
-                for (Object parameter : parameters) {
+                for (int i = 0; i < parameters.length; i++) {
+                    jsonWriter.beginObject();
+                    jsonWriter.name(parameterNames[i]);
+
+                    Object parameter = parameters[i];
                     if (parameter != null) {
                         writeSerializedObjectWithFallback(parameter, parameter.toString());
                     }
                     else {
                         jsonWriter.nullValue();
                     }
+
+                    jsonWriter.endObject();
                 }
                 jsonWriter.endArray();
             }
@@ -188,7 +194,7 @@ public final class HeisentestJsonLogger {
             gson.toJson(element, jsonWriter);
         }
         catch (Throwable e) {
-            Log.d(HEISENTEST_LOGGER_TAG, String.format("Failed to convert object '%s' to JSON", fallbackRepresentation), e);
+            Log.d(HEISENTEST_LOGGER_TAG, String.format("Failed to convert object '%s' to JSON", fallbackRepresentation));
             jsonWriter.value(fallbackRepresentation);
         }
     }

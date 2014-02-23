@@ -4,7 +4,9 @@ import com.google.common.collect.ArrayListMultimap;
 import com.heisentest.splatter.Descriptors;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.MethodVisitor;
+import org.ow2.asmdex.structureWriter.Method;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -108,19 +110,45 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
      * representations.
      */
     private void applyParameterCollectingInstrumentation(int thisRegister) {
-        mv.visitStringInsn(INSN_CONST_STRING, 0, name); // put our method name into register 0
+        String[] parameters = null;
+        try {
+            Field method = mv.getClass().getDeclaredField("method");
+            method.setAccessible(true);
+            Method methodObject = (Method) method.get(mv);
+            parameters = methodObject.getParameters();
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            logger.debug(e);
+        }
 
+        mv.visitVarInsn(INSN_CONST_4, 4, 0); // Set register 4 (our array index) to a value of 0
         mv.visitVarInsn(INSN_CONST_4, 1, totalNumberParameters); // Set register 1 to a value representing our total number of parameters
-        mv.visitTypeInsn(INSN_NEW_ARRAY, 1, 0, 1, "[Ljava/lang/Object;"); // Initialize an Object[] at register 1 with size whatever value is at 1
+        mv.visitTypeInsn(INSN_NEW_ARRAY, 0, 0, 1, "[Ljava/lang/String;"); // Initialize a String[] at register 0 with size whatever value is at 1
+
+        int currentParamNumber = 0;
+        if (parameters != null) {
+            for (String parameterName : parameters) {
+                mv.visitVarInsn(INSN_CONST_4, 4, currentParamNumber); // Set our index register to the current parameter number
+
+                mv.visitStringInsn(INSN_CONST_STRING, 1, parameterName);
+                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 1, 0, 4); // Put the value at register 1 into the array at register 0 at index value[4]
+                currentParamNumber++;
+            }
+        }
+
+
+        mv.visitStringInsn(INSN_CONST_STRING, 1, name); // put our method name into register 1
+
+        mv.visitVarInsn(INSN_CONST_4, 2, totalNumberParameters); // Set register 2 to a value representing our total number of parameters
+        mv.visitTypeInsn(INSN_NEW_ARRAY, 2, 0, 2, "[Ljava/lang/Object;"); // Initialize an Object[] at register 2 with size whatever value is at 2
 
         int parametersStartRegister = totalRequiredRegisters - totalParameterRegisters;
-        int currentParamNumber = 0;
+        currentParamNumber = 0;
         for (Map.Entry<Character, Integer> entry : parameterMap.entries()) {
             int currentParameterRegister = parametersStartRegister + entry.getValue();
 
-            mv.visitVarInsn(INSN_CONST_4, 2, currentParamNumber); // Set register 2 to a value of 0
+            mv.visitVarInsn(INSN_CONST_4, 3, currentParamNumber); // Set register 3 to a value of 0
             if (entry.getKey() == 'L' || entry.getKey() == '[') {
-                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, currentParameterRegister, 1, 2); // Put the value at the parameter register into the array at the current parameter index
+                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, currentParameterRegister, 2, 3); // Put the value at the currentParameterRegister into the array at register 2 at the current parameter index (value[3])
             } else {
                 // Convert our primitive param to an object.
                 Character argumentCharacter = entry.getKey();
@@ -152,13 +180,13 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
                     default:
                         logger.error(String.format("Unsupported primitive argument: %s", argumentCharacter));
                 }
-                mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3); // Put our int object in register 3
-                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 3, 1, 2); // Put the value at register 3 into the array at register 1 at index (value of register 2)
+                mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4); // Put our int object in register 4
+                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 4, 2, 3); // Put the value at register 4 into the array at register 2 at index (value of register 3)
             }
             currentParamNumber++;
         }
 
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "log", "VLjava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", new int[] { 0, thisRegister, 1 });
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "log", "VLjava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", new int[] { 1, 0, thisRegister, 2 });
     }
 
     private char typeOfParameterAt(int parameterPosition) {
@@ -201,7 +229,7 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
      * - totalPrimitiveParams (object representation)
      */
     private void forceRequiredRegisters() {
-        additionalNeeded = 3 + totalNumberPrimitiveParameters;
+        additionalNeeded = 5 + totalNumberPrimitiveParameters;
         totalRequiredRegisters = maxStack + additionalNeeded;
         mv.visitMaxs(totalRequiredRegisters, maxLocals);
     }
