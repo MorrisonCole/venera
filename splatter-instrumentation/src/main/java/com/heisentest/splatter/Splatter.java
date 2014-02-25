@@ -9,19 +9,32 @@ import java.io.IOException;
 public class Splatter {
 
     private static final Logger logger = Logger.getLogger(Splatter.class);
-    public static final String TEST_APK_LOCATION_SKELETON = "/home/morrison/code/ucl/heisentest/splatter/skeleton-android-app/build/apk/skeleton-android-app-debug-test-unaligned.apk";
-    public static final String APK_LOCATION_SKELETON = "/home/morrison/code/ucl/heisentest/splatter/skeleton-android-app/build/apk/skeleton-android-app-debug-unaligned.apk";
+
+    // TODO: These namespaces should not be hardcoded.
     public static final String HEISENTEST_SKELETON_APP_NAMESPACE = "Lcom/heisentest/skeletonandroidapp/";
     public static final String HEISENTEST_SKELETON_APP_TEST_NAMESPACE = "Lcom/heisentest/skeletonandroidapp/test/";
-    public static final String TEST_APK_LOCATION_SHAZAM = "/home/morrison/code/shazam/android/android_shazam/shazam-android/target/shazam-android-free-debug.apk";
     public static final String SHAZAM_ANDROID_NAMESPACE = "Lcom/shazam/android/";
-    private static final int ASM_API_LEVEL = Opcodes.ASM4;
 
+    private static final int ASM_API_LEVEL = Opcodes.ASM4;
+    private static String applicationApkPath;
+    private static String applicationTestApkPath;
+
+    /**
+     * Expected args: path to application apk, path to test apk.
+     */
     public static void main(String args[]) {
         logger.debug("Starting up Splatter!");
 
-        instrumentApk(APK_LOCATION_SKELETON, HEISENTEST_SKELETON_APP_NAMESPACE);
-        instrumentApk(TEST_APK_LOCATION_SKELETON, HEISENTEST_SKELETON_APP_TEST_NAMESPACE);
+        if (args.length == 2) {
+            applicationApkPath = args[0];
+            logger.debug(String.format("Using application APK path '%s'", applicationApkPath));
+
+            applicationTestApkPath = args[1];
+            logger.debug(String.format("Using application test APK path '%s'", applicationTestApkPath));
+        }
+
+        instrumentApk(applicationApkPath, HEISENTEST_SKELETON_APP_NAMESPACE);
+        instrumentApk(applicationTestApkPath, HEISENTEST_SKELETON_APP_TEST_NAMESPACE);
     }
 
     private static void instrumentApk(String testApkLocation, String appNamespace) {

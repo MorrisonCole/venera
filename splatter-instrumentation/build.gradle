@@ -30,4 +30,12 @@ task dumpDex(type: Exec) {
     }
 }
 
+run {
+    if ( project.hasProperty('args') ) {
+        args project.args.split('\\s+')
+    } else {
+        args "${project(':skeleton-android-app').buildDir}/apk/skeleton-android-app-debug-unaligned.apk", "${project(':skeleton-android-app').buildDir}/apk/skeleton-android-app-debug-test-unaligned.apk"
+    }
+}
+
 run.finalizedBy dumpDex
