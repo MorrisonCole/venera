@@ -1,4 +1,4 @@
-package com.heisentest.splatter;
+package com.heisentest.splatter.classwriters;
 
 import org.ow2.asmdex.ApplicationWriter;
 

@@ -29,8 +29,9 @@ public class AnInstrumentationTestCase<T extends Activity> extends ActivityInstr
         File fileDirectory = Environment.getExternalStorageDirectory();
         try {
             Method method = getClass().getMethod(getName(), (Class[]) null);
-            HeisentestXmlLogger.init(fileDirectory, method.getName());
-            HeisentestXmlLogger.beginLogging();
+            HeisentestJsonLogger heisentestJsonLogger = new HeisentestJsonLogger(fileDirectory, method.getName());
+            final Thread logThread = new Thread(heisentestJsonLogger);
+            logThread.start();
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }

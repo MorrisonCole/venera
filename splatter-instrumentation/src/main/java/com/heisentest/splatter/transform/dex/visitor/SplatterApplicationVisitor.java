@@ -1,7 +1,7 @@
 package com.heisentest.splatter.transform.dex.visitor;
 
-import com.heisentest.splatter.HeisentestJsonLoggerClassWriter;
-import com.heisentest.splatter.LoggerClassWriter;
+import com.heisentest.splatter.classwriters.HeisentestJsonLoggerClassWriter;
+import com.heisentest.splatter.classwriters.LoggerClassWriter;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.ApplicationVisitor;
 import org.ow2.asmdex.ApplicationWriter;

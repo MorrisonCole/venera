@@ -111,17 +111,20 @@ public class SplatterLoggingInitializationMethodVisitor extends MethodVisitor {
         Label l2 = new Label();
         mv.visitTryCatchBlock(l0, l1, l2, "Ljava/lang/NoSuchMethodException;");
         mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "getClass", "Ljava/lang/Class;", new int[] { thisRegister });
-        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4);
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 6);
         mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/test/acceptance/SkeletonInstrumentationTestCase;", "getName", "Ljava/lang/String;", new int[] { thisRegister });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 7);
+        mv.visitVarInsn(INSN_CONST_4, 5, 0);
+        mv.visitTypeInsn(INSN_CHECK_CAST, 0, 5, 0, "[Ljava/lang/Class;");
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "getMethod", "Ljava/lang/reflect/Method;Ljava/lang/String;[Ljava/lang/Class;", new int[] { 6, 7, 5 });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4);
+        mv.visitTypeInsn(INSN_NEW_INSTANCE, 2, 0, 0, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;");
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Method;", "getName", "Ljava/lang/String;", new int[] { 4 });
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 5);
-        mv.visitVarInsn(INSN_CONST_4, 3, 0);
-        mv.visitTypeInsn(INSN_CHECK_CAST, 0, 3, 0, "[Ljava/lang/Class;");
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "getMethod", "Ljava/lang/reflect/Method;Ljava/lang/String;[Ljava/lang/Class;", new int[] { 4, 5, 3 });
-        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 2);
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Method;", "getName", "Ljava/lang/String;", new int[] { 2 });
-        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "init", "VLjava/io/File;Ljava/lang/String;", new int[] { 1, 3 });
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "beginLogging", "V", new int[] {  });
+        mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "<init>", "VLjava/io/File;Ljava/lang/String;", new int[] { 2, 1, 5 });
+        mv.visitTypeInsn(INSN_NEW_INSTANCE, 3, 0, 0, "Ljava/lang/Thread;");
+        mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Thread;", "<init>", "VLjava/lang/Runnable;", new int[] { 3, 2 });
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Thread;", "start", "V", new int[] { 3 });
         mv.visitLabel(l1);
         mv.visitInsn(INSN_RETURN_VOID);
         mv.visitLabel(l2);
@@ -135,7 +138,7 @@ public class SplatterLoggingInitializationMethodVisitor extends MethodVisitor {
      * - 4
      */
     private void forceRequiredRegisters() {
-        additionalNeeded = 5;
+        additionalNeeded = 7;
         totalRequiredRegisters = maxStack + additionalNeeded;
         mv.visitMaxs(totalRequiredRegisters, maxLocals);
     }

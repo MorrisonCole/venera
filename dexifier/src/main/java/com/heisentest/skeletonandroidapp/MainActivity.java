@@ -7,8 +7,15 @@ import java.io.File;
 public class MainActivity extends Activity {
 
     public MainActivity() {
+        aMethodThatInstantiatesOurLogger();
         aStaticMethod();
         anInstanceMethod();
+    }
+
+    private void aMethodThatInstantiatesOurLogger() {
+        HeisentestJsonLogger heisentestJsonLogger = new HeisentestJsonLogger(new File("path"), "method_name");
+        final Thread logThread = new Thread(heisentestJsonLogger);
+        logThread.start();
     }
 
     private static void aStaticMethod() {

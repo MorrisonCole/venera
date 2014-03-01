@@ -1,10 +1,7 @@
-package com.heisentest.splatter;
+package com.heisentest.splatter.classwriters;
 
 import com.heisentest.splatter.dexifier.ClassesDump;
-import org.ow2.asmdex.*;
-import org.ow2.asmdex.structureCommon.Label;
-
-import static org.ow2.asmdex.Opcodes.*;
+import org.ow2.asmdex.ApplicationWriter;
 
 public class HeisentestXmlLoggerClassWriter implements LoggerClassWriter {
 

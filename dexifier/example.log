@@ -1,4 +1,0 @@
-DEBUG main com.heisentest.asmdexifier.Main - java.io.FileNotFoundException: ./debug/classes.dex (No such file or directory)
-DEBUG main com.heisentest.asmdexifier.Main - java.io.FileNotFoundException: ./debug/classes.dex (No such file or directory)
-DEBUG main com.heisentest.asmdexifier.Main - java.io.FileNotFoundException: /home/morrison/code/ucl/heisentest/splatter/android/build/debug/classes.dex (No such file or directory)
-DEBUG main com.heisentest.asmdexifier.Main - java.io.FileNotFoundException: /home/morrison/code/ucl/heisentest/splatter/android/build/apk/debug/classes.dex (No such file or directory)
