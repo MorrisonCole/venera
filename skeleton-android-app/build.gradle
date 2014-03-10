@@ -45,7 +45,7 @@ task removeStaleResults(type: Delete) {
 task pullResults(type: Exec) {
     workingDir project.projectDir
 
-    commandLine 'scripts/pull-results.sh', "${project.projectDir}/scripts/results"
+    commandLine 'scripts/pull-results.sh', "${project.buildDir}/instrumentTest-results/connected"
 }
 
 evaluationDependsOn(':splatter-instrumentation')

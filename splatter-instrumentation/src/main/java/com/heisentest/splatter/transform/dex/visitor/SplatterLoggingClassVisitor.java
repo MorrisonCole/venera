@@ -8,6 +8,9 @@ import org.ow2.asmdex.Opcodes;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static org.ow2.asmdex.Opcodes.ACC_PRIVATE;
+import static org.ow2.asmdex.Opcodes.ACC_STATIC;
+
 public class SplatterLoggingClassVisitor extends ClassVisitor {
 
     private final Logger logger = Logger.getLogger(SplatterLoggingClassVisitor.class);
@@ -16,6 +19,10 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
     public SplatterLoggingClassVisitor(int asmApiLevel, ClassVisitor classVisitor, String className) {
         super(asmApiLevel, classVisitor);
         this.className = className;
+
+        if (isTestCaseClass()) {
+            cv.visitField(ACC_PRIVATE + ACC_STATIC, "logThread", "Ljava/lang/Thread;", null, null);
+        }
     }
 
     @Override
@@ -48,22 +55,34 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
             }
         }
 
-        if (className.contains("SkeletonInstrumentationTestCase") && name.equals("setUp")) {
+        if (isSetUpMethod(name)) {
             // TODO: MainActivity / onCreate should be in some config ('entry point class / method').
             logger.debug(String.format("Adding HeisentestLogger initialization to method (name: '%s') (desc: '%s') (class: '%s')", name, desc, className));
             return new SplatterLoggingInitializationMethodVisitor(api, methodVisitor, desc);
-        } else if (className.contains("SkeletonInstrumentationTestCase") && name.equals("tearDown")) {
+        } else if (isTearDownMethod(name)) {
             // TODO: As above, this should not be hardcoded.
             logger.debug(String.format("Adding HeisentestLogger cleanup to method (name: '%s') (desc: '%s') (class: '%s')", name, desc, className));
-            return new SplatterLoggingCleanupMethodVisitor(api, methodVisitor);
+            return new SplatterLoggingCleanupMethodVisitor(api, methodVisitor, desc);
         } else if (instrument && (access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter)) {
             logger.debug(String.format("Adding HeisentestLogger to method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
-            boolean isStatic = (access & Opcodes.ACC_STATIC) > 0;
+            boolean isStatic = (access & ACC_STATIC) > 0;
             return new SplatterLoggingMethodVisitor(api, methodVisitor, desc, name, className, isStatic);
         } else if ((access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter)) {
             logger.debug(String.format("SKIPPING method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
         }
 
         return new SplatterMethodVisitor(api, methodVisitor);
+    }
+
+    private boolean isTearDownMethod(String name) {
+        return isTestCaseClass() && name.equals("tearDown");
+    }
+
+    private boolean isSetUpMethod(String name) {
+        return isTestCaseClass() && name.equals("setUp");
+    }
+
+    private boolean isTestCaseClass() {
+        return className.contains("SkeletonInstrumentationTestCase");
     }
 }

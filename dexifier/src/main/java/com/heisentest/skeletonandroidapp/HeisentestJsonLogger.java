@@ -11,6 +11,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 public final class HeisentestJsonLogger implements Runnable {
 
@@ -67,6 +68,11 @@ public final class HeisentestJsonLogger implements Runnable {
      * Logs an instance method call.
      */
     public static void log(String calleeMethodName, String[] parameterNames, Object callee, Object... parameters) {
+        if (!currentlyLogging) {
+            Log.d(HEISENTEST_LOGGER_TAG, "Requested log instance event but finished logging");
+            return;
+        }
+
         Log.d(HEISENTEST_LOGGER_TAG, "Logging instance event");
 
         queueLogEvent(new LogEvent(calleeMethodName, parameterNames, callee, parameters));
@@ -95,7 +101,10 @@ public final class HeisentestJsonLogger implements Runnable {
 
         while (currentlyLogging) {
             try {
-                flush(blockingQueue.take());
+                final LogEvent logEvent = blockingQueue.poll(1, TimeUnit.MILLISECONDS);
+                if (logEvent != null) {
+                    flush(logEvent);
+                }
             } catch (InterruptedException e) {
                 Log.d(HEISENTEST_LOGGER_TAG, "Interrupted while retrieving event from queue", e);
             }

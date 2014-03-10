@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -13,6 +14,8 @@ import java.lang.reflect.Method;
 import static android.content.Context.MODE_WORLD_READABLE;
 
 public class AnInstrumentationTestCase<T extends Activity> extends ActivityInstrumentationTestCase2<T> {
+
+    private static Thread logThread;
 
     public AnInstrumentationTestCase(Class<T> activityClass) {
         super(activityClass);
@@ -30,7 +33,7 @@ public class AnInstrumentationTestCase<T extends Activity> extends ActivityInstr
         try {
             Method method = getClass().getMethod(getName(), (Class[]) null);
             HeisentestJsonLogger heisentestJsonLogger = new HeisentestJsonLogger(fileDirectory, method.getName());
-            final Thread logThread = new Thread(heisentestJsonLogger);
+            logThread = new Thread(heisentestJsonLogger);
             logThread.start();
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
@@ -39,6 +42,14 @@ public class AnInstrumentationTestCase<T extends Activity> extends ActivityInstr
 
     @Override
     public void tearDown() throws Exception {
+        HeisentestJsonLogger.endLogging();
+
+        try {
+            logThread.join();
+        } catch (InterruptedException e) {
+            Log.e("HeisentestLogger", "Failed to complete logging", e);
+        }
+
         super.tearDown();
     }
 }

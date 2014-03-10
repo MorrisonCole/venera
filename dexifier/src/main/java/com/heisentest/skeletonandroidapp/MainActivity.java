@@ -1,6 +1,7 @@
 package com.heisentest.skeletonandroidapp;
 
 import android.app.Activity;
+import android.util.Log;
 
 import java.io.File;
 
