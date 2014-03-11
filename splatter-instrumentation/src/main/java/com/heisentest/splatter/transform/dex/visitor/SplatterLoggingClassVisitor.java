@@ -55,18 +55,18 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
             }
         }
 
+        boolean isStatic = (access & ACC_STATIC) > 0;
         if (isSetUpMethod(name)) {
             // TODO: MainActivity / onCreate should be in some config ('entry point class / method').
             logger.debug(String.format("Adding HeisentestLogger initialization to method (name: '%s') (desc: '%s') (class: '%s')", name, desc, className));
-            return new SplatterLoggingInitializationMethodVisitor(api, methodVisitor, desc);
+            return new SplatterLoggingInitializationMethodVisitor(api, methodVisitor, desc, isStatic);
         } else if (isTearDownMethod(name)) {
             // TODO: As above, this should not be hardcoded.
             logger.debug(String.format("Adding HeisentestLogger cleanup to method (name: '%s') (desc: '%s') (class: '%s')", name, desc, className));
-            return new SplatterLoggingCleanupMethodVisitor(api, methodVisitor, desc);
+            return new SplatterLoggingCleanupMethodVisitor(api, methodVisitor, desc, isStatic);
         } else if (instrument && (access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter)) {
             logger.debug(String.format("Adding HeisentestLogger to method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
-            boolean isStatic = (access & ACC_STATIC) > 0;
-            return new SplatterLoggingMethodVisitor(api, methodVisitor, desc, name, className, isStatic);
+            return new SplatterLoggingMethodVisitor(api, methodVisitor, desc, name, isStatic);
         } else if ((access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter)) {
             logger.debug(String.format("SKIPPING method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
         }

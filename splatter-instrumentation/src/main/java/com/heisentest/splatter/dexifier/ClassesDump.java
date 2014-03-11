@@ -13067,9 +13067,6 @@ public static void dumpHeisentestJsonLogger(ApplicationWriter aw) {
 		Label l3 = new Label();
 		Label l4 = new Label();
 		mv.visitTryCatchBlock(l2, l3, l4, "Ljava/lang/InterruptedException;");
-		mv.visitStringInsn(INSN_CONST_STRING, 2, "HeisentestLogger");
-		mv.visitStringInsn(INSN_CONST_STRING, 3, "flushing queue...");
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;", new int[] { 2, 3 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "blockingQueue", "Ljava/util/concurrent/BlockingQueue;", 2, 0);
 		mv.visitVarInsn(INSN_CONST_WIDE_16, 3, 1);
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Ljava/util/concurrent/TimeUnit;", "MILLISECONDS", "Ljava/util/concurrent/TimeUnit;", 5, 0);

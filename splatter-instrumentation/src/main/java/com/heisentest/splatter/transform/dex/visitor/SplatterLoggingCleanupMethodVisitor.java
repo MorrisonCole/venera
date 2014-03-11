@@ -2,7 +2,6 @@ package com.heisentest.splatter.transform.dex.visitor;
 
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.MethodVisitor;
-import org.ow2.asmdex.Opcodes;
 import org.ow2.asmdex.structureCommon.Label;
 
 import static org.ow2.asmdex.Opcodes.*;
@@ -11,8 +10,8 @@ public class SplatterLoggingCleanupMethodVisitor extends SplatterRegisterAllocat
 
     private final Logger logger = Logger.getLogger(SplatterLoggingCleanupMethodVisitor.class);
 
-    public SplatterLoggingCleanupMethodVisitor(int api, MethodVisitor methodVisitor, String desc) {
-        super(api, methodVisitor, desc);
+    public SplatterLoggingCleanupMethodVisitor(int api, MethodVisitor methodVisitor, String desc, boolean isStatic) {
+        super(api, methodVisitor, desc, isStatic);
     }
 
     @Override

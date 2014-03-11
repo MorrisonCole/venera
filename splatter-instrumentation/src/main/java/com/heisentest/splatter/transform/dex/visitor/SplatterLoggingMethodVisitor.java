@@ -1,107 +1,38 @@
 package com.heisentest.splatter.transform.dex.visitor;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.heisentest.splatter.Descriptors;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.MethodVisitor;
 import org.ow2.asmdex.structureWriter.Method;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.ow2.asmdex.Opcodes.*;
 
-public class SplatterLoggingMethodVisitor extends MethodVisitor {
+public class SplatterLoggingMethodVisitor extends SplatterRegisterAllocatingMethodVisitor {
 
     private final Logger logger = Logger.getLogger(SplatterLoggingMethodVisitor.class);
-    private final String desc;
     private final String name;
-    /**
-     * This can be larger than the actual number of parameters, because some values are 32 bit,
-     * so require more than 1 register.
-      */
-    private final int totalParameterRegisters;
-    private final ArrayListMultimap<Character, Integer> parameterMap;
-    private final int totalNumberPrimitiveParameters;
-    private int maxStack;
-    private int maxLocals;
-    private int additionalNeeded;
-    private int totalRequiredRegisters;
     private boolean isStatic;
-    private String className;
-    private int totalNumberParameters;
 
-    public SplatterLoggingMethodVisitor(int api, MethodVisitor methodVisitor, String desc, String methodName, String className, boolean isStatic) {
-        super(api, methodVisitor);
-        this.desc = desc;
+    public SplatterLoggingMethodVisitor(int api, MethodVisitor methodVisitor, String desc, String methodName, boolean isStatic) {
+        super(api, methodVisitor, desc, isStatic);
         this.name = methodName;
-        this.className = className;
         this.isStatic = isStatic;
-        this.totalParameterRegisters = Descriptors.numParamRegisters(desc);
-        totalNumberParameters = Descriptors.numParams(desc);
-        totalNumberPrimitiveParameters = Descriptors.numPrimitiveParams(desc);
-        parameterMap = Descriptors.mappedParams(desc);
     }
 
     @Override
-    public void visitMaxs(int maxStack, int maxLocals) {
-        this.maxStack = maxStack;
-        this.maxLocals = maxLocals;
+    protected int requiredExtraRegisters() {
+        return 5;
+    }
 
-        forceRequiredRegisters();
-
+    @Override
+    protected void addInstrumentation() {
         if (isStatic) {
 //            applyStaticInstrumentation(register1, register2);
         } else {
-            applyParameterCollectingInstrumentation(totalRequiredRegisters - totalParameterRegisters - 1);
+            applyParameterCollectingInstrumentation(thisRegister());
         }
-
-        int sourceRegister = totalRequiredRegisters - totalParameterRegisters - 1;
-        int destinationRegister = totalRequiredRegisters - totalParameterRegisters - 1 - additionalNeeded;
-
-        int parameterNumber = 1;
-        while (sourceRegister <= totalRequiredRegisters - 1) {
-            if (sourceRegister == totalRequiredRegisters - totalParameterRegisters - 1) {
-                if (!isStatic) {
-                    // Every class method definition has a local ('this') that takes the final position *before* any parameters.
-                    // If there are no parameters, it takes the final position. It counts as an 'in'.
-                    // A self-reference ('this'), so it will always be an object as primitives can't have methods!
-                    // Is the method is static, we just skip this register, since we don't have an object reference.
-                    mv.visitVarInsn(INSN_MOVE_OBJECT, destinationRegister, sourceRegister); // dest, source
-                }
-                sourceRegister += 1;
-                destinationRegister += 1;
-            } else {
-                int moveOpcodeForType = moveOpcodeForType(typeOfParameterAt(parameterNumber));
-                parameterNumber++;
-                if (moveOpcodeForType == INSN_MOVE_WIDE_16) {
-                    // TODO: Need an extra register!
-                    mv.visitVarInsn(moveOpcodeForType, destinationRegister, sourceRegister); // dest, source
-                    sourceRegister += 2;
-                    destinationRegister += 2;
-                } else {
-                    mv.visitVarInsn(moveOpcodeForType, destinationRegister, sourceRegister); // dest, source
-                    sourceRegister += 1;
-                    destinationRegister += 1;
-                }
-            }
-        }
-    }
-
-    private void applyStaticInstrumentation(int register1, int register2) {
-        // Class name is in the form "Lcom/heisentest/skeletonandroidapp/MainActivity$PlaceholderFragment;", so we
-        // just grab the last bit.
-        mv.visitStringInsn(INSN_CONST_STRING, register1, className.substring(className.lastIndexOf('/') + 1, className.lastIndexOf(';')));
-        mv.visitStringInsn(INSN_CONST_STRING, register2, "(static) " + name);
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "log", "VLjava/lang/String;Ljava/lang/String;", new int[] { register1, register2 });
-    }
-
-    private void applyRegularInstrumentation(int register1, int register2, int thisRegister) {
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "toString", "Ljava/lang/String;", new int[] { thisRegister });
-        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, register1);
-        mv.visitStringInsn(INSN_CONST_STRING, register2, name);
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "log", "VLjava/lang/String;Ljava/lang/String;", new int[] { register1, register2 });
     }
 
     /**
@@ -121,7 +52,7 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
         }
 
         mv.visitVarInsn(INSN_CONST_4, 4, 0); // Set register 4 (our array index) to a value of 0
-        mv.visitVarInsn(INSN_CONST_4, 1, totalNumberParameters); // Set register 1 to a value representing our total number of parameters
+        mv.visitVarInsn(INSN_CONST_4, 1, getTotalNumberParameters()); // Set register 1 to a value representing our total number of parameters
         mv.visitTypeInsn(INSN_NEW_ARRAY, 0, 0, 1, "[Ljava/lang/String;"); // Initialize a String[] at register 0 with size whatever value is at 1
 
         int currentParamNumber = 0;
@@ -138,12 +69,12 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
 
         mv.visitStringInsn(INSN_CONST_STRING, 1, name); // put our method name into register 1
 
-        mv.visitVarInsn(INSN_CONST_4, 2, totalNumberParameters); // Set register 2 to a value representing our total number of parameters
+        mv.visitVarInsn(INSN_CONST_4, 2, getTotalNumberParameters()); // Set register 2 to a value representing our total number of parameters
         mv.visitTypeInsn(INSN_NEW_ARRAY, 2, 0, 2, "[Ljava/lang/Object;"); // Initialize an Object[] at register 2 with size whatever value is at 2
 
-        int parametersStartRegister = totalRequiredRegisters - totalParameterRegisters;
+        int parametersStartRegister = firstParameterRegister();
         currentParamNumber = 0;
-        for (Map.Entry<Character, Integer> entry : parameterMap.entries()) {
+        for (Map.Entry<Character, Integer> entry : getParameterMap().entries()) {
             int currentParameterRegister = parametersStartRegister + entry.getValue();
 
             mv.visitVarInsn(INSN_CONST_4, 3, currentParamNumber); // Set register 3 to a value of 0
@@ -187,50 +118,5 @@ public class SplatterLoggingMethodVisitor extends MethodVisitor {
         }
 
         mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "log", "VLjava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", new int[] { 1, 0, thisRegister, 2 });
-    }
-
-    private char typeOfParameterAt(int parameterPosition) {
-        int index = 0;
-        index = Descriptors.advanceOne(desc, index); // Skip past the return type
-
-        int i = 1;
-        while (i != parameterPosition) {
-            i++;
-            index = Descriptors.advanceOne(desc, index);
-        }
-
-        char c = 'a';
-        try {
-            c = desc.charAt(index);
-        } catch (StringIndexOutOfBoundsException e) {
-            logger.debug(e);
-        }
-        return c;
-    }
-
-    private int moveOpcodeForType(char typeChar) {
-        switch (typeChar) {
-            case 'J': // long
-            case 'D': // double
-                return INSN_MOVE_WIDE_16;
-            case '[': // array
-            case 'L': // object
-                return INSN_MOVE_OBJECT_16;
-            default:
-                return INSN_MOVE_16;
-        }
-    }
-
-
-    /**
-     * Number of extra registers needed:
-     * - 1 (method name)
-     * - 2 (object array / array index)
-     * - totalPrimitiveParams (object representation)
-     */
-    private void forceRequiredRegisters() {
-        additionalNeeded = 5 + totalNumberPrimitiveParameters;
-        totalRequiredRegisters = maxStack + additionalNeeded;
-        mv.visitMaxs(totalRequiredRegisters, maxLocals);
     }
 }

@@ -10,18 +10,24 @@ import static org.ow2.asmdex.Opcodes.*;
 public abstract class SplatterRegisterAllocatingMethodVisitor extends MethodVisitor {
 
     private final Logger logger = Logger.getLogger(SplatterRegisterAllocatingMethodVisitor.class);
-    private final ArrayListMultimap<Character, Integer> parameterMap;
     private final String desc;
+    /**
+     * This can be larger than the actual number of parameters, because some values are 32 bit,
+     * so require more than 1 register.
+     */
     private final int totalParameterRegisters;
     private final int totalNumberParameters;
     private final int totalNumberPrimitiveParameters;
+    private final ArrayListMultimap<Character, Integer> parameterMap;
     private int totalRequiredRegisters;
     private int maxStack;
     private int maxLocals;
+    private boolean isStatic;
 
-    public SplatterRegisterAllocatingMethodVisitor(int api, MethodVisitor methodVisitor, String desc) {
+    public SplatterRegisterAllocatingMethodVisitor(int api, MethodVisitor methodVisitor, String desc, boolean isStatic) {
         super(api, methodVisitor);
         this.desc = desc;
+        this.isStatic = isStatic;
         this.totalParameterRegisters = Descriptors.numParamRegisters(desc);
         totalNumberParameters = Descriptors.numParams(desc);
         totalNumberPrimitiveParameters = Descriptors.numPrimitiveParams(desc);
@@ -43,11 +49,13 @@ public abstract class SplatterRegisterAllocatingMethodVisitor extends MethodVisi
         int parameterNumber = 1;
         while (sourceRegister <= totalRequiredRegisters - 1) {
             if (sourceRegister == totalRequiredRegisters - totalParameterRegisters - 1) {
-                // Every class method definition has a local ('this') that takes the final position *before* any parameters.
-                // If there are no parameters, it takes the final position. It counts as an 'in'.
-                // A self-reference ('this'), so it will always be an object as primitives can't have methods!
-                // Is the method is static, we just skip this register, since we don't have an object reference.
-                mv.visitVarInsn(INSN_MOVE_OBJECT, destinationRegister, sourceRegister); // dest, source
+                if (!isStatic) {
+                    // Every class method definition has a local ('this') that takes the final position *before* any parameters.
+                    // If there are no parameters, it takes the final position. It counts as an 'in'.
+                    // A self-reference ('this'), so it will always be an object as primitives can't have methods!
+                    // Is the method is static, we just skip this register, since we don't have an object reference.
+                    mv.visitVarInsn(INSN_MOVE_OBJECT, destinationRegister, sourceRegister); // dest, source
+                }
                 sourceRegister += 1;
                 destinationRegister += 1;
             } else {
@@ -78,6 +86,18 @@ public abstract class SplatterRegisterAllocatingMethodVisitor extends MethodVisi
 
     protected int thisRegister() {
         return totalRequiredRegisters - totalParameterRegisters - 1;
+    }
+
+    protected int firstParameterRegister() {
+        return totalRequiredRegisters - totalParameterRegisters;
+    }
+
+    protected int getTotalNumberParameters() {
+        return totalNumberParameters;
+    }
+
+    protected ArrayListMultimap<Character, Integer> getParameterMap() {
+        return parameterMap;
     }
 
     private char typeOfParameterAt(int parameterPosition) {

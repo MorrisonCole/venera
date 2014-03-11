@@ -7,8 +7,8 @@ import static org.ow2.asmdex.Opcodes.*;
 
 public class SplatterLoggingInitializationMethodVisitor extends SplatterRegisterAllocatingMethodVisitor {
 
-    public SplatterLoggingInitializationMethodVisitor(int api, MethodVisitor methodVisitor, String desc) {
-        super(api, methodVisitor, desc);
+    public SplatterLoggingInitializationMethodVisitor(int api, MethodVisitor methodVisitor, String desc, boolean isStatic) {
+        super(api, methodVisitor, desc, isStatic);
     }
 
     @Override
