@@ -6,6 +6,7 @@ mainClassName = "com.heisentest.splatter.Splatter"
 dependencies {
     compile files('libs/asmdex-latest.jar')
     compile files('libs/tools.jar')
+    compile files('libs/sootall-2.5.0.jar')
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.google.android.tools:dx:1.7'
     compile 'log4j:log4j:1.2.17'
