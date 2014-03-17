@@ -6,7 +6,7 @@ mainClassName = "com.heisentest.splatter.Splatter"
 dependencies {
     compile files('libs/asmdex-latest.jar')
     compile files('libs/tools.jar')
-    compile files('libs/sootall-2.5.0.jar')
+    compile files('libs/soot-nightly-17-03-2014.jar')
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.google.android.tools:dx:1.7'
     compile 'log4j:log4j:1.2.17'
@@ -35,7 +35,9 @@ run {
     if ( project.hasProperty('args') ) {
         args project.args.split('\\s+')
     } else {
-        args "${project(':skeleton-android-app').buildDir}/apk/skeleton-android-app-debug-unaligned.apk", "${project(':skeleton-android-app').buildDir}/apk/skeleton-android-app-debug-test-unaligned.apk"
+        args "${project(':skeleton-android-app').buildDir}/apk/skeleton-android-app-debug-unaligned.apk",
+             "${project(':skeleton-android-app').buildDir}/apk/skeleton-android-app-debug-test-unaligned.apk",
+             "${project.projectDir}/android-platforms"
     }
 }
 
