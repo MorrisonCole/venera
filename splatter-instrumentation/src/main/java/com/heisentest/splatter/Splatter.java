@@ -71,15 +71,21 @@ public class Splatter {
         // Prefer APKs over JARs
         Options.v().set_src_prec(Options.src_prec_apk);
 
-        // Folder containing Android JARs for all API levels
-        Options.v().set_android_jars(androidJars);
+        // Folder containing Android JARs for all API levels.
+        // Note: if we use this with multiple APKs on the Soot classpath, it fails to
+        // detect the API level and exits. Perhaps submit a pull request to choose a
+        // default and print a warning, or just determine the API level here.
+//        Options.v().set_android_jars(androidJars);
+
+        // TODO: Should detect the API level by parsing the manifest of the main application APK.
+        Options.v().set_force_android_jar(String.format("%s/android-19/android.jar", androidJars));
 
         // Not really necessary since we're not outputting anything at the moment
         Options.v().set_output_format(Options.output_format_dex);
 
         // Soot uses its own classpath, so we add our APKs to it
         Options.v().set_prepend_classpath(true);
-        Options.v().set_soot_classpath(String.format("%s", applicationTestApkPath));
+        Options.v().set_soot_classpath(String.format("%s:%s", applicationTestApkPath, applicationApkPath));
 
         // Verbose output for debugging
         Options.v().set_verbose(false);
