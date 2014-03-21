@@ -21,4 +21,5 @@ hs_err_pid*
 .gradle
 build/
 
+## Splatter Instrumentation ##
 splatter-instrumentation/android-platforms/

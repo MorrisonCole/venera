@@ -1,8 +1,9 @@
 package com.heisentest.splatter;
 
 import com.heisentest.splatter.transform.dex.SplatterDexTransformer;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import sun.security.tools.JarSigner;
+import org.apache.log4j.Priority;
 
 import java.io.*;
 import java.util.zip.ZipEntry;
@@ -97,8 +98,12 @@ public class SplatterApkProcessor {
     private void signApk(File outputApkFile) {
         String outputApkFilePath = outputApkFile.getAbsolutePath();
         logger.info(String.format("Resigning apk (at %s)", outputApkFilePath));
+        // TODO: Don't hardcode debug keystore...
         String[] jarSignerArgs = {"-keystore", "/home/morrison/.android/debug.keystore", "-storepass", "android", "-keypass", "android", outputApkFilePath, "androiddebugkey"};
-        JarSigner jarSigner = new JarSigner();
-        jarSigner.run(jarSignerArgs);
+        try {
+            sun.security.tools.jarsigner.Main.main(jarSignerArgs);
+        } catch (Exception e) {
+            logger.log(Level.FATAL, "Failed to re-sign APK", e);
+        }
     }
 }
