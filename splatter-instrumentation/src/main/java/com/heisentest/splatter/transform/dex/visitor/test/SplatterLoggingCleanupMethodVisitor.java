@@ -1,5 +1,6 @@
-package com.heisentest.splatter.transform.dex.visitor;
+package com.heisentest.splatter.transform.dex.visitor.test;
 
+import com.heisentest.splatter.transform.dex.visitor.SplatterRegisterAllocatingMethodVisitor;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.MethodVisitor;
 import org.ow2.asmdex.structureCommon.Label;

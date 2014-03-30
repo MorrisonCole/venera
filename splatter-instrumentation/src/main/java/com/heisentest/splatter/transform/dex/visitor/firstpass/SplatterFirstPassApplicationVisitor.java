@@ -1,6 +1,7 @@
-package com.heisentest.splatter.transform.dex.visitor;
+package com.heisentest.splatter.transform.dex.visitor.firstpass;
 
 import com.heisentest.splatter.transform.dex.InstrumentationSpy;
+import org.ow2.asmdex.AnnotationVisitor;
 import org.ow2.asmdex.ApplicationVisitor;
 import org.ow2.asmdex.ClassVisitor;
 import org.ow2.asmdex.MethodVisitor;
@@ -39,6 +40,11 @@ public class SplatterFirstPassApplicationVisitor extends ApplicationVisitor {
 
         public SplatterFirstPassMethodVisitor(int api) {
             super(api);
+        }
+
+        @Override
+        public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+            return super.visitAnnotation(desc, visible);
         }
     }
 }

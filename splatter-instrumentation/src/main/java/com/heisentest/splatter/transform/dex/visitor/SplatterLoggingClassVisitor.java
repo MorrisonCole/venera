@@ -1,5 +1,9 @@
 package com.heisentest.splatter.transform.dex.visitor;
 
+import com.heisentest.splatter.transform.dex.InstrumentationSpy;
+import com.heisentest.splatter.transform.dex.visitor.noop.SplatterNoOpMethodVisitor;
+import com.heisentest.splatter.transform.dex.visitor.test.SplatterLoggingCleanupMethodVisitor;
+import com.heisentest.splatter.transform.dex.visitor.test.SplatterLoggingInitializationMethodVisitor;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.ClassVisitor;
 import org.ow2.asmdex.MethodVisitor;
@@ -15,12 +19,14 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
 
     private final Logger logger = Logger.getLogger(SplatterLoggingClassVisitor.class);
     private String className;
+    private final InstrumentationSpy instrumentationSpy;
 
-    public SplatterLoggingClassVisitor(int asmApiLevel, ClassVisitor classVisitor, String className) {
+    public SplatterLoggingClassVisitor(int asmApiLevel, ClassVisitor classVisitor, String className, InstrumentationSpy instrumentationSpy) {
         super(asmApiLevel, classVisitor);
         this.className = className;
+        this.instrumentationSpy = instrumentationSpy;
 
-        if (isTestCaseClass()) {
+        if (this.instrumentationSpy.isBaseTestCaseClass(this.className)) {
             cv.visitField(ACC_PRIVATE + ACC_STATIC, "logThread", "Ljava/lang/Thread;", null, null);
         }
     }
@@ -56,11 +62,11 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
         }
 
         boolean isStatic = (access & ACC_STATIC) > 0;
-        if (isSetUpMethod(name)) {
+        if (instrumentationSpy.isBaseTestCaseSetUpMethod(className, name)) {
             // TODO: MainActivity / onCreate should be in some config ('entry point class / method').
             logger.debug(String.format("Adding HeisentestLogger initialization to method (name: '%s') (desc: '%s') (class: '%s')", name, desc, className));
             return new SplatterLoggingInitializationMethodVisitor(api, methodVisitor, desc, isStatic);
-        } else if (isTearDownMethod(name)) {
+        } else if (instrumentationSpy.isBaseTestCaseTearDownMethod(className, name)) {
             // TODO: As above, this should not be hardcoded.
             logger.debug(String.format("Adding HeisentestLogger cleanup to method (name: '%s') (desc: '%s') (class: '%s')", name, desc, className));
             return new SplatterLoggingCleanupMethodVisitor(api, methodVisitor, desc, isStatic);
@@ -71,18 +77,6 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
             logger.debug(String.format("SKIPPING method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
         }
 
-        return new SplatterMethodVisitor(api, methodVisitor);
-    }
-
-    private boolean isTearDownMethod(String name) {
-        return isTestCaseClass() && name.equals("tearDown");
-    }
-
-    private boolean isSetUpMethod(String name) {
-        return isTestCaseClass() && name.equals("setUp");
-    }
-
-    private boolean isTestCaseClass() {
-        return className.contains("SkeletonInstrumentationTestCase");
+        return new SplatterNoOpMethodVisitor(api, methodVisitor);
     }
 }

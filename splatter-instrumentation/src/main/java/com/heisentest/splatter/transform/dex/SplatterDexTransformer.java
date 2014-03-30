@@ -1,7 +1,7 @@
 package com.heisentest.splatter.transform.dex;
 
 import com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor;
-import com.heisentest.splatter.transform.dex.visitor.SplatterFirstPassApplicationVisitor;
+import com.heisentest.splatter.transform.dex.visitor.firstpass.SplatterFirstPassApplicationVisitor;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.ApplicationReader;
 import org.ow2.asmdex.ApplicationVisitor;
@@ -33,7 +33,7 @@ public class SplatterDexTransformer {
         }
 
         // First pass in case we want to save any information before generating the new dex file
-        InstrumentationSpy instrumentationSpy = new InstrumentationSpy();
+        InstrumentationSpy instrumentationSpy = new InstrumentationSpy(applicationRootNamespace);
         SplatterFirstPassApplicationVisitor splatterFirstPassApplicationVisitor = new SplatterFirstPassApplicationVisitor(asmApiLevel, instrumentationSpy);
         applicationReader.accept(splatterFirstPassApplicationVisitor, 0);
 
@@ -41,7 +41,7 @@ public class SplatterDexTransformer {
 
         // Second pass
         ApplicationWriter applicationWriter = new ApplicationWriter(applicationReader);
-        ApplicationVisitor splatterApplicationVisitor = new SplatterApplicationVisitor(asmApiLevel, applicationWriter, applicationRootNamespace);
+        ApplicationVisitor splatterApplicationVisitor = new SplatterApplicationVisitor(asmApiLevel, applicationWriter, instrumentationSpy);
 
         applicationReader.accept(splatterApplicationVisitor, 0);
 
