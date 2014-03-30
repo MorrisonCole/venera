@@ -31,6 +31,7 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.google.code.gson:gson:2.2.4'
+    compile project(':splatter-sdk')
 
     instrumentTestCompile files('libs/espresso-contrib-1.1-bundled.jar')
 }

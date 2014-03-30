@@ -1,13 +1,9 @@
 package com.heisentest.skeletonandroidapp.test.acceptance;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.test.PerformanceTestCase;
 import android.test.suitebuilder.annotation.LargeTest;
 import com.heisentest.skeletonandroidapp.MainActivity;
-import com.heisentest.skeletonandroidapp.NavigationDrawerFragment;
-
-import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withId;
+import com.heisentest.splatter.sdk.SplatterIgnore;
 
 @LargeTest
 public class ProbeTest extends SkeletonInstrumentationTestCase<MainActivity> implements PerformanceTestCase {
