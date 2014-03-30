@@ -23,3 +23,6 @@ build/
 
 ## Splatter Instrumentation ##
 splatter-instrumentation/android-platforms/
+
+# Local Output
+splatter-instrumentation/scripts/dump.output
