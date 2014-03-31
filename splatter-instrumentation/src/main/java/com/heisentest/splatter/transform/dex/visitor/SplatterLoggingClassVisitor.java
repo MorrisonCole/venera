@@ -21,6 +21,23 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
     private String className;
     private final InstrumentationSpy instrumentationSpy;
 
+    // We ignore the constructors for now, since they are special (i.e. 'this' is not yet initialized).
+    // See: http://stackoverflow.com/a/8517155
+    // TODO: Is there a way to figure out the runtime type name of the object at this point?
+    // TODO: If not, we could probably deal with these similarly to static methods (don't rely on 'this'
+    // TODO: for the class name (although that would suck a bit).
+    // Ignoring 'run' since runnables seem to generate bad dex files for some reason. need to fix this.
+    // Ignoring 'toString' since calling 'this.toString' then causes a stack overflow :D
+    // Ignoring 'hashCode' as it's causing stack overflows for some reason.
+    private final ArrayList<String> blacklistedNames = new ArrayList<String>(Arrays.asList("<init>", "<clinit>", "run", "toString", "hashCode", "wakeUpDevice"));
+
+    /**
+     * We don't want to instrument any auto-generated enclosing accessor methods (signature access$0,
+     * access$1 etc.), so we ignore any methods with '$' in their name.
+     * See: http://www.retrologic.com/innerclasses.doc7.html
+      */
+    private final String bannedAutoAccessMethodCharacter = "$";
+
     public SplatterLoggingClassVisitor(int asmApiLevel, ClassVisitor classVisitor, String className, InstrumentationSpy instrumentationSpy) {
         super(asmApiLevel, classVisitor);
         this.className = className;
@@ -35,48 +52,42 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
     public MethodVisitor visitMethod(int access, String name, String desc, String[] signature, String[] exceptions) {
         MethodVisitor methodVisitor = cv.visitMethod(access, name, desc, signature, exceptions);
 
-        // We ignore the constructors for now, since they are special (i.e. 'this' is not yet initialized).
-        // See: http://stackoverflow.com/a/8517155
-        // TODO: Is there a way to figure out the runtime type name of the object at this point?
-        // TODO: If not, we could probably deal with these similarly to static methods (don't rely on 'this'
-        // TODO: for the class name (although that would suck a bit).
-        // Ignoring 'run' since runnables seem to generate bad dex files for some reason. need to fix this.
-        // Ignoring 'toString' since calling 'this.toString' then causes a stack overflow :D
-        // Ignoring 'hashCode' as it's causing stack overflows for some reason.
-        ArrayList<String> blacklistedNames = new ArrayList<String>(Arrays.asList("<init>", "<clinit>", "run", "toString", "hashCode", "wakeUpDevice"));
-
-        // We don't want to instrument any auto-generated enclosing accessor methods (signature access$0,
-        // access$1 etc.), so we ignore any methods with '$' in their name.
-        // See: http://www.retrologic.com/innerclasses.doc7.html
-        // TODO: Are there legitimate usages of '$' in method names? We should only ban methods with a
-        // TODO: specific 'access$' signature if so.
-        String bannedAutoAccessMethodCharacter = "$";
-
+        // TODO: Document this whitelist.
         boolean instrument = false;
-        ArrayList<String> allowedPrefixes = new ArrayList<String>(Arrays.asList("get", "set", "tile", "on", "create", ""));
+        ArrayList<String> allowedPrefixes = new ArrayList<>(Arrays.asList("get", "set", "tile", "on", "create", ""));
         for (String prefix : allowedPrefixes) {
-            if (name.startsWith(prefix)) {
+            if (name.startsWith(prefix) && instrumentationSpy.shouldInstrument(className, name)) {
                 instrument = true;
                 break;
             }
         }
 
-        boolean isStatic = (access & ACC_STATIC) > 0;
+        boolean isStatic = isStatic(access);
         if (instrumentationSpy.isBaseTestCaseSetUpMethod(className, name)) {
-            // TODO: MainActivity / onCreate should be in some config ('entry point class / method').
             logger.debug(String.format("Adding HeisentestLogger initialization to method (name: '%s') (desc: '%s') (class: '%s')", name, desc, className));
             return new SplatterLoggingInitializationMethodVisitor(api, methodVisitor, desc, isStatic);
         } else if (instrumentationSpy.isBaseTestCaseTearDownMethod(className, name)) {
-            // TODO: As above, this should not be hardcoded.
             logger.debug(String.format("Adding HeisentestLogger cleanup to method (name: '%s') (desc: '%s') (class: '%s')", name, desc, className));
             return new SplatterLoggingCleanupMethodVisitor(api, methodVisitor, desc, isStatic);
-        } else if (instrument && (access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter)) {
+        } else if (shouldInstrumentMethod(access, name, instrument)) {
             logger.debug(String.format("Adding HeisentestLogger to method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
             return new SplatterLoggingMethodVisitor(api, methodVisitor, desc, name, isStatic);
-        } else if ((access & Opcodes.ACC_ABSTRACT) == 0 && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter)) {
-            logger.debug(String.format("SKIPPING method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
         }
 
+        logger.debug(String.format("SKIPPING method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
         return new SplatterNoOpMethodVisitor(api, methodVisitor);
+    }
+
+    private boolean shouldInstrumentMethod(int access, String name, boolean instrument) {
+        return instrument && !isAbstract(access) && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter);
+    }
+
+    private boolean isStatic(int access) {
+        return (access & ACC_STATIC) > 0;
+    }
+
+    // TODO: Check this returns correctly.
+    private boolean isAbstract(int access) {
+        return (access & Opcodes.ACC_ABSTRACT) != 0;
     }
 }

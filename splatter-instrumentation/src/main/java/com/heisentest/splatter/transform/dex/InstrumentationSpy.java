@@ -1,9 +1,12 @@
 package com.heisentest.splatter.transform.dex;
 
+import com.google.common.collect.ArrayListMultimap;
+
 public class InstrumentationSpy {
 
     private final String applicationRootNamespace;
     private int availableInstrumentationPoints = 0;
+    private final ArrayListMultimap<String, String> instrumentableMethods = ArrayListMultimap.create();
 
     public InstrumentationSpy(String applicationRootNamespace) {
 
@@ -40,5 +43,13 @@ public class InstrumentationSpy {
     // TODO: should not be hardcoded!
     public boolean isBaseTestCaseClass(String className) {
         return className.contains("SkeletonInstrumentationTestCase");
+    }
+
+    public void addInstrumentableMethod(String className, String methodName) {
+        instrumentableMethods.put(className, methodName);
+    }
+
+    public boolean shouldInstrument(String className, String methodName) {
+        return instrumentableMethods.containsEntry(className, methodName);
     }
 }
