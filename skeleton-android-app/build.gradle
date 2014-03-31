@@ -52,8 +52,11 @@ task pullResults(type: Exec) {
 evaluationDependsOn(':splatter-instrumentation')
 
 afterEvaluate {
-    installDebug.dependsOn project(':splatter-instrumentation').tasks.run
-    connectedInstrumentTest.dependsOn project(':splatter-instrumentation').tasks.run
-    connectedInstrumentTest.dependsOn removeStaleResults
-    connectedInstrumentTest.finalizedBy pullResults
+    // Properties are passed to Gradle from the command line (e.g., gradle clean install -Psplatter)
+    if (project.hasProperty('splatter')) {
+        installDebug.dependsOn project(':splatter-instrumentation').tasks.run
+        connectedInstrumentTest.dependsOn project(':splatter-instrumentation').tasks.run
+        connectedInstrumentTest.dependsOn removeStaleResults
+        connectedInstrumentTest.finalizedBy pullResults
+    }
 }
