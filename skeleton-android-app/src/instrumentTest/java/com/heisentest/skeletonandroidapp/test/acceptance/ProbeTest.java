@@ -20,6 +20,9 @@ public class ProbeTest extends SkeletonInstrumentationTestCase<MainActivity> {
         assertThat(false, is(false));
     }
 
+    private void anInstrumentedEmptyMethod(int unusedParameter) {
+    }
+
     @SplatterIgnore
     public void testUninstrumentedEmptyMethod() {
         for (int i = 0; i < 100; i++) {
@@ -27,9 +30,6 @@ public class ProbeTest extends SkeletonInstrumentationTestCase<MainActivity> {
         }
 
         assertThat(false, is(false));
-    }
-
-    private void anInstrumentedEmptyMethod(int unusedParameter) {
     }
 
     @SplatterIgnore

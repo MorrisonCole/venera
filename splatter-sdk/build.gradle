@@ -4,4 +4,7 @@ sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
 
 dependencies {
+    compile('junit:junit:4.11') {
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
+    }
 }

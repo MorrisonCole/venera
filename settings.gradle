@@ -1,1 +1,2 @@
-include 'splatter-instrumentation', 'dexifier', 'skeleton-android-app', 'splatter-sdk'
+include 'splatter-instrumentation', 'dexifier', 'skeleton-android-app', 'splatter-sdk', 'dex-generator', 'dexifier'
+

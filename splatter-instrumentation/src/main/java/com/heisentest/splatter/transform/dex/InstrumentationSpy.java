@@ -7,6 +7,8 @@ public class InstrumentationSpy {
     private final String applicationRootNamespace;
     private int availableInstrumentationPoints = 0;
     private final ArrayListMultimap<String, String> instrumentableMethods = ArrayListMultimap.create();
+    // TODO: should not be hardcoded!
+    private String baseTestCaseClassName = "Lcom/heisentest/skeletonandroidapp/test/acceptance/SkeletonInstrumentationTestCase;";
 
     public InstrumentationSpy(String applicationRootNamespace) {
 
@@ -40,9 +42,12 @@ public class InstrumentationSpy {
         return isBaseTestCaseClass(className) && name.equals("setUp");
     }
 
-    // TODO: should not be hardcoded!
+    public boolean isBaseTestClassInitMethod(String className, String name) {
+        return isBaseTestCaseClass(className) && name.equals("<init>");
+    }
+
     public boolean isBaseTestCaseClass(String className) {
-        return className.contains("SkeletonInstrumentationTestCase");
+        return className.equals(baseTestCaseClassName);
     }
 
     public void addInstrumentableMethod(String className, String methodName) {
@@ -51,5 +56,9 @@ public class InstrumentationSpy {
 
     public boolean shouldInstrument(String className, String methodName) {
         return instrumentableMethods.containsEntry(className, methodName);
+    }
+
+    public String getBaseTestCaseClassName() {
+        return baseTestCaseClassName;
     }
 }

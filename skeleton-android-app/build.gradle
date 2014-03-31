@@ -26,6 +26,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
+    packagingOptions {
+        // Hamcrests LICENSE.txt is present in JUnit and Hamcrest, so we exclude it.
+        exclude 'LICENSE.txt'
+    }
 }
 
 dependencies {

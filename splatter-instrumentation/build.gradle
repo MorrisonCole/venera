@@ -15,7 +15,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-compileJava.dependsOn project(':dexifier').tasks.dexify
+compileJava.dependsOn project(':dex-generator').tasks.dexify
 
 task dumpDex(type: Exec) {
     workingDir project.projectDir
