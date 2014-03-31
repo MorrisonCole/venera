@@ -1,45 +1,38 @@
 package com.heisentest.skeletonandroidapp.test.acceptance;
 
-import android.test.PerformanceTestCase;
-import android.test.suitebuilder.annotation.LargeTest;
 import com.heisentest.skeletonandroidapp.MainActivity;
 import com.heisentest.splatter.sdk.SplatterIgnore;
 
-@LargeTest
-public class ProbeTest extends SkeletonInstrumentationTestCase<MainActivity> implements PerformanceTestCase {
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+public class ProbeTest extends SkeletonInstrumentationTestCase<MainActivity> {
 
     public ProbeTest() {
         super(MainActivity.class);
     }
 
     public void testInstrumentedEmptyMethod() {
-        int i = 0;
-        while (i < 10000) {
-            anEmptyMethod(i);
+        for (int i = 0; i < 100; i++) {
+            anInstrumentedEmptyMethod(i);
         }
+
+        assertThat(false, is(false));
     }
 
     @SplatterIgnore
     public void testUninstrumentedEmptyMethod() {
-        int i = 0;
-        while (i < 10000) {
-            anEmptyMethod(i);
+        for (int i = 0; i < 100; i++) {
+            anUninstrumentedEmptyMethod(i);
         }
+
+        assertThat(false, is(false));
     }
 
-    /**
-     * Intentionally does nothing, since this will be instrumented.
-     */
-    private void anEmptyMethod(int unusedParameter) {
+    private void anInstrumentedEmptyMethod(int unusedParameter) {
     }
 
-    @Override
-    public int startPerformance(Intermediates intermediates) {
-        return 1;
-    }
-
-    @Override
-    public boolean isPerformanceOnly() {
-        return false;
+    @SplatterIgnore
+    private void anUninstrumentedEmptyMethod(int unusedParameter) {
     }
 }
