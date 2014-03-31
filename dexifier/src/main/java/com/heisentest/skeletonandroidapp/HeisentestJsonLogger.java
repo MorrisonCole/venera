@@ -69,11 +69,11 @@ public final class HeisentestJsonLogger implements Runnable {
      */
     public static void log(String calleeMethodName, String[] parameterNames, Object callee, Object... parameters) {
         if (!currentlyLogging) {
-            Log.d(HEISENTEST_LOGGER_TAG, "Requested log instance event but finished logging");
+            Log.v(HEISENTEST_LOGGER_TAG, "Requested log instance event but finished logging");
             return;
         }
 
-        Log.d(HEISENTEST_LOGGER_TAG, "Logging instance event");
+        Log.v(HEISENTEST_LOGGER_TAG, "Logging instance event");
 
         queueLogEvent(new LogEvent(calleeMethodName, parameterNames, callee, parameters));
     }
@@ -99,7 +99,7 @@ public final class HeisentestJsonLogger implements Runnable {
     public void run() {
         beginLogging();
 
-        while (currentlyLogging) {
+        while (currentlyLogging || !blockingQueue.isEmpty()) {
             try {
                 final LogEvent logEvent = blockingQueue.poll(1, TimeUnit.MILLISECONDS);
                 if (logEvent != null) {
@@ -115,7 +115,7 @@ public final class HeisentestJsonLogger implements Runnable {
 
     private static void flush(LogEvent logEvent) {
         try {
-            Log.d(HEISENTEST_LOGGER_TAG, "Flushing event");
+            Log.v(HEISENTEST_LOGGER_TAG, "Flushing event");
             jsonWriter.beginObject();
 
             jsonWriter.name("class").value(logEvent.getCalleeClassName());
@@ -206,14 +206,13 @@ public final class HeisentestJsonLogger implements Runnable {
             fileWriter.close();
             Log.d(HEISENTEST_LOGGER_TAG, "Ended log.");
 
-            Log.d(HEISENTEST_LOGGER_TAG, String.format("Heisentest output directory: %s", outputDirectory.getAbsolutePath()));
+            Log.i(HEISENTEST_LOGGER_TAG, String.format("Heisentest output directory: %s", outputDirectory.getAbsolutePath()));
 
-            // TODO: For debugging only. This could be massive!
-            Log.d(HEISENTEST_LOGGER_TAG, "Printing final output:");
+            Log.v(HEISENTEST_LOGGER_TAG, "Printing final output:");
             BufferedReader bufferedReader = new BufferedReader(new FileReader(outputFile));
-            String line = null;
+            String line;
             while ((line = bufferedReader.readLine()) != null) {
-                Log.i(HEISENTEST_LOGGER_TAG, line);
+                Log.v(HEISENTEST_LOGGER_TAG, line);
             }
             bufferedReader.close();
         } catch (IOException e) {

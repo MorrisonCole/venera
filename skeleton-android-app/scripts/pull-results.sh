@@ -1,6 +1,6 @@
 #!/bin/bash
 
-outputDir=$(adb logcat -d | grep --line-buffered -i "Heisentest output directory: " | tail -1 | sed -n -e 's/^.*Heisentest output directory: //p')
+outputDir=$(adb logcat -d *:I | grep --line-buffered -i "Heisentest output directory: " | tail -1 | sed -n -e 's/^.*Heisentest output directory: //p')
 
 echo "DETECTED OUTPUT DIR: $outputDir"
 
