@@ -5,7 +5,6 @@ import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 import com.heisentest.splatter.sdk.SplatterIgnore;
-import com.heisentest.splatter.sdk.SplatterIgnoreMethodRule;
 import org.junit.Rule;
 
 import java.io.File;
@@ -13,8 +12,6 @@ import java.lang.reflect.Method;
 
 public class AnInstrumentationTestCase<T extends Activity> extends ActivityInstrumentationTestCase2<T> {
 
-    @Rule
-    SplatterIgnoreMethodRule splatterIgnoreMethodRule = new SplatterIgnoreMethodRule();
     private static Thread logThread;
     private boolean logging;
 

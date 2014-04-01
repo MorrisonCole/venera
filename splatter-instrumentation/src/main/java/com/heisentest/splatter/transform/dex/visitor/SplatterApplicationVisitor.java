@@ -27,7 +27,9 @@ public class SplatterApplicationVisitor extends ApplicationVisitor {
     public ClassVisitor visitClass(int access, String name, String [] signature, String superName, String [] interfaces) {
         ClassVisitor classVisitor = av.visitClass(access, name, signature, superName, interfaces);
 
-        if (instrumentationSpy.shouldClassBeInstrumented(name)) {
+        if (instrumentationSpy.isBaseTestCaseClass(name)) {
+            return new SplatterBaseTestCaseClassVisitor(api, classVisitor, name, instrumentationSpy);
+        } else if (instrumentationSpy.shouldClassBeInstrumented(name)) {
             return new SplatterLoggingClassVisitor(api, classVisitor, name, instrumentationSpy);
         } else {
             return new SplatterNoOpClassVisitor(api, classVisitor);

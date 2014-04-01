@@ -10,9 +10,9 @@ import android.view.WindowManager;
  *
  * Wakes and unlocks the device without the need to extra permissions.
  */
-public class SkeletonInstrumentationTestCase<T extends Activity> extends ActivityInstrumentationTestCase2<T> {
+public class SkeletonActivityInstrumentationTestCase<T extends Activity> extends ActivityInstrumentationTestCase2<T> {
 
-    public SkeletonInstrumentationTestCase(Class<T> activityClass) {
+    public SkeletonActivityInstrumentationTestCase(Class<T> activityClass) {
         super(activityClass);
     }
 

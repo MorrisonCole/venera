@@ -6,7 +6,7 @@ import com.heisentest.splatter.sdk.SplatterIgnore;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ProbeTest extends SkeletonInstrumentationTestCase<MainActivity> {
+public class ProbeTest extends SkeletonActivityUnitTestCase<MainActivity> {
 
     public ProbeTest() {
         super(MainActivity.class);

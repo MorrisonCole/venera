@@ -1,6 +1,5 @@
 package com.heisentest.splatter.transform.dex.visitor.test;
 
-import com.heisentest.splatter.transform.dex.InstrumentationSpy;
 import com.heisentest.splatter.transform.dex.visitor.SplatterRegisterAllocatingMethodVisitor;
 import org.ow2.asmdex.MethodVisitor;
 
@@ -8,11 +7,11 @@ import static org.ow2.asmdex.Opcodes.*;
 
 public class SplatterLoggingInitializationMethodVisitor extends SplatterRegisterAllocatingMethodVisitor {
 
-    private final InstrumentationSpy instrumentationSpy;
+    private final String className;
 
-    public SplatterLoggingInitializationMethodVisitor(int api, MethodVisitor methodVisitor, String desc, boolean isStatic, InstrumentationSpy instrumentationSpy) {
+    public SplatterLoggingInitializationMethodVisitor(int api, MethodVisitor methodVisitor, String desc, boolean isStatic, String className) {
         super(api, methodVisitor, desc, isStatic);
-        this.instrumentationSpy = instrumentationSpy;
+        this.className = className;
     }
 
     @Override
@@ -28,6 +27,6 @@ public class SplatterLoggingInitializationMethodVisitor extends SplatterRegister
     private void addHeisentestLoggerInitializationInstrumentation(int thisRegister) {
         mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Lcom/heisentest/splatter/sdk/SplatterIgnoreMethodRule;");
         mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/splatter/sdk/SplatterIgnoreMethodRule;", "<init>", "V", new int[] { 0 });
-        mv.visitFieldInsn(INSN_IPUT_OBJECT, instrumentationSpy.getBaseTestCaseClassName(), "splatterIgnoreMethodRule", "Lcom/heisentest/splatter/sdk/SplatterIgnoreMethodRule;", 0, thisRegister);
+        mv.visitFieldInsn(INSN_IPUT_OBJECT, className, "splatterIgnoreMethodRule", "Lcom/heisentest/splatter/sdk/SplatterIgnoreMethodRule;", 0, thisRegister);
     }
 }

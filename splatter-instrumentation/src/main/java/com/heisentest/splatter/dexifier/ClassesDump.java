@@ -388,7 +388,6 @@ public static byte[] dump() throws Exception {
 	dumpFieldNamingPolicy$3(aw);
 	dumpFieldNamingPolicy$4(aw);
 	dumpFieldNamingPolicy$5(aw);
-	dumpSplatterIgnoreMethodRule(aw);
 	dumpActiveTestSuite(aw);
 	dumpRepeatedTest(aw);
 	dumpTestSetup(aw);
@@ -46599,57 +46598,6 @@ public static void dumpFieldNamingPolicy$5(ApplicationWriter aw) {
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/String;", "toLowerCase", "Ljava/lang/String;", new int[] { 0 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
 		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
-		mv.visitEnd();
-	}
-	cv.visitEnd();
-}
-
-public static void dumpSplatterIgnoreMethodRule(ApplicationWriter aw) {
-	ClassVisitor cv;
-	FieldVisitor fv;
-	MethodVisitor mv;
-	AnnotationVisitor av0;
-
-	cv = aw.visitClass(ACC_PUBLIC, "Lcom/heisentest/splatter/sdk/SplatterIgnoreMethodRule;", null, "Lorg/junit/rules/TestWatcher;", null);
-	cv.visit(0, ACC_PUBLIC, "Lcom/heisentest/splatter/sdk/SplatterIgnoreMethodRule;", null, "Lorg/junit/rules/TestWatcher;", null);
-	cv.visitSource("SplatterIgnoreMethodRule.java", null);
-	{
-		fv = cv.visitField(ACC_PRIVATE, "ignored", "Z", null, null);
-		fv.visitEnd();
-	}
-	{
-		mv = cv.visitMethod(ACC_PUBLIC + ACC_CONSTRUCTOR, "<init>", "V", null, null);
-		mv.visitCode();
-		mv.visitMaxs(1, 0);
-		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lorg/junit/rules/TestWatcher;", "<init>", "V", new int[] { 0 });
-		mv.visitInsn(INSN_RETURN_VOID);
-		mv.visitEnd();
-	}
-	{
-		mv = cv.visitMethod(ACC_PUBLIC, "currentTestIsIgnored", "Z", null, null);
-		mv.visitCode();
-		mv.visitMaxs(2, 0);
-		mv.visitFieldInsn(INSN_IGET_BOOLEAN, "Lcom/heisentest/splatter/sdk/SplatterIgnoreMethodRule;", "ignored", "Z", 0, 1);
-		mv.visitIntInsn(INSN_RETURN, 0);
-		mv.visitEnd();
-	}
-	{
-		mv = cv.visitMethod(ACC_PROTECTED, "starting", "VLorg/junit/runner/Description;", null, null);
-		mv.visitCode();
-		mv.visitMaxs(3, 0);
-		mv.visitTypeInsn(INSN_CONST_CLASS, 0, 0, 0, "Lcom/heisentest/splatter/sdk/SplatterIgnore;");
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lorg/junit/runner/Description;", "getAnnotation", "Ljava/lang/annotation/Annotation;Ljava/lang/Class;", new int[] { 2, 0 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
-		Label l0 = new Label();
-		mv.visitJumpInsn(INSN_IF_EQZ, l0, 0, 0);
-		mv.visitVarInsn(INSN_CONST_4, 0, 1);
-		Label l1 = new Label();
-		mv.visitLabel(l1);
-		mv.visitFieldInsn(INSN_IPUT_BOOLEAN, "Lcom/heisentest/splatter/sdk/SplatterIgnoreMethodRule;", "ignored", "Z", 0, 1);
-		mv.visitInsn(INSN_RETURN_VOID);
-		mv.visitLabel(l0);
-		mv.visitVarInsn(INSN_CONST_4, 0, 0);
-		mv.visitJumpInsn(INSN_GOTO, l1, 0, 0);
 		mv.visitEnd();
 	}
 	cv.visitEnd();

@@ -8,7 +8,6 @@ import android.test.suitebuilder.annotation.Suppress;
 import com.heisentest.skeletonandroidapp.MainActivity;
 import com.heisentest.skeletonandroidapp.NavigationDrawerFragment;
 import com.heisentest.skeletonandroidapp.R;
-import com.heisentest.splatter.sdk.SplatterIgnore;
 
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
 import static com.google.android.apps.common.testing.ui.espresso.assertion.ViewAssertions.matches;
@@ -19,7 +18,7 @@ import static com.google.android.apps.common.testing.ui.espresso.contrib.DrawerM
 import static com.google.android.apps.common.testing.ui.espresso.matcher.ViewMatchers.withId;
 
 @LargeTest
-public class NavigationDrawerTest extends SkeletonInstrumentationTestCase<MainActivity> {
+public class NavigationDrawerTest extends SkeletonActivityInstrumentationTestCase<MainActivity> {
 
     public NavigationDrawerTest() {
         super(MainActivity.class);
