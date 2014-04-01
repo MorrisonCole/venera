@@ -4,8 +4,7 @@ import android.app.Activity;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
-import com.heisentest.splatter.sdk.SplatterIgnore;
-import org.junit.Rule;
+import com.heisentest.splatter.sdk.Splatter;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -33,7 +32,8 @@ public class AnInstrumentationTestCase<T extends Activity> extends ActivityInstr
         try {
             method = getClass().getMethod(getName(), (Class[]) null);
 
-            if (method.isAnnotationPresent(SplatterIgnore.class)) {
+            final Splatter splatter = method.getAnnotation(Splatter.class);
+            if (splatter != null && splatter.instrumentationPolicy() == Splatter.InstrumentationPolicy.NONE) {
                 return;
             }
 

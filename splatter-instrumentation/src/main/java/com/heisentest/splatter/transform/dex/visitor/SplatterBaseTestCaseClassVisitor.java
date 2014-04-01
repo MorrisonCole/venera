@@ -15,13 +15,11 @@ import static org.ow2.asmdex.Opcodes.*;
 public class SplatterBaseTestCaseClassVisitor extends ClassVisitor {
 
     private final Logger logger = Logger.getLogger(SplatterBaseTestCaseClassVisitor.class);
-    private final ClassVisitor classVisitor;
     private final String className;
     private final InstrumentationSpy instrumentationSpy;
 
     public SplatterBaseTestCaseClassVisitor(int api, ClassVisitor classVisitor, String className, InstrumentationSpy instrumentationSpy) {
         super(api, classVisitor);
-        this.classVisitor = classVisitor;
         this.className = className;
         this.instrumentationSpy = instrumentationSpy;
 
@@ -67,27 +65,32 @@ public class SplatterBaseTestCaseClassVisitor extends ClassVisitor {
     private void addStartLoggingMethod() {
         MethodVisitor mv = cv.visitMethod(ACC_PUBLIC, "startLogging", "V", null, null);
         mv.visitCode();
-        mv.visitMaxs(8, 0);
-        mv.visitVarInsn(INSN_CONST_4, 4, 0);
-        mv.visitFieldInsn(INSN_IPUT_BOOLEAN, className, "logging", "Z", 4, 7);
+        mv.visitMaxs(9, 0);
+        mv.visitVarInsn(INSN_CONST_4, 5, 0);
+        mv.visitFieldInsn(INSN_IPUT_BOOLEAN, className, "logging", "Z", 5, 8);
         Label l0 = new Label();
         mv.visitLabel(l0);
         Label l1 = new Label();
         Label l2 = new Label();
         mv.visitTryCatchBlock(l0, l1, l2, "Ljava/lang/NoSuchMethodException;");
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "getClass", "Ljava/lang/Class;", new int[] { 7 });
-        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 5);
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, className, "getName", "Ljava/lang/String;", new int[] { 7 });
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "getClass", "Ljava/lang/Class;", new int[] { 8 });
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 6);
-        mv.visitVarInsn(INSN_CONST_4, 4, 0);
-        mv.visitTypeInsn(INSN_CHECK_CAST, 0, 4, 0, "[Ljava/lang/Class;");
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "getMethod", "Ljava/lang/reflect/Method;Ljava/lang/String;[Ljava/lang/Class;", new int[] { 5, 6, 4 });
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, className, "getName", "Ljava/lang/String;", new int[] { 8 });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 7);
+        mv.visitVarInsn(INSN_CONST_4, 5, 0);
+        mv.visitTypeInsn(INSN_CHECK_CAST, 0, 5, 0, "[Ljava/lang/Class;");
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "getMethod", "Ljava/lang/reflect/Method;Ljava/lang/String;[Ljava/lang/Class;", new int[] { 6, 7, 5 });
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
-        mv.visitTypeInsn(INSN_CONST_CLASS, 4, 0, 0, "Lcom/heisentest/splatter/sdk/SplatterIgnore;");
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Method;", "isAnnotationPresent", "ZLjava/lang/Class;", new int[] { 3, 4 });
-        mv.visitIntInsn(INSN_MOVE_RESULT, 4);
+        mv.visitTypeInsn(INSN_CONST_CLASS, 5, 0, 0, "Lcom/heisentest/splatter/sdk/Splatter;");
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Method;", "getAnnotation", "Ljava/lang/annotation/Annotation;Ljava/lang/Class;", new int[] { 3, 5 });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4);
+        mv.visitTypeInsn(INSN_CHECK_CAST, 0, 4, 0, "Lcom/heisentest/splatter/sdk/Splatter;");
         Label l3 = new Label();
         mv.visitJumpInsn(INSN_IF_EQZ, l3, 4, 0);
+        mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lcom/heisentest/splatter/sdk/Splatter;", "instrumentationPolicy", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", new int[] { 4 });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 5);
+        mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "NONE", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", 6, 0);
+        mv.visitJumpInsn(INSN_IF_NE, l3, 5, 6);
         Label l4 = new Label();
         mv.visitLabel(l4);
         mv.visitInsn(INSN_RETURN_VOID);
@@ -96,15 +99,15 @@ public class SplatterBaseTestCaseClassVisitor extends ClassVisitor {
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
         mv.visitTypeInsn(INSN_NEW_INSTANCE, 2, 0, 0, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;");
         mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Method;", "getName", "Ljava/lang/String;", new int[] { 3 });
-        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4);
-        mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "<init>", "VLjava/io/File;Ljava/lang/String;", new int[] { 2, 1, 4 });
-        mv.visitTypeInsn(INSN_NEW_INSTANCE, 4, 0, 0, "Ljava/lang/Thread;");
-        mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Thread;", "<init>", "VLjava/lang/Runnable;", new int[] { 4, 2 });
-        mv.visitFieldInsn(INSN_SPUT_OBJECT, className, "logThread", "Ljava/lang/Thread;", 4, 0);
-        mv.visitFieldInsn(INSN_SGET_OBJECT, className, "logThread", "Ljava/lang/Thread;", 4, 0);
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Thread;", "start", "V", new int[] { 4 });
-        mv.visitVarInsn(INSN_CONST_4, 4, 1);
-        mv.visitFieldInsn(INSN_IPUT_BOOLEAN, className, "logging", "Z", 4, 7);
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 5);
+        mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "<init>", "VLjava/io/File;Ljava/lang/String;", new int[] { 2, 1, 5 });
+        mv.visitTypeInsn(INSN_NEW_INSTANCE, 5, 0, 0, "Ljava/lang/Thread;");
+        mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Thread;", "<init>", "VLjava/lang/Runnable;", new int[] { 5, 2 });
+        mv.visitFieldInsn(INSN_SPUT_OBJECT, className, "logThread", "Ljava/lang/Thread;", 5, 0);
+        mv.visitFieldInsn(INSN_SGET_OBJECT, className, "logThread", "Ljava/lang/Thread;", 5, 0);
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Thread;", "start", "V", new int[] { 5 });
+        mv.visitVarInsn(INSN_CONST_4, 5, 1);
+        mv.visitFieldInsn(INSN_IPUT_BOOLEAN, className, "logging", "Z", 5, 8);
         mv.visitLabel(l1);
         mv.visitJumpInsn(INSN_GOTO, l4, 0, 0);
         mv.visitLabel(l2);

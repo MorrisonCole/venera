@@ -1,12 +1,15 @@
 package com.heisentest.splatter.transform.dex.visitor.firstpass;
 
+import com.heisentest.splatter.instrumentation.point.MethodEntryInstrumentationPoint;
 import com.heisentest.splatter.transform.dex.InstrumentationSpy;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.AnnotationVisitor;
 import org.ow2.asmdex.ApplicationVisitor;
 import org.ow2.asmdex.ClassVisitor;
 import org.ow2.asmdex.MethodVisitor;
+
+import static com.heisentest.splatter.instrumentation.point.MethodEntryInstrumentationPoint.Builder.methodEntryInstrumentationPoint;
+import static com.heisentest.splatter.sdk.Splatter.InstrumentationPolicy.*;
 
 public class SplatterFirstPassApplicationVisitor extends ApplicationVisitor {
 
@@ -45,29 +48,30 @@ public class SplatterFirstPassApplicationVisitor extends ApplicationVisitor {
 
         private final String className;
         private final String methodName;
-        private boolean ignoreMethod;
+        private final MethodEntryInstrumentationPoint.Builder methodEntryInstrumentationPoint;
 
         public SplatterFirstPassMethodVisitor(int api, String className, String methodName) {
             super(api);
             this.className = className;
             this.methodName = methodName;
+
+            methodEntryInstrumentationPoint = methodEntryInstrumentationPoint()
+                    .withClassName(className)
+                    .withMethodName(methodName)
+                    .withInstrumentationPolicy(COMPLEX);
         }
 
         @Override
         public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-            if (desc.equals("Lcom/heisentest/splatter/sdk/SplatterIgnore;")) {
-                ignoreMethod = true;
+            if (desc.equals("Lcom/heisentest/splatter/sdk/Splatter;")) {
+                return new SplatterFirstPassAnnotationVisitor(api, methodEntryInstrumentationPoint);
             }
             return super.visitAnnotation(desc, visible);
         }
 
         @Override
         public void visitEnd() {
-            if (!ignoreMethod) {
-                instrumentationSpy.addInstrumentableMethod(className, methodName);
-            } else {
-                logger.debug(String.format("Annotation found! Skipping Class: %s, Method: %s.", className, methodName));
-            }
+            instrumentationSpy.addInstrumentationPoint(methodEntryInstrumentationPoint.build());
 
             super.visitEnd();
         }

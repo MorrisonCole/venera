@@ -81,7 +81,8 @@ public static byte[] dump() throws Exception {
 	dumpHeisentestXmlLogger(aw);
 	dumpMainActivity(aw);
 	dumpLogEvent(aw);
-	dumpSplatterIgnore(aw);
+	dumpSplatter$InstrumentationPolicy(aw);
+	dumpSplatter(aw);
 	dumpActiveTestSuite$1(aw);
 	dumppackageinfo(aw);
 	dumpAssert(aw);
@@ -12734,27 +12735,32 @@ public static void dumpAnInstrumentationTestCase(ApplicationWriter aw) {
 	{
 		mv = cv.visitMethod(ACC_PUBLIC, "startLogging", "V", null, null);
 		mv.visitCode();
-		mv.visitMaxs(8, 0);
-		mv.visitVarInsn(INSN_CONST_4, 4, 0);
-		mv.visitFieldInsn(INSN_IPUT_BOOLEAN, "Lcom/heisentest/skeletonandroidapp/AnInstrumentationTestCase;", "logging", "Z", 4, 7);
+		mv.visitMaxs(9, 0);
+		mv.visitVarInsn(INSN_CONST_4, 5, 0);
+		mv.visitFieldInsn(INSN_IPUT_BOOLEAN, "Lcom/heisentest/skeletonandroidapp/AnInstrumentationTestCase;", "logging", "Z", 5, 8);
 		Label l0 = new Label();
 		mv.visitLabel(l0);
 		Label l1 = new Label();
 		Label l2 = new Label();
 		mv.visitTryCatchBlock(l0, l1, l2, "Ljava/lang/NoSuchMethodException;");
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "getClass", "Ljava/lang/Class;", new int[] { 7 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 5);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/AnInstrumentationTestCase;", "getName", "Ljava/lang/String;", new int[] { 7 });
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "getClass", "Ljava/lang/Class;", new int[] { 8 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 6);
-		mv.visitVarInsn(INSN_CONST_4, 4, 0);
-		mv.visitTypeInsn(INSN_CHECK_CAST, 0, 4, 0, "[Ljava/lang/Class;");
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "getMethod", "Ljava/lang/reflect/Method;Ljava/lang/String;[Ljava/lang/Class;", new int[] { 5, 6, 4 });
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/AnInstrumentationTestCase;", "getName", "Ljava/lang/String;", new int[] { 8 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 7);
+		mv.visitVarInsn(INSN_CONST_4, 5, 0);
+		mv.visitTypeInsn(INSN_CHECK_CAST, 0, 5, 0, "[Ljava/lang/Class;");
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "getMethod", "Ljava/lang/reflect/Method;Ljava/lang/String;[Ljava/lang/Class;", new int[] { 6, 7, 5 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
-		mv.visitTypeInsn(INSN_CONST_CLASS, 4, 0, 0, "Lcom/heisentest/splatter/sdk/SplatterIgnore;");
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Method;", "isAnnotationPresent", "ZLjava/lang/Class;", new int[] { 3, 4 });
-		mv.visitIntInsn(INSN_MOVE_RESULT, 4);
+		mv.visitTypeInsn(INSN_CONST_CLASS, 5, 0, 0, "Lcom/heisentest/splatter/sdk/Splatter;");
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Method;", "getAnnotation", "Ljava/lang/annotation/Annotation;Ljava/lang/Class;", new int[] { 3, 5 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4);
+		mv.visitTypeInsn(INSN_CHECK_CAST, 0, 4, 0, "Lcom/heisentest/splatter/sdk/Splatter;");
 		Label l3 = new Label();
 		mv.visitJumpInsn(INSN_IF_EQZ, l3, 4, 0);
+		mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lcom/heisentest/splatter/sdk/Splatter;", "instrumentationPolicy", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", new int[] { 4 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 5);
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "NONE", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", 6, 0);
+		mv.visitJumpInsn(INSN_IF_NE, l3, 5, 6);
 		Label l4 = new Label();
 		mv.visitLabel(l4);
 		mv.visitInsn(INSN_RETURN_VOID);
@@ -12763,15 +12769,15 @@ public static void dumpAnInstrumentationTestCase(ApplicationWriter aw) {
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
 		mv.visitTypeInsn(INSN_NEW_INSTANCE, 2, 0, 0, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;");
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Method;", "getName", "Ljava/lang/String;", new int[] { 3 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4);
-		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "<init>", "VLjava/io/File;Ljava/lang/String;", new int[] { 2, 1, 4 });
-		mv.visitTypeInsn(INSN_NEW_INSTANCE, 4, 0, 0, "Ljava/lang/Thread;");
-		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Thread;", "<init>", "VLjava/lang/Runnable;", new int[] { 4, 2 });
-		mv.visitFieldInsn(INSN_SPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/AnInstrumentationTestCase;", "logThread", "Ljava/lang/Thread;", 4, 0);
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/AnInstrumentationTestCase;", "logThread", "Ljava/lang/Thread;", 4, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Thread;", "start", "V", new int[] { 4 });
-		mv.visitVarInsn(INSN_CONST_4, 4, 1);
-		mv.visitFieldInsn(INSN_IPUT_BOOLEAN, "Lcom/heisentest/skeletonandroidapp/AnInstrumentationTestCase;", "logging", "Z", 4, 7);
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 5);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "<init>", "VLjava/io/File;Ljava/lang/String;", new int[] { 2, 1, 5 });
+		mv.visitTypeInsn(INSN_NEW_INSTANCE, 5, 0, 0, "Ljava/lang/Thread;");
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Thread;", "<init>", "VLjava/lang/Runnable;", new int[] { 5, 2 });
+		mv.visitFieldInsn(INSN_SPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/AnInstrumentationTestCase;", "logThread", "Ljava/lang/Thread;", 5, 0);
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/AnInstrumentationTestCase;", "logThread", "Ljava/lang/Thread;", 5, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Thread;", "start", "V", new int[] { 5 });
+		mv.visitVarInsn(INSN_CONST_4, 5, 1);
+		mv.visitFieldInsn(INSN_IPUT_BOOLEAN, "Lcom/heisentest/skeletonandroidapp/AnInstrumentationTestCase;", "logging", "Z", 5, 8);
 		mv.visitLabel(l1);
 		mv.visitJumpInsn(INSN_GOTO, l4, 0, 0);
 		mv.visitLabel(l2);
@@ -13999,15 +14005,105 @@ public static void dumpLogEvent(ApplicationWriter aw) {
 	cv.visitEnd();
 }
 
-public static void dumpSplatterIgnore(ApplicationWriter aw) {
+public static void dumpSplatter$InstrumentationPolicy(ApplicationWriter aw) {
 	ClassVisitor cv;
 	FieldVisitor fv;
 	MethodVisitor mv;
 	AnnotationVisitor av0;
 
-	cv = aw.visitClass(ACC_PUBLIC + ACC_INTERFACE + ACC_ABSTRACT + ACC_ANNOTATION, "Lcom/heisentest/splatter/sdk/SplatterIgnore;", null, "Ljava/lang/Object;", new String[] { "Ljava/lang/annotation/Annotation;" });
-	cv.visit(0, ACC_PUBLIC + ACC_INTERFACE + ACC_ABSTRACT + ACC_ANNOTATION, "Lcom/heisentest/splatter/sdk/SplatterIgnore;", null, "Ljava/lang/Object;", new String[] { "Ljava/lang/annotation/Annotation;" });
-	cv.visitSource("SplatterIgnore.java", null);
+	cv = aw.visitClass(ACC_PUBLIC + ACC_FINAL + ACC_ENUM, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", new String[] { "Ljava/lang/Enum", "<", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", ">;" }, "Ljava/lang/Enum;", null);
+	cv.visit(0, ACC_PUBLIC + ACC_FINAL + ACC_ENUM, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", new String[] { "Ljava/lang/Enum", "<", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", ">;" }, "Ljava/lang/Enum;", null);
+	cv.visitSource("Splatter.java", null);
+	cv.visitInnerClass("Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "Lcom/heisentest/splatter/sdk/Splatter;", "InstrumentationPolicy", ACC_PUBLIC + ACC_STATIC + ACC_FINAL + ACC_ENUM);
+	{
+		fv = cv.visitField(ACC_PRIVATE + ACC_STATIC + ACC_FINAL + ACC_SYNTHETIC, "$VALUES", "[Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PUBLIC + ACC_STATIC + ACC_FINAL + ACC_ENUM, "COMPLEX", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PUBLIC + ACC_STATIC + ACC_FINAL + ACC_ENUM, "NONE", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PUBLIC + ACC_STATIC + ACC_FINAL + ACC_ENUM, "SIMPLE", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", null, null);
+		fv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_CONSTRUCTOR, "<clinit>", "V", null, null);
+		mv.visitCode();
+		mv.visitMaxs(5, 0);
+		mv.visitVarInsn(INSN_CONST_4, 4, 2);
+		mv.visitVarInsn(INSN_CONST_4, 3, 1);
+		mv.visitVarInsn(INSN_CONST_4, 2, 0);
+		mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;");
+		mv.visitStringInsn(INSN_CONST_STRING, 1, "NONE");
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "<init>", "VLjava/lang/String;I", new int[] { 0, 1, 2 });
+		mv.visitFieldInsn(INSN_SPUT_OBJECT, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "NONE", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", 0, 0);
+		mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;");
+		mv.visitStringInsn(INSN_CONST_STRING, 1, "SIMPLE");
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "<init>", "VLjava/lang/String;I", new int[] { 0, 1, 3 });
+		mv.visitFieldInsn(INSN_SPUT_OBJECT, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "SIMPLE", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", 0, 0);
+		mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;");
+		mv.visitStringInsn(INSN_CONST_STRING, 1, "COMPLEX");
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "<init>", "VLjava/lang/String;I", new int[] { 0, 1, 4 });
+		mv.visitFieldInsn(INSN_SPUT_OBJECT, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "COMPLEX", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", 0, 0);
+		mv.visitVarInsn(INSN_CONST_4, 0, 3);
+		mv.visitTypeInsn(INSN_NEW_ARRAY, 0, 0, 0, "[Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;");
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "NONE", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", 1, 0);
+		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 1, 0, 2);
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "SIMPLE", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", 1, 0);
+		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 1, 0, 3);
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "COMPLEX", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", 1, 0);
+		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 1, 0, 4);
+		mv.visitFieldInsn(INSN_SPUT_OBJECT, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "$VALUES", "[Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", 0, 0);
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PRIVATE + ACC_CONSTRUCTOR, "<init>", "VLjava/lang/String;I", new String[] { "()V" }, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Enum;", "<init>", "VLjava/lang/String;I", new int[] { 0, 1, 2 });
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_STATIC, "valueOf", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;Ljava/lang/String;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitTypeInsn(INSN_CONST_CLASS, 0, 0, 0, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;");
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Ljava/lang/Enum;", "valueOf", "Ljava/lang/Enum;Ljava/lang/Class;Ljava/lang/String;", new int[] { 0, 1 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitTypeInsn(INSN_CHECK_CAST, 0, 0, 0, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;");
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_STATIC, "values", "[Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(1, 0);
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "$VALUES", "[Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", 0, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "[Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "clone", "Ljava/lang/Object;", new int[] { 0 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitTypeInsn(INSN_CHECK_CAST, 0, 0, 0, "[Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;");
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	cv.visitEnd();
+}
+
+public static void dumpSplatter(ApplicationWriter aw) {
+	ClassVisitor cv;
+	FieldVisitor fv;
+	MethodVisitor mv;
+	AnnotationVisitor av0;
+
+	cv = aw.visitClass(ACC_PUBLIC + ACC_INTERFACE + ACC_ABSTRACT + ACC_ANNOTATION, "Lcom/heisentest/splatter/sdk/Splatter;", null, "Ljava/lang/Object;", new String[] { "Ljava/lang/annotation/Annotation;" });
+	cv.visit(0, ACC_PUBLIC + ACC_INTERFACE + ACC_ABSTRACT + ACC_ANNOTATION, "Lcom/heisentest/splatter/sdk/Splatter;", null, "Ljava/lang/Object;", new String[] { "Ljava/lang/annotation/Annotation;" });
+	cv.visitSource("Splatter.java", null);
 	{
 	av0 = cv.visitAnnotation("Ljava/lang/annotation/Retention;", true);
 		av0.visitEnum("value", "Ljava/lang/annotation/RetentionPolicy;", "RUNTIME");
@@ -14021,6 +14117,16 @@ public static void dumpSplatterIgnore(ApplicationWriter aw) {
 			av1.visitEnd();
 		}
 		av0.visitEnd();
+	}
+	cv.visitMemberClass("Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "Lcom/heisentest/splatter/sdk/Splatter;", "InstrumentationPolicy");
+	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_ABSTRACT, "instrumentationPolicy", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", null, null);
+		{
+			av0 = mv.visitAnnotationDefault();
+			av0.visitEnum("instrumentationPolicy", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "COMPLEX");
+			av0.visitEnd();
+		}
+		mv.visitEnd();
 	}
 	cv.visitEnd();
 }

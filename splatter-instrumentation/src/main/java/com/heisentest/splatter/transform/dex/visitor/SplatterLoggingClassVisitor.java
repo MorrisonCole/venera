@@ -1,5 +1,7 @@
 package com.heisentest.splatter.transform.dex.visitor;
 
+import com.heisentest.splatter.instrumentation.point.InstrumentationPoint;
+import com.heisentest.splatter.sdk.Splatter;
 import com.heisentest.splatter.transform.dex.InstrumentationSpy;
 import com.heisentest.splatter.transform.dex.visitor.noop.SplatterNoOpMethodVisitor;
 import com.heisentest.splatter.transform.dex.visitor.test.SplatterLoggingTearDownMethodVisitor;
@@ -11,6 +13,7 @@ import org.ow2.asmdex.structureCommon.Label;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.heisentest.splatter.sdk.Splatter.InstrumentationPolicy.COMPLEX;
 import static org.ow2.asmdex.Opcodes.*;
 
 public class SplatterLoggingClassVisitor extends ClassVisitor {
@@ -50,7 +53,9 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
         boolean instrument = false;
         ArrayList<String> allowedPrefixes = new ArrayList<>(Arrays.asList("get", "set", "tile", "on", "create", ""));
         for (String prefix : allowedPrefixes) {
-            if (name.startsWith(prefix) && instrumentationSpy.shouldInstrument(className, name)) {
+            final InstrumentationPoint instrumentationPoint = instrumentationSpy.getInstrumentationPoint(className, name);
+            if (name.startsWith(prefix) && instrumentationPoint != null && instrumentationPoint.getInstrumentationPolicy() == COMPLEX) {
+
                 instrument = true;
                 break;
             }

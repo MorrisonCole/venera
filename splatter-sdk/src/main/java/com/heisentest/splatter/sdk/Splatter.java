@@ -7,5 +7,13 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SplatterIgnore {
+public @interface Splatter {
+
+    public enum InstrumentationPolicy {
+        NONE,
+        SIMPLE,
+        COMPLEX
+    }
+
+    InstrumentationPolicy instrumentationPolicy() default InstrumentationPolicy.COMPLEX;
 }

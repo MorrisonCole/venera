@@ -1,16 +1,18 @@
 package com.heisentest.splatter.transform.dex;
 
-import com.google.common.collect.ArrayListMultimap;
+import com.heisentest.splatter.instrumentation.point.InstrumentationPoint;
+
+import java.util.ArrayList;
 
 public class InstrumentationSpy {
 
     private final String applicationRootNamespace;
     private int availableInstrumentationPoints = 0;
-    private final ArrayListMultimap<String, String> instrumentableMethods = ArrayListMultimap.create();
     private static final BaseTestCaseClassInfo[] baseTestCaseClassInfos = {
             new BaseTestCaseClassInfo("Lcom/heisentest/skeletonandroidapp/test/acceptance/SkeletonActivityInstrumentationTestCase;", "setUp", "tearDown"),
             new BaseTestCaseClassInfo("Lcom/heisentest/skeletonandroidapp/test/acceptance/SkeletonActivityUnitTestCase;", "setUp", "tearDown")
     };
+    private final ArrayList<InstrumentationPoint> instrumentationPoints = new ArrayList<>();
 
     public InstrumentationSpy(String applicationRootNamespace) {
         this.applicationRootNamespace = applicationRootNamespace;
@@ -69,11 +71,16 @@ public class InstrumentationSpy {
         return false;
     }
 
-    public void addInstrumentableMethod(String className, String methodName) {
-        instrumentableMethods.put(className, methodName);
+    public InstrumentationPoint getInstrumentationPoint(String className, String methodName) {
+        for (InstrumentationPoint instrumentationPoint : instrumentationPoints) {
+            if (instrumentationPoint.matches(className, methodName)) {
+                return instrumentationPoint;
+            }
+        }
+        return null;
     }
 
-    public boolean shouldInstrument(String className, String methodName) {
-        return instrumentableMethods.containsEntry(className, methodName);
+    public void addInstrumentationPoint(InstrumentationPoint instrumentationPoint) {
+        instrumentationPoints.add(instrumentationPoint);
     }
 }
