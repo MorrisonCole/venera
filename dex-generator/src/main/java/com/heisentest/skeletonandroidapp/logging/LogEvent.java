@@ -1,45 +1,24 @@
 package com.heisentest.skeletonandroidapp.logging;
 
-public class LogEvent {
-    private String calleeClassName = "";
-    private final String calleeMethodName;
-    private final String[] parameterNames;
-    private final Object callee;
-    private final Object[] parameters;
+import java.io.IOException;
 
-    public LogEvent(String calleeMethodName, String[] parameterNames, Object callee, Object[] parameters) {
-        this.calleeMethodName = calleeMethodName;
-        this.parameterNames = parameterNames;
-        this.callee = callee;
-        this.parameters = parameters;
+public abstract class LogEvent {
+
+    protected String eventName;
+    protected long eventTime;
+    protected long eventThreadId;
+
+    public String getEventName() {
+        return eventName;
     }
 
-    public LogEvent(String calleeClassName, String calleeMethodName, Object[] parameters) {
-        this(calleeMethodName, null, null, parameters);
-        this.calleeClassName = calleeClassName;
+    public long getEventTime() {
+        return eventTime;
     }
 
-    public String getCalleeClassName() {
-        if (callee != null) {
-            return callee.getClass().toString();
-        } else {
-            return calleeClassName;
-        }
+    public long getEventThreadId() {
+        return eventThreadId;
     }
 
-    public String getCalleeMethodName() {
-        return calleeMethodName;
-    }
-
-    public String[] getParameterNames() {
-        return parameterNames;
-    }
-
-    public Object getCallee() {
-        return callee;
-    }
-
-    public Object[] getParameters() {
-        return parameters;
-    }
+    public abstract void write(LogEventWriter logEventWriter) throws IOException;
 }

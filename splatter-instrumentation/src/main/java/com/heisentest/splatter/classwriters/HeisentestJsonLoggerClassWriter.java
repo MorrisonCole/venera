@@ -7,6 +7,5 @@ public class HeisentestJsonLoggerClassWriter implements LoggerClassWriter {
 
     public void addLogClass(ApplicationWriter applicationWriter) {
         ClassesDump.dumpHeisentestJsonLogger(applicationWriter);
-        ClassesDump.dumpLogEvent(applicationWriter);
     }
 }

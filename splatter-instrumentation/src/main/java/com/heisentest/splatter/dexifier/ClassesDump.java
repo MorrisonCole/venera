@@ -80,7 +80,12 @@ public static byte[] dump() throws Exception {
 	dumpHeisentestLogger(aw);
 	dumpHeisentestXmlLogger(aw);
 	dumpMainActivity(aw);
+	dumpInstanceMethodEntryEvent$1(aw);
+	dumpInstanceMethodEntryEvent$Builder(aw);
 	dumpLogEvent(aw);
+	dumpLogEventWriter(aw);
+	dumpStaticMethodEntryEvent$1(aw);
+	dumpStaticMethodEntryEvent$Builder(aw);
 	dumpSplatter$InstrumentationPolicy(aw);
 	dumpSplatter(aw);
 	dumpActiveTestSuite$1(aw);
@@ -306,6 +311,7 @@ public static byte[] dump() throws Exception {
 	dumpTypeAdapters$9(aw);
 	dumpTypeAdapters$EnumTypeAdapter(aw);
 	dumpJsonReader$1(aw);
+	dumpMethodEntryEvent(aw);
 	dumpTestDecorator(aw);
 	dumpTestSetup$1(aw);
 	dumpComparisonFailure2(aw);
@@ -389,6 +395,8 @@ public static byte[] dump() throws Exception {
 	dumpFieldNamingPolicy$3(aw);
 	dumpFieldNamingPolicy$4(aw);
 	dumpFieldNamingPolicy$5(aw);
+	dumpInstanceMethodEntryEvent(aw);
+	dumpStaticMethodEntryEvent(aw);
 	dumpActiveTestSuite(aw);
 	dumpRepeatedTest(aw);
 	dumpTestSetup(aw);
@@ -12828,11 +12836,11 @@ public static void dumpHeisentestJsonLogger(ApplicationWriter aw) {
 		fv.visitEnd();
 	}
 	{
-		fv = cv.visitField(ACC_PRIVATE + ACC_STATIC + ACC_FINAL, "gson", "Lcom/google/gson/Gson;", null, null);
+		fv = cv.visitField(ACC_PRIVATE + ACC_STATIC, "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", null, null);
 		fv.visitEnd();
 	}
 	{
-		fv = cv.visitField(ACC_PRIVATE + ACC_STATIC, "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", null, null);
+		fv = cv.visitField(ACC_PRIVATE + ACC_STATIC, "logEventWriter", "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", null, null);
 		fv.visitEnd();
 	}
 	{
@@ -12853,9 +12861,6 @@ public static void dumpHeisentestJsonLogger(ApplicationWriter aw) {
 		mv.visitMaxs(2, 0);
 		mv.visitVarInsn(INSN_CONST_4, 0, 0);
 		mv.visitFieldInsn(INSN_SPUT_BOOLEAN, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "currentlyLogging", "Z", 0, 0);
-		mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Lcom/google/gson/Gson;");
-		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/google/gson/Gson;", "<init>", "V", new int[] { 0 });
-		mv.visitFieldInsn(INSN_SPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "gson", "Lcom/google/gson/Gson;", 0, 0);
 		mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Ljava/util/concurrent/ArrayBlockingQueue;");
 		mv.visitVarInsn(INSN_CONST_16, 1, 10);
 		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/util/concurrent/ArrayBlockingQueue;", "<init>", "VI", new int[] { 0, 1 });
@@ -12924,6 +12929,10 @@ public static void dumpHeisentestJsonLogger(ApplicationWriter aw) {
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 1, 0);
 		mv.visitStringInsn(INSN_CONST_STRING, 2, "  ");
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "setIndent", "VLjava/lang/String;", new int[] { 1, 2 });
+		mv.visitTypeInsn(INSN_NEW_INSTANCE, 1, 0, 0, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;");
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 2, 0);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "<init>", "VLcom/google/gson/stream/JsonWriter;", new int[] { 1, 2 });
+		mv.visitFieldInsn(INSN_SPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "logEventWriter", "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", 1, 0);
 		mv.visitLabel(l1);
 		mv.visitInsn(INSN_RETURN_VOID);
 		mv.visitLabel(l2);
@@ -13040,6 +13049,66 @@ public static void dumpHeisentestJsonLogger(ApplicationWriter aw) {
 		mv.visitEnd();
 	}
 	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_STATIC + ACC_TRANSIENT, "complexLogInstanceMethodEntry", "VLjava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(7, 0);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "warnIfNotLogging", "Z", new int[] {  });
+		mv.visitIntInsn(INSN_MOVE_RESULT, 1);
+		Label l0 = new Label();
+		mv.visitJumpInsn(INSN_IF_EQZ, l0, 1, 0);
+		Label l1 = new Label();
+		mv.visitLabel(l1);
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitLabel(l0);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "instanceMethodEntryEvent", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", new int[] {  });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "withMethodName", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;Ljava/lang/String;", new int[] { 1, 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "getClass", "Ljava/lang/Class;", new int[] { 5 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 2);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "getName", "Ljava/lang/String;", new int[] { 2 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 2);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "withClassName", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;Ljava/lang/String;", new int[] { 1, 2 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "withCallee", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;Ljava/lang/Object;", new int[] { 1, 5 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "withParameters", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;[Ljava/lang/Object;", new int[] { 1, 6 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "withParameterNames", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;[Ljava/lang/String;", new int[] { 1, 4 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "build", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", new int[] { 1 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "queueLogEvent", "VLcom/heisentest/skeletonandroidapp/logging/LogEvent;", new int[] { 0 });
+		mv.visitJumpInsn(INSN_GOTO, l1, 0, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_STATIC + ACC_TRANSIENT, "complexLogStaticMethodEntry", "VLjava/lang/String;Ljava/lang/String;[Ljava/lang/Object;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(5, 0);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "warnIfNotLogging", "Z", new int[] {  });
+		mv.visitIntInsn(INSN_MOVE_RESULT, 1);
+		Label l0 = new Label();
+		mv.visitJumpInsn(INSN_IF_EQZ, l0, 1, 0);
+		Label l1 = new Label();
+		mv.visitLabel(l1);
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitLabel(l0);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "staticMethodEntryEvent", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", new int[] {  });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "withClassName", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;Ljava/lang/String;", new int[] { 1, 2 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "withMethodName", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;Ljava/lang/String;", new int[] { 1, 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "withParameters", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;[Ljava/lang/Object;", new int[] { 1, 4 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "build", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", new int[] { 1 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "queueLogEvent", "VLcom/heisentest/skeletonandroidapp/logging/LogEvent;", new int[] { 0 });
+		mv.visitJumpInsn(INSN_GOTO, l1, 0, 0);
+		mv.visitEnd();
+	}
+	{
 		mv = cv.visitMethod(ACC_PUBLIC + ACC_STATIC, "endLogging", "V", null, null);
 		mv.visitCode();
 		mv.visitMaxs(2, 0);
@@ -13054,219 +13123,33 @@ public static void dumpHeisentestJsonLogger(ApplicationWriter aw) {
 	{
 		mv = cv.visitMethod(ACC_PRIVATE + ACC_STATIC, "flush", "VLcom/heisentest/skeletonandroidapp/logging/LogEvent;", null, null);
 		mv.visitCode();
-		mv.visitMaxs(16, 0);
-		mv.visitVarInsn(INSN_CONST_4, 8, 0);
+		mv.visitMaxs(3, 0);
 		Label l0 = new Label();
 		mv.visitLabel(l0);
 		Label l1 = new Label();
 		Label l2 = new Label();
 		mv.visitTryCatchBlock(l0, l1, l2, "Ljava/io/IOException;");
-		mv.visitStringInsn(INSN_CONST_STRING, 9, "HeisentestLogger");
-		mv.visitStringInsn(INSN_CONST_STRING, 10, "Flushing event");
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "v", "ILjava/lang/String;Ljava/lang/String;", new int[] { 9, 10 });
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 9, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "beginObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 9 });
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 9, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 10, "class");
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 9, 10 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 9);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "getCalleeClassName", "Ljava/lang/String;", new int[] { 15 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 10);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "value", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 9, 10 });
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 9, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 10, "method");
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 9, 10 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 9);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "getCalleeMethodName", "Ljava/lang/String;", new int[] { 15 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 10);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "value", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 9, 10 });
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "getParameters", "[Ljava/lang/Object;", new int[] { 15 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 7);
-		mv.visitArrayLengthInsn(9, 7);
-		Label l3 = new Label();
-		mv.visitJumpInsn(INSN_IF_LEZ, l3, 9, 0);
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 9, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 10, "parameters");
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 9, 10 });
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 9, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "beginArray", "Lcom/google/gson/stream/JsonWriter;", new int[] { 9 });
-		mv.visitVarInsn(INSN_CONST_4, 5, 0);
-		Label l4 = new Label();
-		mv.visitLabel(l4);
-		mv.visitArrayLengthInsn(9, 7);
-		Label l5 = new Label();
-		mv.visitJumpInsn(INSN_IF_GE, l5, 5, 9);
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 9, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "beginObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 9 });
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 9, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "getParameterNames", "[Ljava/lang/String;", new int[] { 15 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 10);
-		mv.visitArrayOperationInsn(INSN_AGET_OBJECT, 10, 10, 5);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 9, 10 });
-		mv.visitArrayOperationInsn(INSN_AGET_OBJECT, 6, 7, 5);
-		Label l6 = new Label();
-		mv.visitJumpInsn(INSN_IF_EQZ, l6, 6, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "toString", "Ljava/lang/String;", new int[] { 6 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 9);
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "writeSerializedObjectWithFallback", "VLjava/lang/Object;Ljava/lang/String;", new int[] { 6, 9 });
-		Label l7 = new Label();
-		mv.visitLabel(l7);
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 9, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "endObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 9 });
-		mv.visitOperationInsn(INSN_ADD_INT_LIT8, 5, 5, 0, 1);
-		mv.visitJumpInsn(INSN_GOTO, l4, 0, 0);
-		mv.visitLabel(l6);
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 9, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "nullValue", "Lcom/google/gson/stream/JsonWriter;", new int[] { 9 });
-		mv.visitJumpInsn(INSN_GOTO, l7, 0, 0);
-		mv.visitLabel(l2);
-		mv.visitIntInsn(INSN_MOVE_EXCEPTION, 8);
-		Label l8 = new Label();
-		mv.visitLabel(l8);
-		mv.visitInsn(INSN_RETURN_VOID);
-		mv.visitLabel(l5);
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 9, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "endArray", "Lcom/google/gson/stream/JsonWriter;", new int[] { 9 });
-		mv.visitLabel(l3);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "getCallee", "Ljava/lang/Object;", new int[] { 15 });
+		mv.visitStringInsn(INSN_CONST_STRING, 0, "HeisentestLogger");
+		mv.visitStringInsn(INSN_CONST_STRING, 1, "Flushing event");
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "v", "ILjava/lang/String;Ljava/lang/String;", new int[] { 0, 1 });
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "logEventWriter", "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", 0, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "write", "VLcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", new int[] { 2, 0 });
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 0, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "flush", "V", new int[] { 0 });
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "fileWriter", "Ljava/io/FileWriter;", 0, 0);
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "stringWriter", "Ljava/io/StringWriter;", 1, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/io/StringWriter;", "toString", "Ljava/lang/String;", new int[] { 1 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/io/FileWriter;", "append", "Ljava/io/Writer;Ljava/lang/CharSequence;", new int[] { 0, 1 });
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "stringWriter", "Ljava/io/StringWriter;", 0, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/io/StringWriter;", "getBuffer", "Ljava/lang/StringBuffer;", new int[] { 0 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
-		Label l9 = new Label();
-		mv.visitJumpInsn(INSN_IF_EQZ, l9, 0, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "getClass", "Ljava/lang/Class;", new int[] { 0 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 9);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "getDeclaredFields", "[Ljava/lang/reflect/Field;", new int[] { 9 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4);
-		mv.visitArrayLengthInsn(9, 4);
-		mv.visitJumpInsn(INSN_IF_LEZ, l9, 9, 0);
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 9, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 10, "fields");
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 9, 10 });
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 9, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "beginArray", "Lcom/google/gson/stream/JsonWriter;", new int[] { 9 });
-		mv.visitArrayLengthInsn(9, 4);
-		Label l10 = new Label();
-		mv.visitLabel(l10);
-		Label l11 = new Label();
-		mv.visitJumpInsn(INSN_IF_GE, l11, 8, 9);
-		mv.visitArrayOperationInsn(INSN_AGET_OBJECT, 2, 4, 8);
-		Label l12 = new Label();
-		mv.visitJumpInsn(INSN_IF_EQZ, l12, 2, 0);
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 10, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "beginObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 10 });
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 10, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Field;", "toString", "Ljava/lang/String;", new int[] { 2 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 11);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Field;", "toString", "Ljava/lang/String;", new int[] { 2 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 12);
-		mv.visitVarInsn(INSN_CONST_16, 13, 46);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/String;", "lastIndexOf", "II", new int[] { 12, 13 });
-		mv.visitIntInsn(INSN_MOVE_RESULT, 12);
-		mv.visitOperationInsn(INSN_ADD_INT_LIT8, 12, 12, 0, 1);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/String;", "substring", "Ljava/lang/String;I", new int[] { 11, 12 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 11);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 10, 11 });
-		mv.visitVarInsn(INSN_CONST_4, 10, 1);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Field;", "setAccessible", "VZ", new int[] { 2, 10 });
-		mv.visitLabel(l1);
-		Label l13 = new Label();
-		Label l14 = new Label();
-		mv.visitTryCatchBlock(l1, l13, l14, "Ljava/lang/IllegalAccessException;");
-		mv.visitTryCatchBlock(l1, l13, l2, "Ljava/io/IOException;");
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Field;", "get", "Ljava/lang/Object;Ljava/lang/Object;", new int[] { 2, 0 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
-		Label l15 = new Label();
-		mv.visitJumpInsn(INSN_IF_EQZ, l15, 3, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "toString", "Ljava/lang/String;", new int[] { 3 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 10);
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "writeSerializedObjectWithFallback", "VLjava/lang/Object;Ljava/lang/String;", new int[] { 3, 10 });
-		mv.visitLabel(l13);
-		mv.visitTryCatchBlock(l13, l12, l2, "Ljava/io/IOException;");
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 10, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "endObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 10 });
-		mv.visitLabel(l12);
-		mv.visitOperationInsn(INSN_ADD_INT_LIT8, 8, 8, 0, 1);
-		mv.visitJumpInsn(INSN_GOTO, l10, 0, 0);
-		mv.visitLabel(l15);
-		Label l16 = new Label();
-		mv.visitTryCatchBlock(l15, l16, l14, "Ljava/lang/IllegalAccessException;");
-		mv.visitTryCatchBlock(l15, l16, l2, "Ljava/io/IOException;");
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 10, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "nullValue", "Lcom/google/gson/stream/JsonWriter;", new int[] { 10 });
-		mv.visitLabel(l16);
-		mv.visitJumpInsn(INSN_GOTO, l13, 0, 0);
-		mv.visitLabel(l14);
-		mv.visitIntInsn(INSN_MOVE_EXCEPTION, 1);
-		Label l17 = new Label();
-		mv.visitLabel(l17);
-		Label l18 = new Label();
-		mv.visitTryCatchBlock(l17, l18, l2, "Ljava/io/IOException;");
-		mv.visitStringInsn(INSN_CONST_STRING, 10, "HeisentestLogger");
-		mv.visitStringInsn(INSN_CONST_STRING, 11, "Field '%s' could not be accessed");
-		mv.visitVarInsn(INSN_CONST_4, 12, 1);
-		mv.visitTypeInsn(INSN_NEW_ARRAY, 12, 0, 12, "[Ljava/lang/Object;");
-		mv.visitVarInsn(INSN_CONST_4, 13, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Field;", "toString", "Ljava/lang/String;", new int[] { 2 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 14);
-		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 14, 12, 13);
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Ljava/lang/String;", "format", "Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;", new int[] { 11, 12 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 11);
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;", new int[] { 10, 11, 1 });
-		mv.visitJumpInsn(INSN_GOTO, l13, 0, 0);
-		mv.visitLabel(l11);
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "endArray", "Lcom/google/gson/stream/JsonWriter;", new int[] { 8 });
-		mv.visitLabel(l9);
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "endObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 8 });
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "flush", "V", new int[] { 8 });
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "fileWriter", "Ljava/io/FileWriter;", 8, 0);
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "stringWriter", "Ljava/io/StringWriter;", 9, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/io/StringWriter;", "toString", "Ljava/lang/String;", new int[] { 9 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 9);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/io/FileWriter;", "append", "Ljava/io/Writer;Ljava/lang/CharSequence;", new int[] { 8, 9 });
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "stringWriter", "Ljava/io/StringWriter;", 8, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/io/StringWriter;", "getBuffer", "Ljava/lang/StringBuffer;", new int[] { 8 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 8);
-		mv.visitVarInsn(INSN_CONST_4, 9, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/StringBuffer;", "setLength", "VI", new int[] { 8, 9 });
-		mv.visitLabel(l18);
-		mv.visitJumpInsn(INSN_GOTO_16, l8, 0, 0);
-		mv.visitEnd();
-	}
-	{
-		mv = cv.visitMethod(ACC_PUBLIC + ACC_STATIC + ACC_TRANSIENT, "log", "VLjava/lang/String;Ljava/lang/String;[Ljava/lang/Object;", null, null);
-		mv.visitCode();
-		mv.visitMaxs(5, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 0, "HeisentestLogger");
-		mv.visitStringInsn(INSN_CONST_STRING, 1, "Logging static event");
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;", new int[] { 0, 1 });
-		mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;");
-		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "<init>", "VLjava/lang/String;Ljava/lang/String;[Ljava/lang/Object;", new int[] { 0, 2, 3, 4 });
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "queueLogEvent", "VLcom/heisentest/skeletonandroidapp/logging/LogEvent;", new int[] { 0 });
-		mv.visitInsn(INSN_RETURN_VOID);
-		mv.visitEnd();
-	}
-	{
-		mv = cv.visitMethod(ACC_PUBLIC + ACC_STATIC + ACC_TRANSIENT, "log", "VLjava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", null, null);
-		mv.visitCode();
-		mv.visitMaxs(6, 0);
-		mv.visitFieldInsn(INSN_SGET_BOOLEAN, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "currentlyLogging", "Z", 0, 0);
-		Label l0 = new Label();
-		mv.visitJumpInsn(INSN_IF_NEZ, l0, 0, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 0, "HeisentestLogger");
-		mv.visitStringInsn(INSN_CONST_STRING, 1, "Requested log instance event but finished logging");
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "v", "ILjava/lang/String;Ljava/lang/String;", new int[] { 0, 1 });
-		Label l1 = new Label();
+		mv.visitVarInsn(INSN_CONST_4, 1, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/StringBuffer;", "setLength", "VI", new int[] { 0, 1 });
 		mv.visitLabel(l1);
 		mv.visitInsn(INSN_RETURN_VOID);
-		mv.visitLabel(l0);
-		mv.visitStringInsn(INSN_CONST_STRING, 0, "HeisentestLogger");
-		mv.visitStringInsn(INSN_CONST_STRING, 1, "Logging instance event");
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "v", "ILjava/lang/String;Ljava/lang/String;", new int[] { 0, 1 });
-		mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;");
-		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "<init>", "VLjava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", new int[] { 0, 2, 3, 4, 5 });
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "queueLogEvent", "VLcom/heisentest/skeletonandroidapp/logging/LogEvent;", new int[] { 0 });
+		mv.visitLabel(l2);
+		mv.visitIntInsn(INSN_MOVE_EXCEPTION, 0);
 		mv.visitJumpInsn(INSN_GOTO, l1, 0, 0);
 		mv.visitEnd();
 	}
@@ -13292,35 +13175,31 @@ public static void dumpHeisentestJsonLogger(ApplicationWriter aw) {
 		mv.visitEnd();
 	}
 	{
-		mv = cv.visitMethod(ACC_PRIVATE + ACC_STATIC, "writeSerializedObjectWithFallback", "VLjava/lang/Object;Ljava/lang/String;", null, new String[] { "Ljava/io/IOException;" });
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_STATIC, "simpleLogInstanceMethodEntry", "VLjava/lang/String;Ljava/lang/String;", null, null);
 		mv.visitCode();
-		mv.visitMaxs(8, 0);
-		Label l0 = new Label();
-		mv.visitLabel(l0);
-		Label l1 = new Label();
-		Label l2 = new Label();
-		mv.visitTryCatchBlock(l0, l1, l2, "Ljava/lang/Throwable;");
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "gson", "Lcom/google/gson/Gson;", 2, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/Gson;", "toJsonTree", "Lcom/google/gson/JsonElement;Ljava/lang/Object;", new int[] { 2, 6 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "gson", "Lcom/google/gson/Gson;", 2, 0);
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 3, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/Gson;", "toJson", "VLcom/google/gson/JsonElement;Lcom/google/gson/stream/JsonWriter;", new int[] { 2, 1, 3 });
-		mv.visitLabel(l1);
+		mv.visitMaxs(2, 0);
 		mv.visitInsn(INSN_RETURN_VOID);
-		mv.visitLabel(l2);
-		mv.visitIntInsn(INSN_MOVE_EXCEPTION, 0);
-		mv.visitStringInsn(INSN_CONST_STRING, 2, "HeisentestLogger");
-		mv.visitStringInsn(INSN_CONST_STRING, 3, "Failed to convert object '%s' to JSON");
-		mv.visitVarInsn(INSN_CONST_4, 4, 1);
-		mv.visitTypeInsn(INSN_NEW_ARRAY, 4, 0, 4, "[Ljava/lang/Object;");
-		mv.visitVarInsn(INSN_CONST_4, 5, 0);
-		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 7, 4, 5);
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Ljava/lang/String;", "format", "Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;", new int[] { 3, 4 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;", new int[] { 2, 3 });
-		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 2, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "value", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 2, 7 });
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PRIVATE + ACC_STATIC, "warnIfNotLogging", "Z", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_SGET_BOOLEAN, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "currentlyLogging", "Z", 0, 0);
+		Label l0 = new Label();
+		mv.visitJumpInsn(INSN_IF_NEZ, l0, 0, 0);
+		mv.visitStringInsn(INSN_CONST_STRING, 0, "HeisentestLogger");
+		mv.visitStringInsn(INSN_CONST_STRING, 1, "Requested log event but finished logging");
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "v", "ILjava/lang/String;Ljava/lang/String;", new int[] { 0, 1 });
+		mv.visitVarInsn(INSN_CONST_4, 0, 1);
+		Label l1 = new Label();
+		mv.visitLabel(l1);
+		mv.visitIntInsn(INSN_RETURN, 0);
+		mv.visitLabel(l0);
+		mv.visitStringInsn(INSN_CONST_STRING, 0, "HeisentestLogger");
+		mv.visitStringInsn(INSN_CONST_STRING, 1, "Logging event");
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "v", "ILjava/lang/String;Ljava/lang/String;", new int[] { 0, 1 });
+		mv.visitVarInsn(INSN_CONST_4, 0, 0);
 		mv.visitJumpInsn(INSN_GOTO, l1, 0, 0);
 		mv.visitEnd();
 	}
@@ -13870,7 +13749,7 @@ public static void dumpMainActivity(ApplicationWriter aw) {
 		mv.visitVarInsn(INSN_CONST_4, 3, 0);
 		mv.visitStringInsn(INSN_CONST_STRING, 4, "a parameter");
 		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 4, 2, 3);
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "log", "VLjava/lang/String;Ljava/lang/String;[Ljava/lang/Object;", new int[] { 0, 1, 2 });
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "complexLogStaticMethodEntry", "VLjava/lang/String;Ljava/lang/String;[Ljava/lang/Object;", new int[] { 0, 1, 2 });
 		mv.visitInsn(INSN_RETURN_VOID);
 		mv.visitEnd();
 	}
@@ -13890,8 +13769,221 @@ public static void dumpMainActivity(ApplicationWriter aw) {
 		mv.visitTypeInsn(INSN_NEW_ARRAY, 2, 0, 2, "[Ljava/lang/Object;");
 		mv.visitStringInsn(INSN_CONST_STRING, 3, "a parameter");
 		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 3, 2, 4);
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "log", "VLjava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", new int[] { 1, 0, 5, 2 });
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "complexLogInstanceMethodEntry", "VLjava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", new int[] { 1, 0, 5, 2 });
 		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	cv.visitEnd();
+}
+
+public static void dumpInstanceMethodEntryEvent$1(ApplicationWriter aw) {
+	ClassVisitor cv;
+	FieldVisitor fv;
+	MethodVisitor mv;
+	AnnotationVisitor av0;
+
+	cv = aw.visitClass(ACC_SYNTHETIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$1;", null, "Ljava/lang/Object;", null);
+	cv.visit(0, ACC_SYNTHETIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$1;", null, "Ljava/lang/Object;", null);
+	cv.visitSource("InstanceMethodEntryEvent.java", null);
+	cv.visitInnerClass("Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$1;", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", null, ACC_STATIC + ACC_SYNTHETIC);
+	cv.visitEnd();
+}
+
+public static void dumpInstanceMethodEntryEvent$Builder(ApplicationWriter aw) {
+	ClassVisitor cv;
+	FieldVisitor fv;
+	MethodVisitor mv;
+	AnnotationVisitor av0;
+
+	cv = aw.visitClass(ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", null, "Ljava/lang/Object;", null);
+	cv.visit(0, ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", null, "Ljava/lang/Object;", null);
+	cv.visitSource("InstanceMethodEntryEvent.java", null);
+	cv.visitInnerClass("Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "Builder", ACC_PUBLIC + ACC_STATIC);
+	{
+		fv = cv.visitField(ACC_PRIVATE, "callee", "Ljava/lang/Object;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PRIVATE, "className", "Ljava/lang/String;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PRIVATE, "eventName", "Ljava/lang/String;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PRIVATE, "eventThreadId", "J", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PRIVATE, "eventTime", "J", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PRIVATE, "methodName", "Ljava/lang/String;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PRIVATE, "parameterNames", "[Ljava/lang/String;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PRIVATE, "parameters", "[Ljava/lang/Object;", null, null);
+		fv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_CONSTRUCTOR, "<init>", "V", null, null);
+		mv.visitCode();
+		mv.visitMaxs(1, 0);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Object;", "<init>", "V", new int[] { 0 });
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "access$000", "Ljava/lang/Object;Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "callee", "Ljava/lang/Object;", 0, 1);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "access$100", "[Ljava/lang/String;Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "parameterNames", "[Ljava/lang/String;", 0, 1);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "access$200", "Ljava/lang/String;Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "className", "Ljava/lang/String;", 0, 1);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "access$300", "Ljava/lang/String;Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "methodName", "Ljava/lang/String;", 0, 1);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "access$400", "[Ljava/lang/Object;Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "parameters", "[Ljava/lang/Object;", 0, 1);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "access$500", "Ljava/lang/String;Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "eventName", "Ljava/lang/String;", 0, 1);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "access$600", "JLcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitFieldInsn(INSN_IGET_WIDE, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "eventTime", "J", 0, 2);
+		mv.visitIntInsn(INSN_RETURN_WIDE, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "access$700", "JLcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitFieldInsn(INSN_IGET_WIDE, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "eventThreadId", "J", 0, 2);
+		mv.visitIntInsn(INSN_RETURN_WIDE, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_STATIC, "instanceMethodEntryEvent", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(1, 0);
+		mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;");
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "<init>", "V", new int[] { 0 });
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "build", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;");
+		mv.visitVarInsn(INSN_CONST_4, 1, 0);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "<init>", "VLcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$1;", new int[] { 0, 2, 1 });
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "withCallee", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;Ljava/lang/Object;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "callee", "Ljava/lang/Object;", 1, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "withClassName", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;Ljava/lang/String;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "className", "Ljava/lang/String;", 1, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "withEventName", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;Ljava/lang/String;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "eventName", "Ljava/lang/String;", 1, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "withEventThreadId", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;J", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitFieldInsn(INSN_IPUT_WIDE, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "eventThreadId", "J", 1, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "withEventTime", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;J", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitFieldInsn(INSN_IPUT_WIDE, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "eventTime", "J", 1, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "withMethodName", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;Ljava/lang/String;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "methodName", "Ljava/lang/String;", 1, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "withParameterNames", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;[Ljava/lang/String;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "parameterNames", "[Ljava/lang/String;", 1, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "withParameters", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;[Ljava/lang/Object;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "parameters", "[Ljava/lang/Object;", 1, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
 		mv.visitEnd();
 	}
 	cv.visitEnd();
@@ -13903,102 +13995,457 @@ public static void dumpLogEvent(ApplicationWriter aw) {
 	MethodVisitor mv;
 	AnnotationVisitor av0;
 
-	cv = aw.visitClass(ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", null, "Ljava/lang/Object;", null);
-	cv.visit(0, ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", null, "Ljava/lang/Object;", null);
+	cv = aw.visitClass(ACC_PUBLIC + ACC_ABSTRACT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", null, "Ljava/lang/Object;", null);
+	cv.visit(0, ACC_PUBLIC + ACC_ABSTRACT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", null, "Ljava/lang/Object;", null);
 	cv.visitSource("LogEvent.java", null);
 	{
-		fv = cv.visitField(ACC_PRIVATE + ACC_FINAL, "callee", "Ljava/lang/Object;", null, null);
+		fv = cv.visitField(ACC_PROTECTED, "eventName", "Ljava/lang/String;", null, null);
 		fv.visitEnd();
 	}
 	{
-		fv = cv.visitField(ACC_PRIVATE, "calleeClassName", "Ljava/lang/String;", null, null);
+		fv = cv.visitField(ACC_PROTECTED, "eventThreadId", "J", null, null);
 		fv.visitEnd();
 	}
 	{
-		fv = cv.visitField(ACC_PRIVATE + ACC_FINAL, "calleeMethodName", "Ljava/lang/String;", null, null);
+		fv = cv.visitField(ACC_PROTECTED, "eventTime", "J", null, null);
 		fv.visitEnd();
 	}
 	{
-		fv = cv.visitField(ACC_PRIVATE + ACC_FINAL, "parameterNames", "[Ljava/lang/String;", null, null);
-		fv.visitEnd();
-	}
-	{
-		fv = cv.visitField(ACC_PRIVATE + ACC_FINAL, "parameters", "[Ljava/lang/Object;", null, null);
-		fv.visitEnd();
-	}
-	{
-		mv = cv.visitMethod(ACC_PUBLIC + ACC_CONSTRUCTOR, "<init>", "VLjava/lang/String;Ljava/lang/String;[Ljava/lang/Object;", null, null);
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_CONSTRUCTOR, "<init>", "V", null, null);
 		mv.visitCode();
-		mv.visitMaxs(5, 0);
-		mv.visitVarInsn(INSN_CONST_4, 0, 0);
-		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "<init>", "VLjava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", new int[] { 1, 3, 0, 0, 4 });
-		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "calleeClassName", "Ljava/lang/String;", 2, 1);
+		mv.visitMaxs(1, 0);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Object;", "<init>", "V", new int[] { 0 });
 		mv.visitInsn(INSN_RETURN_VOID);
 		mv.visitEnd();
 	}
 	{
-		mv = cv.visitMethod(ACC_PUBLIC + ACC_CONSTRUCTOR, "<init>", "VLjava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", null, null);
-		mv.visitCode();
-		mv.visitMaxs(6, 0);
-		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Object;", "<init>", "V", new int[] { 1 });
-		mv.visitStringInsn(INSN_CONST_STRING, 0, "");
-		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "calleeClassName", "Ljava/lang/String;", 0, 1);
-		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "calleeMethodName", "Ljava/lang/String;", 2, 1);
-		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "parameterNames", "[Ljava/lang/String;", 3, 1);
-		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "callee", "Ljava/lang/Object;", 4, 1);
-		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "parameters", "[Ljava/lang/Object;", 5, 1);
-		mv.visitInsn(INSN_RETURN_VOID);
-		mv.visitEnd();
-	}
-	{
-		mv = cv.visitMethod(ACC_PUBLIC, "getCallee", "Ljava/lang/Object;", null, null);
+		mv = cv.visitMethod(ACC_PUBLIC, "getEventName", "Ljava/lang/String;", null, null);
 		mv.visitCode();
 		mv.visitMaxs(2, 0);
-		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "callee", "Ljava/lang/Object;", 0, 1);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "eventName", "Ljava/lang/String;", 0, 1);
 		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
 		mv.visitEnd();
 	}
 	{
-		mv = cv.visitMethod(ACC_PUBLIC, "getCalleeClassName", "Ljava/lang/String;", null, null);
+		mv = cv.visitMethod(ACC_PUBLIC, "getEventThreadId", "J", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitFieldInsn(INSN_IGET_WIDE, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "eventThreadId", "J", 0, 2);
+		mv.visitIntInsn(INSN_RETURN_WIDE, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "getEventTime", "J", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitFieldInsn(INSN_IGET_WIDE, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "eventTime", "J", 0, 2);
+		mv.visitIntInsn(INSN_RETURN_WIDE, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_ABSTRACT, "write", "VLcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", null, new String[] { "Ljava/io/IOException;" });
+		mv.visitEnd();
+	}
+	cv.visitEnd();
+}
+
+public static void dumpLogEventWriter(ApplicationWriter aw) {
+	ClassVisitor cv;
+	FieldVisitor fv;
+	MethodVisitor mv;
+	AnnotationVisitor av0;
+
+	cv = aw.visitClass(ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", null, "Ljava/lang/Object;", null);
+	cv.visit(0, ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", null, "Ljava/lang/Object;", null);
+	cv.visitSource("LogEventWriter.java", null);
+	{
+		fv = cv.visitField(ACC_PRIVATE + ACC_STATIC + ACC_FINAL, "gson", "Lcom/google/gson/Gson;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PRIVATE + ACC_FINAL, "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", null, null);
+		fv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_CONSTRUCTOR, "<clinit>", "V", null, null);
+		mv.visitCode();
+		mv.visitMaxs(1, 0);
+		mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Lcom/google/gson/Gson;");
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/google/gson/Gson;", "<init>", "V", new int[] { 0 });
+		mv.visitFieldInsn(INSN_SPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "gson", "Lcom/google/gson/Gson;", 0, 0);
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_CONSTRUCTOR, "<init>", "VLcom/google/gson/stream/JsonWriter;", null, null);
 		mv.visitCode();
 		mv.visitMaxs(2, 0);
-		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "callee", "Ljava/lang/Object;", 0, 1);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Object;", "<init>", "V", new int[] { 0 });
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 1, 0);
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PRIVATE, "writeSerializedObjectWithFallback", "VLjava/lang/Object;Ljava/lang/String;", null, new String[] { "Ljava/io/IOException;" });
+		mv.visitCode();
+		mv.visitMaxs(9, 0);
 		Label l0 = new Label();
-		mv.visitJumpInsn(INSN_IF_EQZ, l0, 0, 0);
-		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "callee", "Ljava/lang/Object;", 0, 1);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "getClass", "Ljava/lang/Class;", new int[] { 0 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "toString", "Ljava/lang/String;", new int[] { 0 });
-		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
-		Label l1 = new Label();
-		mv.visitLabel(l1);
-		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
 		mv.visitLabel(l0);
-		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "calleeClassName", "Ljava/lang/String;", 0, 1);
+		Label l1 = new Label();
+		Label l2 = new Label();
+		mv.visitTryCatchBlock(l0, l1, l2, "Ljava/lang/Throwable;");
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "gson", "Lcom/google/gson/Gson;", 2, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/Gson;", "toJsonTree", "Lcom/google/gson/JsonElement;Ljava/lang/Object;", new int[] { 2, 7 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
+		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "gson", "Lcom/google/gson/Gson;", 2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 3, 6);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/Gson;", "toJson", "VLcom/google/gson/JsonElement;Lcom/google/gson/stream/JsonWriter;", new int[] { 2, 1, 3 });
+		mv.visitLabel(l1);
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitLabel(l2);
+		mv.visitIntInsn(INSN_MOVE_EXCEPTION, 0);
+		mv.visitStringInsn(INSN_CONST_STRING, 2, "HeisentestLogger");
+		mv.visitStringInsn(INSN_CONST_STRING, 3, "Failed to convert object '%s' to JSON");
+		mv.visitVarInsn(INSN_CONST_4, 4, 1);
+		mv.visitTypeInsn(INSN_NEW_ARRAY, 4, 0, 4, "[Ljava/lang/Object;");
+		mv.visitVarInsn(INSN_CONST_4, 5, 0);
+		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 8, 4, 5);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Ljava/lang/String;", "format", "Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;", new int[] { 3, 4 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;", new int[] { 2, 3 });
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 2, 6);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "value", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 2, 8 });
 		mv.visitJumpInsn(INSN_GOTO, l1, 0, 0);
 		mv.visitEnd();
 	}
 	{
-		mv = cv.visitMethod(ACC_PUBLIC, "getCalleeMethodName", "Ljava/lang/String;", null, null);
+		mv = cv.visitMethod(ACC_PUBLIC, "write", "VLcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", null, new String[] { "Ljava/io/IOException;" });
+		mv.visitCode();
+		mv.visitMaxs(17, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 15);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "beginObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 8 });
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 15);
+		mv.visitStringInsn(INSN_CONST_STRING, 9, "class");
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 8, 9 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 8);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL_RANGE, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "getClassName", "Ljava/lang/String;", new int[] { 16 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 9);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "value", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 8, 9 });
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 15);
+		mv.visitStringInsn(INSN_CONST_STRING, 9, "method");
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 8, 9 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 8);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL_RANGE, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "getMethodName", "Ljava/lang/String;", new int[] { 16 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 9);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "value", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 8, 9 });
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL_RANGE, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "getParameters", "[Ljava/lang/Object;", new int[] { 16 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 7);
+		mv.visitArrayLengthInsn(8, 7);
+		Label l0 = new Label();
+		mv.visitJumpInsn(INSN_IF_LEZ, l0, 8, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 15);
+		mv.visitStringInsn(INSN_CONST_STRING, 9, "parameters");
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 8, 9 });
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 15);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "beginArray", "Lcom/google/gson/stream/JsonWriter;", new int[] { 8 });
+		mv.visitVarInsn(INSN_CONST_4, 5, 0);
+		Label l1 = new Label();
+		mv.visitLabel(l1);
+		mv.visitArrayLengthInsn(8, 7);
+		Label l2 = new Label();
+		mv.visitJumpInsn(INSN_IF_GE, l2, 5, 8);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 15);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "beginObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 8 });
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 15);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL_RANGE, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "getParameterNames", "[Ljava/lang/String;", new int[] { 16 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 9);
+		mv.visitArrayOperationInsn(INSN_AGET_OBJECT, 9, 9, 5);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 8, 9 });
+		mv.visitArrayOperationInsn(INSN_AGET_OBJECT, 6, 7, 5);
+		Label l3 = new Label();
+		mv.visitJumpInsn(INSN_IF_EQZ, l3, 6, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "toString", "Ljava/lang/String;", new int[] { 6 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 8);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "writeSerializedObjectWithFallback", "VLjava/lang/Object;Ljava/lang/String;", new int[] { 15, 6, 8 });
+		Label l4 = new Label();
+		mv.visitLabel(l4);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 15);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "endObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 8 });
+		mv.visitOperationInsn(INSN_ADD_INT_LIT8, 5, 5, 0, 1);
+		mv.visitJumpInsn(INSN_GOTO, l1, 0, 0);
+		mv.visitLabel(l3);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 15);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "nullValue", "Lcom/google/gson/stream/JsonWriter;", new int[] { 8 });
+		mv.visitJumpInsn(INSN_GOTO, l4, 0, 0);
+		mv.visitLabel(l2);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 15);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "endArray", "Lcom/google/gson/stream/JsonWriter;", new int[] { 8 });
+		mv.visitLabel(l0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL_RANGE, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "getCallee", "Ljava/lang/Object;", new int[] { 16 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		Label l5 = new Label();
+		mv.visitJumpInsn(INSN_IF_EQZ, l5, 0, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "getClass", "Ljava/lang/Class;", new int[] { 0 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 8);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "getDeclaredFields", "[Ljava/lang/reflect/Field;", new int[] { 8 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4);
+		mv.visitArrayLengthInsn(8, 4);
+		mv.visitJumpInsn(INSN_IF_LEZ, l5, 8, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 15);
+		mv.visitStringInsn(INSN_CONST_STRING, 9, "fields");
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 8, 9 });
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 15);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "beginArray", "Lcom/google/gson/stream/JsonWriter;", new int[] { 8 });
+		mv.visitArrayLengthInsn(9, 4);
+		mv.visitVarInsn(INSN_CONST_4, 8, 0);
+		Label l6 = new Label();
+		mv.visitLabel(l6);
+		Label l7 = new Label();
+		mv.visitJumpInsn(INSN_IF_GE, l7, 8, 9);
+		mv.visitArrayOperationInsn(INSN_AGET_OBJECT, 2, 4, 8);
+		Label l8 = new Label();
+		mv.visitJumpInsn(INSN_IF_EQZ, l8, 2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 10, 15);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "beginObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 10 });
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 10, 15);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Field;", "toString", "Ljava/lang/String;", new int[] { 2 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 11);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Field;", "toString", "Ljava/lang/String;", new int[] { 2 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 12);
+		mv.visitVarInsn(INSN_CONST_16, 13, 46);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/String;", "lastIndexOf", "II", new int[] { 12, 13 });
+		mv.visitIntInsn(INSN_MOVE_RESULT, 12);
+		mv.visitOperationInsn(INSN_ADD_INT_LIT8, 12, 12, 0, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/String;", "substring", "Ljava/lang/String;I", new int[] { 11, 12 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 11);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 10, 11 });
+		mv.visitVarInsn(INSN_CONST_4, 10, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Field;", "setAccessible", "VZ", new int[] { 2, 10 });
+		Label l9 = new Label();
+		mv.visitLabel(l9);
+		Label l10 = new Label();
+		Label l11 = new Label();
+		mv.visitTryCatchBlock(l9, l10, l11, "Ljava/lang/IllegalAccessException;");
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Field;", "get", "Ljava/lang/Object;Ljava/lang/Object;", new int[] { 2, 0 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
+		Label l12 = new Label();
+		mv.visitJumpInsn(INSN_IF_EQZ, l12, 3, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "toString", "Ljava/lang/String;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 10);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "writeSerializedObjectWithFallback", "VLjava/lang/Object;Ljava/lang/String;", new int[] { 15, 3, 10 });
+		mv.visitLabel(l10);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 10, 15);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "endObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 10 });
+		mv.visitLabel(l8);
+		mv.visitOperationInsn(INSN_ADD_INT_LIT8, 8, 8, 0, 1);
+		mv.visitJumpInsn(INSN_GOTO, l6, 0, 0);
+		mv.visitLabel(l12);
+		Label l13 = new Label();
+		mv.visitTryCatchBlock(l12, l13, l11, "Ljava/lang/IllegalAccessException;");
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 10, 15);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "nullValue", "Lcom/google/gson/stream/JsonWriter;", new int[] { 10 });
+		mv.visitLabel(l13);
+		mv.visitJumpInsn(INSN_GOTO, l10, 0, 0);
+		mv.visitLabel(l11);
+		mv.visitIntInsn(INSN_MOVE_EXCEPTION, 1);
+		mv.visitStringInsn(INSN_CONST_STRING, 10, "HeisentestLogger");
+		mv.visitStringInsn(INSN_CONST_STRING, 11, "Field '%s' could not be accessed");
+		mv.visitVarInsn(INSN_CONST_4, 12, 1);
+		mv.visitTypeInsn(INSN_NEW_ARRAY, 12, 0, 12, "[Ljava/lang/Object;");
+		mv.visitVarInsn(INSN_CONST_4, 13, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Field;", "toString", "Ljava/lang/String;", new int[] { 2 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 14);
+		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 14, 12, 13);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Ljava/lang/String;", "format", "Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;", new int[] { 11, 12 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 11);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;", new int[] { 10, 11, 1 });
+		mv.visitJumpInsn(INSN_GOTO, l10, 0, 0);
+		mv.visitLabel(l7);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 15);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "endArray", "Lcom/google/gson/stream/JsonWriter;", new int[] { 8 });
+		mv.visitLabel(l5);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 8, 15);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "endObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 8 });
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "write", "VLcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", null, null);
 		mv.visitCode();
 		mv.visitMaxs(2, 0);
-		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "calleeMethodName", "Ljava/lang/String;", 0, 1);
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	cv.visitEnd();
+}
+
+public static void dumpStaticMethodEntryEvent$1(ApplicationWriter aw) {
+	ClassVisitor cv;
+	FieldVisitor fv;
+	MethodVisitor mv;
+	AnnotationVisitor av0;
+
+	cv = aw.visitClass(ACC_SYNTHETIC, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$1;", null, "Ljava/lang/Object;", null);
+	cv.visit(0, ACC_SYNTHETIC, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$1;", null, "Ljava/lang/Object;", null);
+	cv.visitSource("StaticMethodEntryEvent.java", null);
+	cv.visitInnerClass("Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$1;", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", null, ACC_STATIC + ACC_SYNTHETIC);
+	cv.visitEnd();
+}
+
+public static void dumpStaticMethodEntryEvent$Builder(ApplicationWriter aw) {
+	ClassVisitor cv;
+	FieldVisitor fv;
+	MethodVisitor mv;
+	AnnotationVisitor av0;
+
+	cv = aw.visitClass(ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", null, "Ljava/lang/Object;", null);
+	cv.visit(0, ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", null, "Ljava/lang/Object;", null);
+	cv.visitSource("StaticMethodEntryEvent.java", null);
+	cv.visitInnerClass("Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", "Builder", ACC_PUBLIC + ACC_STATIC);
+	{
+		fv = cv.visitField(ACC_PRIVATE, "className", "Ljava/lang/String;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PRIVATE, "eventName", "Ljava/lang/String;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PRIVATE, "eventThreadId", "J", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PRIVATE, "eventTime", "J", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PRIVATE, "methodName", "Ljava/lang/String;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PRIVATE, "parameters", "[Ljava/lang/Object;", null, null);
+		fv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_CONSTRUCTOR, "<init>", "V", null, null);
+		mv.visitCode();
+		mv.visitMaxs(1, 0);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Object;", "<init>", "V", new int[] { 0 });
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "access$000", "Ljava/lang/String;Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "eventName", "Ljava/lang/String;", 0, 1);
 		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
 		mv.visitEnd();
 	}
 	{
-		mv = cv.visitMethod(ACC_PUBLIC, "getParameterNames", "[Ljava/lang/String;", null, null);
+		mv = cv.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "access$100", "JLcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitFieldInsn(INSN_IGET_WIDE, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "eventTime", "J", 0, 2);
+		mv.visitIntInsn(INSN_RETURN_WIDE, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "access$200", "JLcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitFieldInsn(INSN_IGET_WIDE, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "eventThreadId", "J", 0, 2);
+		mv.visitIntInsn(INSN_RETURN_WIDE, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "access$300", "Ljava/lang/String;Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", null, null);
 		mv.visitCode();
 		mv.visitMaxs(2, 0);
-		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "parameterNames", "[Ljava/lang/String;", 0, 1);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "className", "Ljava/lang/String;", 0, 1);
 		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
 		mv.visitEnd();
 	}
 	{
-		mv = cv.visitMethod(ACC_PUBLIC, "getParameters", "[Ljava/lang/Object;", null, null);
+		mv = cv.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "access$400", "Ljava/lang/String;Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", null, null);
 		mv.visitCode();
 		mv.visitMaxs(2, 0);
-		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "parameters", "[Ljava/lang/Object;", 0, 1);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "methodName", "Ljava/lang/String;", 0, 1);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "access$500", "[Ljava/lang/Object;Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "parameters", "[Ljava/lang/Object;", 0, 1);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_STATIC, "staticMethodEntryEvent", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(1, 0);
+		mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;");
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "<init>", "V", new int[] { 0 });
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "build", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;");
+		mv.visitVarInsn(INSN_CONST_4, 1, 0);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", "<init>", "VLcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$1;", new int[] { 0, 2, 1 });
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "withClassName", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;Ljava/lang/String;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "className", "Ljava/lang/String;", 1, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "withEventName", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;Ljava/lang/String;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "eventName", "Ljava/lang/String;", 1, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "withEventThreadId", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;J", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitFieldInsn(INSN_IPUT_WIDE, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "eventThreadId", "J", 1, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "withEventTime", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;J", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitFieldInsn(INSN_IPUT_WIDE, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "eventTime", "J", 1, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "withMethodName", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;Ljava/lang/String;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "methodName", "Ljava/lang/String;", 1, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "withParameters", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;[Ljava/lang/Object;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "parameters", "[Ljava/lang/Object;", 1, 0);
 		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
 		mv.visitEnd();
 	}
@@ -37773,6 +38220,62 @@ public static void dumpJsonReader$1(ApplicationWriter aw) {
 	cv.visitEnd();
 }
 
+public static void dumpMethodEntryEvent(ApplicationWriter aw) {
+	ClassVisitor cv;
+	FieldVisitor fv;
+	MethodVisitor mv;
+	AnnotationVisitor av0;
+
+	cv = aw.visitClass(ACC_PUBLIC + ACC_ABSTRACT, "Lcom/heisentest/skeletonandroidapp/logging/MethodEntryEvent;", null, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", null);
+	cv.visit(0, ACC_PUBLIC + ACC_ABSTRACT, "Lcom/heisentest/skeletonandroidapp/logging/MethodEntryEvent;", null, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", null);
+	cv.visitSource("MethodEntryEvent.java", null);
+	{
+		fv = cv.visitField(ACC_PROTECTED, "className", "Ljava/lang/String;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PROTECTED, "methodName", "Ljava/lang/String;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PROTECTED, "parameters", "[Ljava/lang/Object;", null, null);
+		fv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_CONSTRUCTOR, "<init>", "V", null, null);
+		mv.visitCode();
+		mv.visitMaxs(1, 0);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/LogEvent;", "<init>", "V", new int[] { 0 });
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "getClassName", "Ljava/lang/String;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/MethodEntryEvent;", "className", "Ljava/lang/String;", 0, 1);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "getMethodName", "Ljava/lang/String;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/MethodEntryEvent;", "methodName", "Ljava/lang/String;", 0, 1);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "getParameters", "[Ljava/lang/Object;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/MethodEntryEvent;", "parameters", "[Ljava/lang/Object;", 0, 1);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	cv.visitEnd();
+}
+
 public static void dumpTestDecorator(ApplicationWriter aw) {
 	ClassVisitor cv;
 	FieldVisitor fv;
@@ -46704,6 +47207,148 @@ public static void dumpFieldNamingPolicy$5(ApplicationWriter aw) {
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/String;", "toLowerCase", "Ljava/lang/String;", new int[] { 0 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
 		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	cv.visitEnd();
+}
+
+public static void dumpInstanceMethodEntryEvent(ApplicationWriter aw) {
+	ClassVisitor cv;
+	FieldVisitor fv;
+	MethodVisitor mv;
+	AnnotationVisitor av0;
+
+	cv = aw.visitClass(ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", null, "Lcom/heisentest/skeletonandroidapp/logging/MethodEntryEvent;", null);
+	cv.visit(0, ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", null, "Lcom/heisentest/skeletonandroidapp/logging/MethodEntryEvent;", null);
+	cv.visitSource("InstanceMethodEntryEvent.java", null);
+	cv.visitMemberClass("Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$1;", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "1");
+	cv.visitMemberClass("Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "Builder");
+	{
+		fv = cv.visitField(ACC_PRIVATE, "callee", "Ljava/lang/Object;", null, null);
+		fv.visitEnd();
+	}
+	{
+		fv = cv.visitField(ACC_PRIVATE, "parameterNames", "[Ljava/lang/String;", null, null);
+		fv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PRIVATE + ACC_CONSTRUCTOR, "<init>", "VLcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(4, 0);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/MethodEntryEvent;", "<init>", "V", new int[] { 2 });
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "access$000", "Ljava/lang/Object;Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "callee", "Ljava/lang/Object;", 0, 2);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "access$100", "[Ljava/lang/String;Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "parameterNames", "[Ljava/lang/String;", 0, 2);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "access$200", "Ljava/lang/String;Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "className", "Ljava/lang/String;", 0, 2);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "access$300", "Ljava/lang/String;Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "methodName", "Ljava/lang/String;", 0, 2);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "access$400", "[Ljava/lang/Object;Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "parameters", "[Ljava/lang/Object;", 0, 2);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "access$500", "Ljava/lang/String;Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "eventName", "Ljava/lang/String;", 0, 2);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "access$600", "JLcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_WIDE, 0);
+		mv.visitFieldInsn(INSN_IPUT_WIDE, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "eventTime", "J", 0, 2);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", "access$700", "JLcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_WIDE, 0);
+		mv.visitFieldInsn(INSN_IPUT_WIDE, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "eventThreadId", "J", 0, 2);
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_SYNTHETIC + ACC_CONSTRUCTOR, "<init>", "VLcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$1;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "<init>", "VLcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent$Builder;", new int[] { 0, 1 });
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "getCallee", "Ljava/lang/Object;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "callee", "Ljava/lang/Object;", 0, 1);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "getParameterNames", "[Ljava/lang/String;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", "parameterNames", "[Ljava/lang/String;", 0, 1);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "write", "VLcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", null, new String[] { "Ljava/io/IOException;" });
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "write", "VLcom/heisentest/skeletonandroidapp/logging/InstanceMethodEntryEvent;", new int[] { 1, 0 });
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	cv.visitEnd();
+}
+
+public static void dumpStaticMethodEntryEvent(ApplicationWriter aw) {
+	ClassVisitor cv;
+	FieldVisitor fv;
+	MethodVisitor mv;
+	AnnotationVisitor av0;
+
+	cv = aw.visitClass(ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", null, "Lcom/heisentest/skeletonandroidapp/logging/MethodEntryEvent;", null);
+	cv.visit(0, ACC_PUBLIC, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", null, "Lcom/heisentest/skeletonandroidapp/logging/MethodEntryEvent;", null);
+	cv.visitSource("StaticMethodEntryEvent.java", null);
+	cv.visitMemberClass("Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$1;", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", "1");
+	cv.visitMemberClass("Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", "Builder");
+	{
+		mv = cv.visitMethod(ACC_PRIVATE + ACC_CONSTRUCTOR, "<init>", "VLcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(4, 0);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/MethodEntryEvent;", "<init>", "V", new int[] { 2 });
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "access$000", "Ljava/lang/String;Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", "eventName", "Ljava/lang/String;", 0, 2);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "access$100", "JLcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_WIDE, 0);
+		mv.visitFieldInsn(INSN_IPUT_WIDE, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", "eventTime", "J", 0, 2);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "access$200", "JLcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_WIDE, 0);
+		mv.visitFieldInsn(INSN_IPUT_WIDE, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", "eventThreadId", "J", 0, 2);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "access$300", "Ljava/lang/String;Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", "className", "Ljava/lang/String;", 0, 2);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "access$400", "Ljava/lang/String;Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", "methodName", "Ljava/lang/String;", 0, 2);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", "access$500", "[Ljava/lang/Object;Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", new int[] { 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitFieldInsn(INSN_IPUT_OBJECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", "parameters", "[Ljava/lang/Object;", 0, 2);
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_SYNTHETIC + ACC_CONSTRUCTOR, "<init>", "VLcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$1;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", "<init>", "VLcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent$Builder;", new int[] { 0, 1 });
+		mv.visitInsn(INSN_RETURN_VOID);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PUBLIC, "write", "VLcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", null, null);
+		mv.visitCode();
+		mv.visitMaxs(2, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/skeletonandroidapp/logging/LogEventWriter;", "write", "VLcom/heisentest/skeletonandroidapp/logging/StaticMethodEntryEvent;", new int[] { 1, 0 });
+		mv.visitInsn(INSN_RETURN_VOID);
 		mv.visitEnd();
 	}
 	cv.visitEnd();

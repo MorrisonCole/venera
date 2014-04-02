@@ -2,16 +2,19 @@ package com.heisentest.skeletonandroidapp;
 
 import android.os.Environment;
 import android.util.Log;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.stream.JsonWriter;
+import com.heisentest.skeletonandroidapp.logging.InstanceMethodEntryEvent;
 import com.heisentest.skeletonandroidapp.logging.LogEvent;
+import com.heisentest.skeletonandroidapp.logging.LogEventWriter;
+import com.heisentest.skeletonandroidapp.logging.StaticMethodEntryEvent;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+
+import static com.heisentest.skeletonandroidapp.logging.InstanceMethodEntryEvent.Builder.instanceMethodEntryEvent;
+import static com.heisentest.skeletonandroidapp.logging.StaticMethodEntryEvent.Builder.staticMethodEntryEvent;
 
 public final class HeisentestJsonLogger implements Runnable {
 
@@ -22,9 +25,9 @@ public final class HeisentestJsonLogger implements Runnable {
     private static File outputFile;
     private static JsonWriter jsonWriter;
     private volatile static boolean currentlyLogging = false;
-    private static final Gson gson = new Gson();
     private static File outputDirectory;
     private static final BlockingQueue<LogEvent> blockingQueue = new ArrayBlockingQueue<>(DEFAULT_QUEUE_CAPACITY);
+    private static LogEventWriter logEventWriter;
 
     public HeisentestJsonLogger(File fileDirectory, String methodName) {
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -42,6 +45,8 @@ public final class HeisentestJsonLogger implements Runnable {
 
             jsonWriter = new JsonWriter(stringWriter);
             jsonWriter.setIndent("  ");
+
+            logEventWriter = new LogEventWriter(jsonWriter);
         } catch (IOException e) {
             Log.e(HEISENTEST_LOGGER_TAG, "Failed to create output outputDirectory", e);
         }
@@ -64,27 +69,44 @@ public final class HeisentestJsonLogger implements Runnable {
         currentlyLogging = false;
     }
 
-    /**
-     * Logs an instance method call.
-     */
-    public static void log(String calleeMethodName, String[] parameterNames, Object callee, Object... parameters) {
-        if (!currentlyLogging) {
-            Log.v(HEISENTEST_LOGGER_TAG, "Requested log instance event but finished logging");
-            return;
-        }
-
-        Log.v(HEISENTEST_LOGGER_TAG, "Logging instance event");
-
-        queueLogEvent(new LogEvent(calleeMethodName, parameterNames, callee, parameters));
+    public static void simpleLogInstanceMethodEntry(String calleeClassName, String calleeMethodName) {
     }
 
-    /**
-     * Logs a static method call.
-     */
-    public static void log(String calleeClassName, String calleeMethodName, Object... parameters) {
-        Log.d(HEISENTEST_LOGGER_TAG, "Logging static event");
+    public static void complexLogInstanceMethodEntry(String calleeMethodName, String[] parameterNames, Object callee, Object... parameters) {
+        if (warnIfNotLogging()) return;
 
-        queueLogEvent(new LogEvent(calleeClassName, calleeMethodName, parameters));
+        final InstanceMethodEntryEvent instanceMethodEntryEvent = instanceMethodEntryEvent()
+                .withMethodName(calleeMethodName)
+                .withClassName(callee.getClass().getName())
+                .withCallee(callee)
+                .withParameters(parameters)
+                .withParameterNames(parameterNames)
+                .build();
+
+        queueLogEvent(instanceMethodEntryEvent);
+    }
+
+    public static void complexLogStaticMethodEntry(String calleeClassName, String calleeMethodName, Object... parameters) {
+        if (warnIfNotLogging()) return;
+
+        final StaticMethodEntryEvent staticMethodEntryEvent = staticMethodEntryEvent()
+                .withClassName(calleeClassName)
+                .withMethodName(calleeMethodName)
+                .withParameters(parameters)
+                .build();
+
+        queueLogEvent(staticMethodEntryEvent);
+    }
+
+    private static boolean warnIfNotLogging() {
+        if (!currentlyLogging) {
+            Log.v(HEISENTEST_LOGGER_TAG, "Requested log event but finished logging");
+            return true;
+        }
+
+        Log.v(HEISENTEST_LOGGER_TAG, "Logging event");
+
+        return false;
     }
 
     private static void queueLogEvent(LogEvent logEvent) {
@@ -116,80 +138,14 @@ public final class HeisentestJsonLogger implements Runnable {
     private static void flush(LogEvent logEvent) {
         try {
             Log.v(HEISENTEST_LOGGER_TAG, "Flushing event");
-            jsonWriter.beginObject();
+            logEvent.write(logEventWriter);
 
-            jsonWriter.name("class").value(logEvent.getCalleeClassName());
-
-            jsonWriter.name("method").value(logEvent.getCalleeMethodName());
-            final Object[] parameters = logEvent.getParameters();
-            if (parameters.length > 0) {
-                jsonWriter.name("parameters");
-                jsonWriter.beginArray();
-                for (int i = 0; i < parameters.length; i++) {
-                    jsonWriter.beginObject();
-                    jsonWriter.name(logEvent.getParameterNames()[i]);
-
-                    Object parameter = parameters[i];
-                    if (parameter != null) {
-                        writeSerializedObjectWithFallback(parameter, parameter.toString());
-                    }
-                    else {
-                        jsonWriter.nullValue();
-                    }
-
-                    jsonWriter.endObject();
-                }
-                jsonWriter.endArray();
-            }
-
-            final Object callee = logEvent.getCallee();
-            if (callee != null) {
-                final Field[] fields = callee.getClass().getDeclaredFields();
-                if (fields.length > 0) {
-                    jsonWriter.name("fields");
-                    jsonWriter.beginArray();
-                    for (Field field : fields) {
-                        if (field != null) {
-                            jsonWriter.beginObject();
-
-                            // TODO: This can be done after the tests have run. Needless overhead.
-                            jsonWriter.name(field.toString().substring(field.toString().lastIndexOf('.') + 1));
-                            field.setAccessible(true);
-                            try {
-                                Object fieldObject = field.get(callee);
-                                if (fieldObject != null) {
-                                    writeSerializedObjectWithFallback(fieldObject, fieldObject.toString());
-                                } else {
-                                    jsonWriter.nullValue();
-                                }
-                            } catch (IllegalAccessException e) {
-                                Log.d(HEISENTEST_LOGGER_TAG, String.format("Field '%s' could not be accessed", field.toString()), e);
-                            }
-                            jsonWriter.endObject();
-                        }
-                    }
-                    jsonWriter.endArray();
-                }
-            }
-
-            jsonWriter.endObject();
             jsonWriter.flush();
             fileWriter.append(stringWriter.toString());
             stringWriter.getBuffer().setLength(0); // TODO: hacky way to 'clear' the StringWriter...
         } catch (IOException e) {
             // TODO: this happens a lot; need a better way to drive the event logging.
 //            Log.d(HEISENTEST_LOGGER_TAG, "Failed to write event to XML", e);
-        }
-    }
-
-    private static void writeSerializedObjectWithFallback(Object object, String fallbackRepresentation) throws IOException {
-        try {
-            JsonElement element = gson.toJsonTree(object);
-            gson.toJson(element, jsonWriter);
-        }
-        catch (Throwable e) {
-            Log.d(HEISENTEST_LOGGER_TAG, String.format("Failed to convert object '%s' to JSON", fallbackRepresentation));
-            jsonWriter.value(fallbackRepresentation);
         }
     }
 

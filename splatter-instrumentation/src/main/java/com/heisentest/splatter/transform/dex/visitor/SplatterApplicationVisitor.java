@@ -1,9 +1,11 @@
 package com.heisentest.splatter.transform.dex.visitor;
 
 import com.heisentest.splatter.classwriters.HeisentestJsonLoggerClassWriter;
+import com.heisentest.splatter.classwriters.LogEventWriter;
 import com.heisentest.splatter.classwriters.LoggerClassWriter;
 import com.heisentest.splatter.transform.dex.InstrumentationSpy;
 import com.heisentest.splatter.transform.dex.visitor.noop.SplatterNoOpClassVisitor;
+import com.heisentest.splatter.transform.dex.visitor.test.SplatterBaseTestCaseClassVisitor;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.ApplicationVisitor;
 import org.ow2.asmdex.ApplicationWriter;
@@ -42,7 +44,10 @@ public class SplatterApplicationVisitor extends ApplicationVisitor {
 
         if (instrumentationSpy.isApplicationApk()) {
             loggerClassWriter.addLogClass(applicationWriter);
+            final LogEventWriter logEventWriter = new LogEventWriter();
+            logEventWriter.addLogEventClasses(applicationWriter);
         }
+
         super.visitEnd();
     }
 }

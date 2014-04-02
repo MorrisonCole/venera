@@ -1,9 +1,7 @@
-package com.heisentest.splatter.transform.dex.visitor;
+package com.heisentest.splatter.transform.dex.visitor.test;
 
 import com.heisentest.splatter.transform.dex.InstrumentationSpy;
 import com.heisentest.splatter.transform.dex.visitor.noop.SplatterNoOpMethodVisitor;
-import com.heisentest.splatter.transform.dex.visitor.test.SplatterLoggingSetUpMethodVisitor;
-import com.heisentest.splatter.transform.dex.visitor.test.SplatterLoggingTearDownMethodVisitor;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.ClassVisitor;
 import org.ow2.asmdex.FieldVisitor;
