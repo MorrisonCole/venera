@@ -4,7 +4,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.stream.JsonWriter;
-import com.heisentest.skeletonandroidapp.HeisentestJsonLogger;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -20,19 +19,21 @@ public class LogEventWriter {
         this.jsonWriter = jsonWriter;
     }
 
-    public void write(InstanceMethodEntryEvent instanceMethodEntryEvent) throws IOException {
+    public void write(ComplexInstanceMethodEntryEvent complexInstanceMethodEntryEvent) throws IOException {
         jsonWriter.beginObject();
 
-        jsonWriter.name("class").value(instanceMethodEntryEvent.getClassName());
+        jsonWriter.name("eventType").value(complexInstanceMethodEntryEvent.getEventName());
 
-        jsonWriter.name("method").value(instanceMethodEntryEvent.getMethodName());
-        final Object[] parameters = instanceMethodEntryEvent.getParameters();
+        jsonWriter.name("class").value(complexInstanceMethodEntryEvent.getClassName());
+
+        jsonWriter.name("method").value(complexInstanceMethodEntryEvent.getMethodName());
+        final Object[] parameters = complexInstanceMethodEntryEvent.getParameters();
         if (parameters.length > 0) {
             jsonWriter.name("parameters");
             jsonWriter.beginArray();
             for (int i = 0; i < parameters.length; i++) {
                 jsonWriter.beginObject();
-                jsonWriter.name(instanceMethodEntryEvent.getParameterNames()[i]);
+                jsonWriter.name(complexInstanceMethodEntryEvent.getParameterNames()[i]);
 
                 Object parameter = parameters[i];
                 if (parameter != null) {
@@ -47,7 +48,7 @@ public class LogEventWriter {
             jsonWriter.endArray();
         }
 
-        final Object callee = instanceMethodEntryEvent.getCallee();
+        final Object callee = complexInstanceMethodEntryEvent.getCallee();
         if (callee != null) {
             final Field[] fields = callee.getClass().getDeclaredFields();
             if (fields.length > 0) {

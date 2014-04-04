@@ -2,12 +2,12 @@ package com.heisentest.skeletonandroidapp.logging;
 
 import java.io.IOException;
 
-public class InstanceMethodEntryEvent extends MethodEntryEvent {
+public class ComplexInstanceMethodEntryEvent extends MethodEntryEvent {
 
     private Object callee;
     private String[] parameterNames;
 
-    private InstanceMethodEntryEvent(Builder builder) {
+    private ComplexInstanceMethodEntryEvent(Builder builder) {
         this.callee = builder.callee;
         this.parameterNames = builder.parameterNames;
         this.className = builder.className;
@@ -37,11 +37,11 @@ public class InstanceMethodEntryEvent extends MethodEntryEvent {
         private String className;
         private String methodName;
         private Object[] parameters;
-        private String eventName;
+        private String eventName = "Complex Instance Method Entry";
         private long eventTime;
         private long eventThreadId;
 
-        public static Builder instanceMethodEntryEvent() {
+        public static Builder complexInstanceMethodEntryEvent() {
             return new Builder();
         }
 
@@ -85,8 +85,8 @@ public class InstanceMethodEntryEvent extends MethodEntryEvent {
             return this;
         }
 
-        public InstanceMethodEntryEvent build() {
-            return new InstanceMethodEntryEvent(this);
+        public ComplexInstanceMethodEntryEvent build() {
+            return new ComplexInstanceMethodEntryEvent(this);
         }
     }
 }

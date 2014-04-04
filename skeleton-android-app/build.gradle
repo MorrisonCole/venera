@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.1'
+    buildToolsVersion '19.0.3'
 
     defaultConfig {
         minSdkVersion 15
@@ -38,7 +38,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     compile project(':splatter-sdk')
 
-    instrumentTestCompile files('libs/espresso-contrib-1.1-bundled.jar')
+    androidTestCompile files('libs/espresso-contrib-1.1-bundled.jar')
 }
 
 task removeStaleResults(type: Delete) {
@@ -51,7 +51,7 @@ task removeStaleResults(type: Delete) {
 task pullResults(type: Exec) {
     workingDir project.projectDir
 
-    commandLine 'scripts/pull-results.sh', "${project.buildDir}/instrumentTest-results/connected"
+    commandLine 'scripts/pull-results.sh', "${project.buildDir}/androidTest-results/connected"
 }
 
 evaluationDependsOn(':splatter-instrumentation')
@@ -60,8 +60,8 @@ afterEvaluate {
     // Properties are passed to Gradle from the command line (e.g., gradle clean install -Psplatter)
     if (project.hasProperty('splatter')) {
         installDebug.dependsOn project(':splatter-instrumentation').tasks.run
-        connectedInstrumentTest.dependsOn project(':splatter-instrumentation').tasks.run
-        connectedInstrumentTest.dependsOn removeStaleResults
-        connectedInstrumentTest.finalizedBy pullResults
+        connectedAndroidTest.dependsOn project(':splatter-instrumentation').tasks.run
+        connectedAndroidTest.dependsOn removeStaleResults
+        connectedAndroidTest.finalizedBy pullResults
     }
 }

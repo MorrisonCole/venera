@@ -3,7 +3,7 @@ package com.heisentest.skeletonandroidapp;
 import android.os.Environment;
 import android.util.Log;
 import com.google.gson.stream.JsonWriter;
-import com.heisentest.skeletonandroidapp.logging.InstanceMethodEntryEvent;
+import com.heisentest.skeletonandroidapp.logging.ComplexInstanceMethodEntryEvent;
 import com.heisentest.skeletonandroidapp.logging.LogEvent;
 import com.heisentest.skeletonandroidapp.logging.LogEventWriter;
 import com.heisentest.skeletonandroidapp.logging.StaticMethodEntryEvent;
@@ -13,7 +13,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import static com.heisentest.skeletonandroidapp.logging.InstanceMethodEntryEvent.Builder.instanceMethodEntryEvent;
+import static com.heisentest.skeletonandroidapp.logging.ComplexInstanceMethodEntryEvent.Builder.complexInstanceMethodEntryEvent;
 import static com.heisentest.skeletonandroidapp.logging.StaticMethodEntryEvent.Builder.staticMethodEntryEvent;
 
 public final class HeisentestJsonLogger implements Runnable {
@@ -75,7 +75,7 @@ public final class HeisentestJsonLogger implements Runnable {
     public static void complexLogInstanceMethodEntry(String calleeMethodName, String[] parameterNames, Object callee, Object... parameters) {
         if (warnIfNotLogging()) return;
 
-        final InstanceMethodEntryEvent instanceMethodEntryEvent = instanceMethodEntryEvent()
+        final ComplexInstanceMethodEntryEvent complexInstanceMethodEntryEvent = complexInstanceMethodEntryEvent()
                 .withMethodName(calleeMethodName)
                 .withClassName(callee.getClass().getName())
                 .withCallee(callee)
@@ -83,7 +83,7 @@ public final class HeisentestJsonLogger implements Runnable {
                 .withParameterNames(parameterNames)
                 .build();
 
-        queueLogEvent(instanceMethodEntryEvent);
+        queueLogEvent(complexInstanceMethodEntryEvent);
     }
 
     public static void complexLogStaticMethodEntry(String calleeClassName, String calleeMethodName, Object... parameters) {
@@ -138,6 +138,7 @@ public final class HeisentestJsonLogger implements Runnable {
     private static void flush(LogEvent logEvent) {
         try {
             Log.v(HEISENTEST_LOGGER_TAG, "Flushing event");
+
             logEvent.write(logEventWriter);
 
             jsonWriter.flush();
