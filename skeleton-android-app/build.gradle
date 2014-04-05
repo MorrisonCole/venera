@@ -38,6 +38,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.google.code.gson:gson:2.2.4'
     compile project(':splatter-sdk')
+
     androidTestCompile files('libs/espresso-contrib-1.1-bundled.jar')
 }
 
@@ -57,7 +58,7 @@ task pullResults(type: Exec) {
 evaluationDependsOn(':splatter-instrumentation')
 
 afterEvaluate {
-    // Properties are passed to Gradle from the command line (e.g., gradle clean install -Psplatter)
+    // Properties are passed to Gradle from the command line (e.g., gradle clean connectedAndroidTest -Psplatter)
     if (project.hasProperty('splatter')) {
         installDebug.dependsOn project(':splatter-instrumentation').tasks.run
         connectedAndroidTest.dependsOn project(':splatter-instrumentation').tasks.run

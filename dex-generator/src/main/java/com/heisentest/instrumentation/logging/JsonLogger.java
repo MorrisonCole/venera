@@ -1,22 +1,22 @@
-package com.heisentest.skeletonandroidapp;
+package com.heisentest.instrumentation.logging;
 
 import android.os.Environment;
 import android.util.Log;
 import com.google.gson.stream.JsonWriter;
-import com.heisentest.skeletonandroidapp.logging.ComplexInstanceMethodEntryEvent;
-import com.heisentest.skeletonandroidapp.logging.LogEvent;
-import com.heisentest.skeletonandroidapp.logging.LogEventWriter;
-import com.heisentest.skeletonandroidapp.logging.StaticMethodEntryEvent;
+import com.heisentest.instrumentation.logging.complex.ComplexInstanceMethodEntryEvent;
+import com.heisentest.instrumentation.logging.complex.ComplexStaticMethodEntryEvent;
+import com.heisentest.instrumentation.logging.simple.SimpleInstanceMethodEntryEvent;
 
 import java.io.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import static com.heisentest.skeletonandroidapp.logging.ComplexInstanceMethodEntryEvent.Builder.complexInstanceMethodEntryEvent;
-import static com.heisentest.skeletonandroidapp.logging.StaticMethodEntryEvent.Builder.staticMethodEntryEvent;
+import static com.heisentest.instrumentation.logging.complex.ComplexInstanceMethodEntryEvent.Builder.complexInstanceMethodEntryEvent;
+import static com.heisentest.instrumentation.logging.complex.ComplexStaticMethodEntryEvent.Builder.staticMethodEntryEvent;
+import static com.heisentest.instrumentation.logging.simple.SimpleInstanceMethodEntryEvent.Builder.simpleInstanceMethodEntryEvent;
 
-public final class HeisentestJsonLogger implements Runnable {
+public final class JsonLogger implements Runnable {
 
     public static final String HEISENTEST_LOGGER_TAG = "HeisentestLogger";
     private static final int DEFAULT_QUEUE_CAPACITY = 10;
@@ -29,7 +29,7 @@ public final class HeisentestJsonLogger implements Runnable {
     private static final BlockingQueue<LogEvent> blockingQueue = new ArrayBlockingQueue<>(DEFAULT_QUEUE_CAPACITY);
     private static LogEventWriter logEventWriter;
 
-    public HeisentestJsonLogger(File fileDirectory, String methodName) {
+    public JsonLogger(File fileDirectory, String methodName) {
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             Log.e(HEISENTEST_LOGGER_TAG, "MEDIA NOT MOUNTED!");
         }
@@ -70,6 +70,14 @@ public final class HeisentestJsonLogger implements Runnable {
     }
 
     public static void simpleLogInstanceMethodEntry(String calleeClassName, String calleeMethodName) {
+        if (warnIfNotLogging()) return;
+
+        SimpleInstanceMethodEntryEvent simpleInstanceMethodEntryEvent = simpleInstanceMethodEntryEvent()
+                .withClassName(calleeClassName)
+                .withMethodName(calleeMethodName)
+                .build();
+
+        queueLogEvent(simpleInstanceMethodEntryEvent);
     }
 
     public static void complexLogInstanceMethodEntry(String calleeMethodName, String[] parameterNames, Object callee, Object... parameters) {
@@ -89,13 +97,13 @@ public final class HeisentestJsonLogger implements Runnable {
     public static void complexLogStaticMethodEntry(String calleeClassName, String calleeMethodName, Object... parameters) {
         if (warnIfNotLogging()) return;
 
-        final StaticMethodEntryEvent staticMethodEntryEvent = staticMethodEntryEvent()
+        final ComplexStaticMethodEntryEvent complexStaticMethodEntryEvent = staticMethodEntryEvent()
                 .withClassName(calleeClassName)
                 .withMethodName(calleeMethodName)
                 .withParameters(parameters)
                 .build();
 
-        queueLogEvent(staticMethodEntryEvent);
+        queueLogEvent(complexStaticMethodEntryEvent);
     }
 
     private static boolean warnIfNotLogging() {

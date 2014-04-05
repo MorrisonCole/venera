@@ -1,9 +1,10 @@
-package com.heisentest.skeletonandroidapp;
+package com.heisentest.instrumentation.generator;
 
 import android.app.Activity;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
+import com.heisentest.instrumentation.logging.JsonLogger;
 import com.heisentest.splatter.sdk.Splatter;
 
 import java.io.File;
@@ -38,8 +39,8 @@ public class AnInstrumentationTestCase<T extends Activity> extends ActivityInstr
             }
 
             File fileDirectory = Environment.getExternalStorageDirectory();
-            HeisentestJsonLogger heisentestJsonLogger = new HeisentestJsonLogger(fileDirectory, method.getName());
-            logThread = new Thread(heisentestJsonLogger);
+            JsonLogger jsonLogger = new JsonLogger(fileDirectory, method.getName());
+            logThread = new Thread(jsonLogger);
             logThread.start();
             logging = true;
         } catch (NoSuchMethodException e) {
@@ -59,7 +60,7 @@ public class AnInstrumentationTestCase<T extends Activity> extends ActivityInstr
             return;
         }
 
-        HeisentestJsonLogger.endLogging();
+        JsonLogger.endLogging();
 
         try {
             logThread.join();

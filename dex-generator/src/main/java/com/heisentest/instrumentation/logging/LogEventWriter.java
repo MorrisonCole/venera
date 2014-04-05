@@ -1,14 +1,17 @@
-package com.heisentest.skeletonandroidapp.logging;
+package com.heisentest.instrumentation.logging;
 
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.stream.JsonWriter;
+import com.heisentest.instrumentation.logging.complex.ComplexInstanceMethodEntryEvent;
+import com.heisentest.instrumentation.logging.complex.ComplexStaticMethodEntryEvent;
+import com.heisentest.instrumentation.logging.simple.SimpleInstanceMethodEntryEvent;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 
-import static com.heisentest.skeletonandroidapp.HeisentestJsonLogger.HEISENTEST_LOGGER_TAG;
+import static com.heisentest.instrumentation.logging.JsonLogger.HEISENTEST_LOGGER_TAG;
 
 public class LogEventWriter {
 
@@ -20,9 +23,7 @@ public class LogEventWriter {
     }
 
     public void write(ComplexInstanceMethodEntryEvent complexInstanceMethodEntryEvent) throws IOException {
-        jsonWriter.beginObject();
-
-        jsonWriter.name("eventType").value(complexInstanceMethodEntryEvent.getEventName());
+        beginEvent(complexInstanceMethodEntryEvent);
 
         jsonWriter.name("class").value(complexInstanceMethodEntryEvent.getClassName());
 
@@ -43,7 +44,7 @@ public class LogEventWriter {
                     jsonWriter.nullValue();
                 }
 
-                jsonWriter.endObject();
+                endEvent();
             }
             jsonWriter.endArray();
         }
@@ -71,17 +72,37 @@ public class LogEventWriter {
                         } catch (IllegalAccessException e) {
                             Log.d(HEISENTEST_LOGGER_TAG, String.format("Field '%s' could not be accessed", field.toString()), e);
                         }
-                        jsonWriter.endObject();
+                        endEvent();
                     }
                 }
                 jsonWriter.endArray();
             }
         }
 
+        endEvent();
+    }
+
+    public void write(SimpleInstanceMethodEntryEvent simpleInstanceMethodEntryEvent) throws IOException {
+        beginEvent(simpleInstanceMethodEntryEvent);
+
+        jsonWriter.name("class").value(simpleInstanceMethodEntryEvent.getClassName());
+
+        jsonWriter.name("method").value(simpleInstanceMethodEntryEvent.getMethodName());
+
+        endEvent();
+    }
+
+    private void beginEvent(LogEvent logEvent) throws IOException {
+        jsonWriter.beginObject();
+
+        jsonWriter.name("eventType").value(logEvent.getEventName());
+    }
+
+    private void endEvent() throws IOException {
         jsonWriter.endObject();
     }
 
-    public void write(StaticMethodEntryEvent staticMethodEntryEvent) {
+    public void write(ComplexStaticMethodEntryEvent complexStaticMethodEntryEvent) {
 
     }
 

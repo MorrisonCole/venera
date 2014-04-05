@@ -1,10 +1,11 @@
-package com.heisentest.skeletonandroidapp.logging;
+package com.heisentest.instrumentation.logging.base;
+
+import com.heisentest.instrumentation.logging.LogEvent;
 
 public abstract class MethodEntryEvent extends LogEvent {
 
     protected String className;
     protected String methodName;
-    protected Object[] parameters;
 
     public String getClassName() {
         return className;
@@ -12,9 +13,5 @@ public abstract class MethodEntryEvent extends LogEvent {
 
     public String getMethodName() {
         return methodName;
-    }
-
-    public Object[] getParameters() {
-        return parameters;
     }
 }

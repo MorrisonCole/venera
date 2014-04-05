@@ -1,4 +1,4 @@
-package com.heisentest.skeletonandroidapp.logging;
+package com.heisentest.instrumentation.logging;
 
 import java.io.IOException;
 

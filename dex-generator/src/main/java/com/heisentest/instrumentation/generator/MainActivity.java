@@ -1,6 +1,7 @@
-package com.heisentest.skeletonandroidapp;
+package com.heisentest.instrumentation.generator;
 
 import android.app.Activity;
+import com.heisentest.instrumentation.logging.JsonLogger;
 
 import java.io.File;
 
@@ -13,17 +14,17 @@ public class MainActivity extends Activity {
     }
 
     private void aMethodThatInstantiatesOurLogger() {
-        HeisentestJsonLogger heisentestJsonLogger = new HeisentestJsonLogger(new File("path"), "method_name");
-        final Thread logThread = new Thread(heisentestJsonLogger);
+        JsonLogger jsonLogger = new JsonLogger(new File("path"), "method_name");
+        final Thread logThread = new Thread(jsonLogger);
         logThread.start();
     }
 
     private static void aStaticMethod() {
-        HeisentestJsonLogger.complexLogStaticMethodEntry("method name", "class name", "a parameter");
+        JsonLogger.complexLogStaticMethodEntry("method name", "class name", "a parameter");
     }
 
     private void anInstanceMethod() {
         String[] parameterNames = new String[] { "string 1", "string 2" };
-        HeisentestJsonLogger.complexLogInstanceMethodEntry("method name", parameterNames, this, "a parameter");
+        JsonLogger.complexLogInstanceMethodEntry("method name", parameterNames, this, "a parameter");
     }
 }

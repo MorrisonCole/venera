@@ -1,14 +1,23 @@
-package com.heisentest.skeletonandroidapp.logging;
+package com.heisentest.instrumentation.logging.complex;
 
-public class StaticMethodEntryEvent extends MethodEntryEvent {
+import com.heisentest.instrumentation.logging.LogEventWriter;
+import com.heisentest.instrumentation.logging.base.MethodEntryEvent;
 
-    private StaticMethodEntryEvent(Builder builder) {
+public class ComplexStaticMethodEntryEvent extends MethodEntryEvent {
+
+    private Object[] parameters;
+
+    private ComplexStaticMethodEntryEvent(Builder builder) {
         this.eventName = builder.eventName;
         this.eventTime = builder.eventTime;
         this.eventThreadId = builder.eventThreadId;
         this.className = builder.className;
         this.methodName = builder.methodName;
         this.parameters = builder.parameters;
+    }
+
+    public Object[] getParameters() {
+        return parameters;
     }
 
     @Override
@@ -58,8 +67,8 @@ public class StaticMethodEntryEvent extends MethodEntryEvent {
             return this;
         }
 
-        public StaticMethodEntryEvent build() {
-            return new StaticMethodEntryEvent(this);
+        public ComplexStaticMethodEntryEvent build() {
+            return new ComplexStaticMethodEntryEvent(this);
         }
     }
 }

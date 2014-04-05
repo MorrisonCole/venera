@@ -1,4 +1,7 @@
-package com.heisentest.skeletonandroidapp.logging;
+package com.heisentest.instrumentation.logging.complex;
+
+import com.heisentest.instrumentation.logging.LogEventWriter;
+import com.heisentest.instrumentation.logging.base.MethodEntryEvent;
 
 import java.io.IOException;
 
@@ -6,6 +9,7 @@ public class ComplexInstanceMethodEntryEvent extends MethodEntryEvent {
 
     private Object callee;
     private String[] parameterNames;
+    private Object[] parameters;
 
     private ComplexInstanceMethodEntryEvent(Builder builder) {
         this.callee = builder.callee;
@@ -24,6 +28,10 @@ public class ComplexInstanceMethodEntryEvent extends MethodEntryEvent {
 
     public String[] getParameterNames() {
         return parameterNames;
+    }
+
+    public Object[] getParameters() {
+        return parameters;
     }
 
     @Override

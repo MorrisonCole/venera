@@ -1,21 +1,17 @@
-package com.heisentest.skeletonandroidapp;
+package com.heisentest.instrumentation.skeletonandroidapp;
 
 import android.app.Activity;
-import android.app.KeyguardManager;
-import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity
