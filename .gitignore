@@ -28,3 +28,6 @@ splatter-instrumentation/android-platforms/
 
 # Local Output
 splatter-instrumentation/scripts/dump.output
+
+## Splatter SDK ##
+splatter-sdk/android-platforms/
