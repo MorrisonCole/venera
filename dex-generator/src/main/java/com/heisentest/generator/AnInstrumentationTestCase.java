@@ -1,10 +1,10 @@
-package com.heisentest.instrumentation.generator;
+package com.heisentest.generator;
 
 import android.app.Activity;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
-import com.heisentest.instrumentation.logging.JsonLogger;
+import com.heisentest.splatter.instrumentation.logging.JsonLogger;
 import com.heisentest.splatter.sdk.Splatter;
 
 import java.io.File;

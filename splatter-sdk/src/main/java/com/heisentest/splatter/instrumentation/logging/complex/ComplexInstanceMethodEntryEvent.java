@@ -1,7 +1,7 @@
-package com.heisentest.instrumentation.logging.complex;
+package com.heisentest.splatter.instrumentation.logging.complex;
 
-import com.heisentest.instrumentation.logging.LogEventWriter;
-import com.heisentest.instrumentation.logging.base.MethodEntryEvent;
+import com.heisentest.splatter.instrumentation.logging.LogEventWriter;
+import com.heisentest.splatter.instrumentation.logging.base.MethodEntryEvent;
 
 import java.io.IOException;
 

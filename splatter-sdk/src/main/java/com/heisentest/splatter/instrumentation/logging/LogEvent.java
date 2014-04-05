@@ -1,4 +1,4 @@
-package com.heisentest.instrumentation.logging;
+package com.heisentest.splatter.instrumentation.logging;
 
 import java.io.IOException;
 

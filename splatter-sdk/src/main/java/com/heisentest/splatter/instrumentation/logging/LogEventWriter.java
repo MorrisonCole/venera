@@ -1,17 +1,17 @@
-package com.heisentest.instrumentation.logging;
+package com.heisentest.splatter.instrumentation.logging;
 
 import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.stream.JsonWriter;
-import com.heisentest.instrumentation.logging.complex.ComplexInstanceMethodEntryEvent;
-import com.heisentest.instrumentation.logging.complex.ComplexStaticMethodEntryEvent;
-import com.heisentest.instrumentation.logging.simple.SimpleInstanceMethodEntryEvent;
+import com.heisentest.splatter.instrumentation.logging.complex.ComplexInstanceMethodEntryEvent;
+import com.heisentest.splatter.instrumentation.logging.complex.ComplexStaticMethodEntryEvent;
+import com.heisentest.splatter.instrumentation.logging.simple.SimpleInstanceMethodEntryEvent;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 
-import static com.heisentest.instrumentation.logging.JsonLogger.HEISENTEST_LOGGER_TAG;
+import static com.heisentest.splatter.instrumentation.logging.JsonLogger.HEISENTEST_LOGGER_TAG;
 
 public class LogEventWriter {
 

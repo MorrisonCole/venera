@@ -8,6 +8,7 @@ public class InstrumentationSpy {
 
     private final String applicationRootNamespace;
     private int availableInstrumentationPoints = 0;
+    // TODO: This should not be hardcoded.
     private static final BaseTestCaseClassInfo[] baseTestCaseClassInfos = {
             new BaseTestCaseClassInfo("Lcom/heisentest/skeletonandroidapp/test/acceptance/SkeletonActivityInstrumentationTestCase;", "setUp", "tearDown"),
             new BaseTestCaseClassInfo("Lcom/heisentest/skeletonandroidapp/test/acceptance/SkeletonActivityUnitTestCase;", "setUp", "tearDown")

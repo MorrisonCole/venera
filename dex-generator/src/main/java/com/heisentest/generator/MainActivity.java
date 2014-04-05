@@ -1,7 +1,7 @@
-package com.heisentest.instrumentation.generator;
+package com.heisentest.generator;
 
 import android.app.Activity;
-import com.heisentest.instrumentation.logging.JsonLogger;
+import com.heisentest.splatter.instrumentation.logging.JsonLogger;
 
 import java.io.File;
 

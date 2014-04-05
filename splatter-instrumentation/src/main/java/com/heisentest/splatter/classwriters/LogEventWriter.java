@@ -14,9 +14,9 @@ public class LogEventWriter {
         ClassesDump.dumpComplexInstanceMethodEntryEvent$1(applicationWriter);
         ClassesDump.dumpComplexInstanceMethodEntryEvent$Builder(applicationWriter);
 
-        ClassesDump.dumpStaticMethodEntryEvent(applicationWriter);
-        ClassesDump.dumpStaticMethodEntryEvent$1(applicationWriter);
-        ClassesDump.dumpStaticMethodEntryEvent$Builder(applicationWriter);
+        ClassesDump.dumpComplexStaticMethodEntryEvent(applicationWriter);
+        ClassesDump.dumpComplexStaticMethodEntryEvent$1(applicationWriter);
+        ClassesDump.dumpComplexStaticMethodEntryEvent$Builder(applicationWriter);
 
         ClassesDump.dumpLogEventWriter(applicationWriter);
     }

@@ -1,7 +1,5 @@
 package com.heisentest.splatter.instrumentation.point;
 
-import com.heisentest.splatter.sdk.Splatter;
-
 import static com.heisentest.splatter.sdk.Splatter.InstrumentationPolicy;
 
 public class MethodEntryInstrumentationPoint implements InstrumentationPoint {

@@ -1,7 +1,7 @@
-package com.heisentest.instrumentation.skeletonandroidapp.test.acceptance;
+package com.heisentest.skeletonandroidapp.test.acceptance;
 
 import android.test.suitebuilder.annotation.SmallTest;
-import com.heisentest.instrumentation.skeletonandroidapp.MainActivity;
+import com.heisentest.skeletonandroidapp.MainActivity;
 import com.heisentest.splatter.sdk.Splatter;
 
 import static com.heisentest.splatter.sdk.Splatter.InstrumentationPolicy.NONE;

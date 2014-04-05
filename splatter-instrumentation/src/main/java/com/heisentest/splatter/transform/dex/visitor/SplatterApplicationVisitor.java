@@ -42,10 +42,11 @@ public class SplatterApplicationVisitor extends ApplicationVisitor {
     public void visitEnd() {
         logger.info("Finishing second pass, writing classes.dex");
 
+        // TODO: Unnecessary if using SDK
         if (instrumentationSpy.isApplicationApk()) {
-            loggerClassWriter.addLogClass(applicationWriter);
-            final LogEventWriter logEventWriter = new LogEventWriter();
-            logEventWriter.addLogEventClasses(applicationWriter);
+//            loggerClassWriter.addLogClass(applicationWriter);
+//            final LogEventWriter logEventWriter = new LogEventWriter();
+//            logEventWriter.addLogEventClasses(applicationWriter);
         }
 
         super.visitEnd();

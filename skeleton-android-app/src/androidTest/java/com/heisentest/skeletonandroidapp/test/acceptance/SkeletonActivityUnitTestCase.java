@@ -1,4 +1,4 @@
-package com.heisentest.instrumentation.skeletonandroidapp.test.acceptance;
+package com.heisentest.skeletonandroidapp.test.acceptance;
 
 import android.app.Activity;
 import android.test.ActivityUnitTestCase;

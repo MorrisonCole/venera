@@ -1,4 +1,4 @@
-package com.heisentest.instrumentation.skeletonandroidapp;
+package com.heisentest.skeletonandroidapp;
 
 import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.TextView;
+import com.heisentest.instrumentation.skeletonandroidapp.R;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {

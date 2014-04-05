@@ -1,14 +1,10 @@
 package com.heisentest.splatter.transform.dex.visitor;
 
 import com.heisentest.splatter.instrumentation.point.InstrumentationPoint;
-import com.heisentest.splatter.sdk.Splatter;
 import com.heisentest.splatter.transform.dex.InstrumentationSpy;
 import com.heisentest.splatter.transform.dex.visitor.noop.SplatterNoOpMethodVisitor;
-import com.heisentest.splatter.transform.dex.visitor.test.SplatterLoggingTearDownMethodVisitor;
-import com.heisentest.splatter.transform.dex.visitor.test.SplatterLoggingSetUpMethodVisitor;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.*;
-import org.ow2.asmdex.structureCommon.Label;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,7 +60,7 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
         boolean isStatic = isStatic(access);
         if (shouldInstrumentMethod(access, name, instrument)) {
             logger.debug(String.format("Adding HeisentestLogger to method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
-            return new SplatterLoggingMethodVisitor(api, methodVisitor, desc, name, isStatic);
+            return new ComplexInstanceMethodEntryMethodVisitor(api, methodVisitor, desc, name, isStatic);
         }
 
         logger.debug(String.format("SKIPPING method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));

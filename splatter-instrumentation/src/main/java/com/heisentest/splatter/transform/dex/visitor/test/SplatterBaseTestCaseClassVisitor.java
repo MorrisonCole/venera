@@ -1,13 +1,18 @@
 package com.heisentest.splatter.transform.dex.visitor.test;
 
+import com.heisentest.splatter.instrumentation.logging.JsonLogger;
+import com.heisentest.splatter.sdk.Splatter;
 import com.heisentest.splatter.transform.dex.InstrumentationSpy;
 import com.heisentest.splatter.transform.dex.visitor.noop.SplatterNoOpMethodVisitor;
+import com.heisentest.splatter.utility.DalvikTypeDescriptor;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.ClassVisitor;
 import org.ow2.asmdex.FieldVisitor;
 import org.ow2.asmdex.MethodVisitor;
 import org.ow2.asmdex.structureCommon.Label;
 
+import static com.heisentest.splatter.sdk.Splatter.InstrumentationPolicy;
+import static com.heisentest.splatter.utility.DalvikTypeDescriptor.typeDescriptorForClass;
 import static org.ow2.asmdex.Opcodes.*;
 
 public class SplatterBaseTestCaseClassVisitor extends ClassVisitor {
@@ -79,15 +84,15 @@ public class SplatterBaseTestCaseClassVisitor extends ClassVisitor {
         mv.visitTypeInsn(INSN_CHECK_CAST, 0, 5, 0, "[Ljava/lang/Class;");
         mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "getMethod", "Ljava/lang/reflect/Method;Ljava/lang/String;[Ljava/lang/Class;", new int[] { 6, 7, 5 });
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 3);
-        mv.visitTypeInsn(INSN_CONST_CLASS, 5, 0, 0, "Lcom/heisentest/splatter/sdk/Splatter;");
+        mv.visitTypeInsn(INSN_CONST_CLASS, 5, 0, 0, typeDescriptorForClass(Splatter.class));
         mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Method;", "getAnnotation", "Ljava/lang/annotation/Annotation;Ljava/lang/Class;", new int[] { 3, 5 });
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4);
-        mv.visitTypeInsn(INSN_CHECK_CAST, 0, 4, 0, "Lcom/heisentest/splatter/sdk/Splatter;");
+        mv.visitTypeInsn(INSN_CHECK_CAST, 0, 4, 0, typeDescriptorForClass(Splatter.class));
         Label l3 = new Label();
         mv.visitJumpInsn(INSN_IF_EQZ, l3, 4, 0);
-        mv.visitMethodInsn(INSN_INVOKE_INTERFACE, "Lcom/heisentest/splatter/sdk/Splatter;", "instrumentationPolicy", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", new int[] { 4 });
+        mv.visitMethodInsn(INSN_INVOKE_INTERFACE, typeDescriptorForClass(Splatter.class), "instrumentationPolicy", typeDescriptorForClass(InstrumentationPolicy.class), new int[] { 4 });
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 5);
-        mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", "NONE", "Lcom/heisentest/splatter/sdk/Splatter$InstrumentationPolicy;", 6, 0);
+        mv.visitFieldInsn(INSN_SGET_OBJECT, typeDescriptorForClass(InstrumentationPolicy.class), "NONE", typeDescriptorForClass(InstrumentationPolicy.class), 6, 0);
         mv.visitJumpInsn(INSN_IF_NE, l3, 5, 6);
         Label l4 = new Label();
         mv.visitLabel(l4);
@@ -95,10 +100,10 @@ public class SplatterBaseTestCaseClassVisitor extends ClassVisitor {
         mv.visitLabel(l3);
         mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/os/Environment;", "getExternalStorageDirectory", "Ljava/io/File;", new int[] {  });
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
-        mv.visitTypeInsn(INSN_NEW_INSTANCE, 2, 0, 0, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;");
+        mv.visitTypeInsn(INSN_NEW_INSTANCE, 2, 0, 0, typeDescriptorForClass(JsonLogger.class));
         mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/reflect/Method;", "getName", "Ljava/lang/String;", new int[] { 3 });
         mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 5);
-        mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "<init>", "VLjava/io/File;Ljava/lang/String;", new int[] { 2, 1, 5 });
+        mv.visitMethodInsn(INSN_INVOKE_DIRECT, typeDescriptorForClass(JsonLogger.class), "<init>", "VLjava/io/File;Ljava/lang/String;", new int[] { 2, 1, 5 });
         mv.visitTypeInsn(INSN_NEW_INSTANCE, 5, 0, 0, "Ljava/lang/Thread;");
         mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/Thread;", "<init>", "VLjava/lang/Runnable;", new int[] { 5, 2 });
         mv.visitFieldInsn(INSN_SPUT_OBJECT, className, "logThread", "Ljava/lang/Thread;", 5, 0);
@@ -126,7 +131,7 @@ public class SplatterBaseTestCaseClassVisitor extends ClassVisitor {
         mv.visitLabel(l1);
         mv.visitInsn(INSN_RETURN_VOID);
         mv.visitLabel(l0);
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "endLogging", "V", new int[] {  });
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, typeDescriptorForClass(JsonLogger.class), "endLogging", "V", new int[] {  });
         Label l2 = new Label();
         mv.visitLabel(l2);
         Label l3 = new Label();

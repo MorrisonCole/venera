@@ -1,6 +1,6 @@
-package com.heisentest.instrumentation.logging.base;
+package com.heisentest.splatter.instrumentation.logging.base;
 
-import com.heisentest.instrumentation.logging.LogEvent;
+import com.heisentest.splatter.instrumentation.logging.LogEvent;
 
 public abstract class MethodEntryEvent extends LogEvent {
 

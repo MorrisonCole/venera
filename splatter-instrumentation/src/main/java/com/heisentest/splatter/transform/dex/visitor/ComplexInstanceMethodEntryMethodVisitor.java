@@ -1,5 +1,7 @@
 package com.heisentest.splatter.transform.dex.visitor;
 
+import com.heisentest.splatter.instrumentation.logging.JsonLogger;
+import com.heisentest.splatter.utility.DalvikTypeDescriptor;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.MethodVisitor;
 import org.ow2.asmdex.structureWriter.Method;
@@ -7,18 +9,17 @@ import org.ow2.asmdex.structureWriter.Method;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import static com.heisentest.splatter.utility.DalvikTypeDescriptor.typeDescriptorForClass;
 import static org.ow2.asmdex.Opcodes.*;
 
-public class SplatterLoggingMethodVisitor extends SplatterRegisterAllocatingMethodVisitor {
+public class ComplexInstanceMethodEntryMethodVisitor extends SplatterRegisterAllocatingMethodVisitor {
 
-    private final Logger logger = Logger.getLogger(SplatterLoggingMethodVisitor.class);
-    private final String name;
-    private boolean isStatic;
+    private final Logger logger = Logger.getLogger(ComplexInstanceMethodEntryMethodVisitor.class);
+    private final String methodName;
 
-    public SplatterLoggingMethodVisitor(int api, MethodVisitor methodVisitor, String desc, String methodName, boolean isStatic) {
+    public ComplexInstanceMethodEntryMethodVisitor(int api, MethodVisitor methodVisitor, String desc, String methodName, boolean isStatic) {
         super(api, methodVisitor, desc, isStatic);
-        this.name = methodName;
-        this.isStatic = isStatic;
+        this.methodName = methodName;
     }
 
     @Override
@@ -28,19 +29,6 @@ public class SplatterLoggingMethodVisitor extends SplatterRegisterAllocatingMeth
 
     @Override
     protected void addInstrumentation() {
-        if (isStatic) {
-//            applyStaticInstrumentation(register1, register2);
-        } else {
-            applyParameterCollectingInstrumentation(thisRegister());
-        }
-    }
-
-    /**
-     * We create a new Object[] and fill it with the parameters to be logged.
-     * Any primitive arguments need to be converted into their respective object
-     * representations.
-     */
-    private void applyParameterCollectingInstrumentation(int thisRegister) {
         String[] parameters = null;
         try {
             Field method = mv.getClass().getDeclaredField("method");
@@ -67,7 +55,7 @@ public class SplatterLoggingMethodVisitor extends SplatterRegisterAllocatingMeth
         }
 
 
-        mv.visitStringInsn(INSN_CONST_STRING, 1, name); // put our method name into register 1
+        mv.visitStringInsn(INSN_CONST_STRING, 1, methodName); // put our method name into register 1
 
         mv.visitVarInsn(INSN_CONST_4, 2, getTotalNumberParameters()); // Set register 2 to a value representing our total number of parameters
         mv.visitTypeInsn(INSN_NEW_ARRAY, 2, 0, 2, "[Ljava/lang/Object;"); // Initialize an Object[] at register 2 with size whatever value is at 2
@@ -117,6 +105,6 @@ public class SplatterLoggingMethodVisitor extends SplatterRegisterAllocatingMeth
             currentParamNumber++;
         }
 
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/skeletonandroidapp/HeisentestJsonLogger;", "complexLogInstanceMethodEntry", "VLjava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", new int[] { 1, 0, thisRegister, 2 });
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, typeDescriptorForClass(JsonLogger.class), "complexLogInstanceMethodEntry", "VLjava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", new int[] { 1, 0, thisRegister(), 2 });
     }
 }

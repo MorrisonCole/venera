@@ -1,20 +1,20 @@
-package com.heisentest.instrumentation.logging;
+package com.heisentest.splatter.instrumentation.logging;
 
 import android.os.Environment;
 import android.util.Log;
 import com.google.gson.stream.JsonWriter;
-import com.heisentest.instrumentation.logging.complex.ComplexInstanceMethodEntryEvent;
-import com.heisentest.instrumentation.logging.complex.ComplexStaticMethodEntryEvent;
-import com.heisentest.instrumentation.logging.simple.SimpleInstanceMethodEntryEvent;
+import com.heisentest.splatter.instrumentation.logging.complex.ComplexInstanceMethodEntryEvent;
+import com.heisentest.splatter.instrumentation.logging.complex.ComplexStaticMethodEntryEvent;
+import com.heisentest.splatter.instrumentation.logging.simple.SimpleInstanceMethodEntryEvent;
 
 import java.io.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import static com.heisentest.instrumentation.logging.complex.ComplexInstanceMethodEntryEvent.Builder.complexInstanceMethodEntryEvent;
-import static com.heisentest.instrumentation.logging.complex.ComplexStaticMethodEntryEvent.Builder.staticMethodEntryEvent;
-import static com.heisentest.instrumentation.logging.simple.SimpleInstanceMethodEntryEvent.Builder.simpleInstanceMethodEntryEvent;
+import static com.heisentest.splatter.instrumentation.logging.complex.ComplexInstanceMethodEntryEvent.Builder.complexInstanceMethodEntryEvent;
+import static com.heisentest.splatter.instrumentation.logging.complex.ComplexStaticMethodEntryEvent.Builder.staticMethodEntryEvent;
+import static com.heisentest.splatter.instrumentation.logging.simple.SimpleInstanceMethodEntryEvent.Builder.simpleInstanceMethodEntryEvent;
 
 public final class JsonLogger implements Runnable {
 
@@ -26,7 +26,7 @@ public final class JsonLogger implements Runnable {
     private static JsonWriter jsonWriter;
     private volatile static boolean currentlyLogging = false;
     private static File outputDirectory;
-    private static final BlockingQueue<LogEvent> blockingQueue = new ArrayBlockingQueue<>(DEFAULT_QUEUE_CAPACITY);
+    private static final BlockingQueue<LogEvent> blockingQueue = new ArrayBlockingQueue<LogEvent>(DEFAULT_QUEUE_CAPACITY);
     private static LogEventWriter logEventWriter;
 
     public JsonLogger(File fileDirectory, String methodName) {

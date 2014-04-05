@@ -1,12 +1,12 @@
-package com.heisentest.instrumentation.skeletonandroidapp.test.acceptance;
+package com.heisentest.skeletonandroidapp.test.acceptance;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import android.test.suitebuilder.annotation.Suppress;
-import com.heisentest.instrumentation.skeletonandroidapp.MainActivity;
-import com.heisentest.instrumentation.skeletonandroidapp.NavigationDrawerFragment;
+import com.heisentest.skeletonandroidapp.MainActivity;
+import com.heisentest.skeletonandroidapp.NavigationDrawerFragment;
 import com.heisentest.instrumentation.skeletonandroidapp.R;
 
 import static com.google.android.apps.common.testing.ui.espresso.Espresso.onView;
