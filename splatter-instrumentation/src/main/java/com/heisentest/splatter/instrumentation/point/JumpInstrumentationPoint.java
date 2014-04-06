@@ -2,20 +2,22 @@ package com.heisentest.splatter.instrumentation.point;
 
 import static com.heisentest.splatter.sdk.Splatter.InstrumentationPolicy;
 
-public class MethodEntryInstrumentationPoint implements InstrumentationPoint {
+public class JumpInstrumentationPoint implements InstrumentationPoint {
 
     private String className;
     private String methodName;
     private InstrumentationPolicy instrumentationPolicy;
+    private int lineNumber;
 
-    private MethodEntryInstrumentationPoint(Builder builder) {
+    private JumpInstrumentationPoint(Builder builder) {
         this.className = builder.className;
         this.methodName = builder.methodName;
         this.instrumentationPolicy = builder.instrumentationPolicy;
+        this.lineNumber = builder.lineNumber;
     }
 
-    public boolean matches(String className, String methodName) {
-        return this.className.equals(className) && this.methodName.equals(methodName);
+    public boolean matches(String className, String methodName, int lineNumber) {
+        return this.className.equals(className) && this.methodName.equals(methodName) && this.lineNumber == lineNumber;
     }
 
     @Override
@@ -27,8 +29,9 @@ public class MethodEntryInstrumentationPoint implements InstrumentationPoint {
         private String className;
         private String methodName;
         private InstrumentationPolicy instrumentationPolicy;
+        private int lineNumber;
 
-        public static Builder methodEntryInstrumentationPoint() {
+        public static Builder jumpInstrumentationPoint() {
             return new Builder();
         }
 
@@ -47,8 +50,13 @@ public class MethodEntryInstrumentationPoint implements InstrumentationPoint {
             return this;
         }
 
-        public MethodEntryInstrumentationPoint build() {
-            return new MethodEntryInstrumentationPoint(this);
+        public Builder withLineNumber(int lineNumber) {
+            this.lineNumber = lineNumber;
+            return this;
+        }
+
+        public JumpInstrumentationPoint build() {
+            return new JumpInstrumentationPoint(this);
         }
     }
 }

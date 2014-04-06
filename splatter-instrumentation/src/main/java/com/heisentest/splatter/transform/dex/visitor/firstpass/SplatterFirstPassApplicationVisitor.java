@@ -1,15 +1,16 @@
 package com.heisentest.splatter.transform.dex.visitor.firstpass;
 
+import com.heisentest.splatter.controlflow.SplatterControlFlowAnalyzer;
+import com.heisentest.splatter.instrumentation.point.JumpInstrumentationPoint;
 import com.heisentest.splatter.instrumentation.point.MethodEntryInstrumentationPoint;
 import com.heisentest.splatter.sdk.Splatter;
 import com.heisentest.splatter.transform.dex.InstrumentationSpy;
 import com.heisentest.splatter.utility.DalvikTypeDescriptor;
 import org.apache.log4j.Logger;
-import org.ow2.asmdex.AnnotationVisitor;
-import org.ow2.asmdex.ApplicationVisitor;
-import org.ow2.asmdex.ClassVisitor;
-import org.ow2.asmdex.MethodVisitor;
+import org.ow2.asmdex.*;
+import org.ow2.asmdex.structureCommon.Label;
 
+import static com.heisentest.splatter.instrumentation.point.JumpInstrumentationPoint.Builder.jumpInstrumentationPoint;
 import static com.heisentest.splatter.instrumentation.point.MethodEntryInstrumentationPoint.Builder.methodEntryInstrumentationPoint;
 import static com.heisentest.splatter.sdk.Splatter.InstrumentationPolicy.*;
 import static com.heisentest.splatter.utility.DalvikTypeDescriptor.typeDescriptorForClass;
@@ -18,32 +19,36 @@ public class SplatterFirstPassApplicationVisitor extends ApplicationVisitor {
 
     private static final Logger logger = Logger.getLogger(SplatterFirstPassApplicationVisitor.class);
     private final InstrumentationSpy instrumentationSpy;
+    private final SplatterControlFlowAnalyzer splatterControlFlowAnalyzer;
 
-    public SplatterFirstPassApplicationVisitor(int api, InstrumentationSpy instrumentationSpy) {
+    public SplatterFirstPassApplicationVisitor(int api, InstrumentationSpy instrumentationSpy, SplatterControlFlowAnalyzer splatterControlFlowAnalyzer) {
         super(api);
         this.instrumentationSpy = instrumentationSpy;
+        this.splatterControlFlowAnalyzer = splatterControlFlowAnalyzer;
     }
 
     @Override
     public ClassVisitor visitClass(int access, String name, String[] signature, String superName, String[] interfaces) {
-        return new SplatterFirstPassClassVisitor(api, name, instrumentationSpy);
+        return new SplatterFirstPassClassVisitor(api, name, instrumentationSpy, splatterControlFlowAnalyzer);
     }
 
     private class SplatterFirstPassClassVisitor extends ClassVisitor {
 
         private final String className;
         private final InstrumentationSpy instrumentationSpy;
+        private final SplatterControlFlowAnalyzer splatterControlFlowAnalyzer;
 
-        public SplatterFirstPassClassVisitor(int api, String className, InstrumentationSpy instrumentationSpy) {
+        public SplatterFirstPassClassVisitor(int api, String className, InstrumentationSpy instrumentationSpy, SplatterControlFlowAnalyzer splatterControlFlowAnalyzer) {
             super(api);
             this.className = className;
             this.instrumentationSpy = instrumentationSpy;
+            this.splatterControlFlowAnalyzer = splatterControlFlowAnalyzer;
         }
 
         @Override
         public MethodVisitor visitMethod(int access, String name, String desc, String[] signatures, String[] exceptions) {
             instrumentationSpy.setAvailableInstrumentationPoints(instrumentationSpy.getAvailableInstrumentationPoints() + 1);
-            return new SplatterFirstPassMethodVisitor(api, className, name);
+            return new SplatterFirstPassMethodVisitor(api, className, name, splatterControlFlowAnalyzer);
         }
     }
 
@@ -51,17 +56,33 @@ public class SplatterFirstPassApplicationVisitor extends ApplicationVisitor {
 
         private final String className;
         private final String methodName;
+        private final SplatterControlFlowAnalyzer splatterControlFlowAnalyzer;
         private final MethodEntryInstrumentationPoint.Builder methodEntryInstrumentationPoint;
 
-        public SplatterFirstPassMethodVisitor(int api, String className, String methodName) {
+        public SplatterFirstPassMethodVisitor(int api, String className, String methodName, SplatterControlFlowAnalyzer splatterControlFlowAnalyzer) {
             super(api);
             this.className = className;
             this.methodName = methodName;
+            this.splatterControlFlowAnalyzer = splatterControlFlowAnalyzer;
 
             methodEntryInstrumentationPoint = methodEntryInstrumentationPoint()
                     .withClassName(className)
                     .withMethodName(methodName)
                     .withInstrumentationPolicy(COMPLEX);
+        }
+
+        @Override
+        public void visitJumpInsn(int opcode, Label label, int registerA, int registerB) {
+            final JumpInstrumentationPoint jumpInstrumentationPoint = jumpInstrumentationPoint()
+                    .withClassName(className)
+                    .withMethodName(methodName)
+                    .withLineNumber(label.getLine())
+                    .withInstrumentationPolicy(COMPLEX)
+                    .build();
+
+            instrumentationSpy.addInstrumentationPoint(jumpInstrumentationPoint);
+
+            super.visitJumpInsn(opcode, label, registerA, registerB);
         }
 
         @Override

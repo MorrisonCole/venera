@@ -9,7 +9,6 @@ import org.ow2.asmdex.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.heisentest.splatter.sdk.Splatter.InstrumentationPolicy.COMPLEX;
 import static org.ow2.asmdex.Opcodes.*;
 
 public class SplatterLoggingClassVisitor extends ClassVisitor {
@@ -57,7 +56,7 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
 
         boolean isStatic = isStatic(access);
 
-        final InstrumentationPoint instrumentationPoint = instrumentationSpy.getInstrumentationPoint(className, name);
+        final InstrumentationPoint instrumentationPoint = instrumentationSpy.getMethodEntryInstrumentationPoint(className, name);
 
         if (instrumentationPoint != null && shouldInstrumentMethod(access, name, instrument)) {
             switch (instrumentationPoint.getInstrumentationPolicy()) {
@@ -68,7 +67,7 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
                     return new SimpleInstanceMethodEntryMethodVisitor(api, methodVisitor, desc, name, isStatic);
                 case COMPLEX:
                     logger.debug(String.format("COMPLEX method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
-                    return new ComplexInstanceMethodEntryMethodVisitor(api, methodVisitor, desc, name, isStatic);
+                    return new ComplexInstanceMethodEntryMethodVisitor(api, methodVisitor, desc, name, isStatic, className, instrumentationSpy);
             }
         }
 

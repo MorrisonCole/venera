@@ -1,5 +1,6 @@
 package com.heisentest.splatter;
 
+import com.heisentest.splatter.controlflow.SplatterControlFlowAnalyzer;
 import com.heisentest.splatter.transform.dex.SplatterDexTransformer;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -15,10 +16,12 @@ public class SplatterApkProcessor {
     private final Logger logger = Logger.getLogger(SplatterApkProcessor.class);
     private final int asmApiLevel;
     private final String applicationRootNamespace;
+    private final SplatterControlFlowAnalyzer splatterControlFlowAnalyzer;
 
-    public SplatterApkProcessor(int asmApiLevel, String applicationRootNamespace) {
+    public SplatterApkProcessor(int asmApiLevel, String applicationRootNamespace, SplatterControlFlowAnalyzer splatterControlFlowAnalyzer) {
         this.asmApiLevel = asmApiLevel;
         this.applicationRootNamespace = applicationRootNamespace;
+        this.splatterControlFlowAnalyzer = splatterControlFlowAnalyzer;
     }
 
     public void process(File inputApkFile, File outputApkFile) {
@@ -26,7 +29,7 @@ public class SplatterApkProcessor {
             FileInputStream fileInputStream = new FileInputStream(inputApkFile);
             FileOutputStream fileOutputStream = new FileOutputStream(outputApkFile);
 
-            processApk(fileInputStream, fileOutputStream, new SplatterDexTransformer(asmApiLevel, applicationRootNamespace));
+            processApk(fileInputStream, fileOutputStream, new SplatterDexTransformer(asmApiLevel, applicationRootNamespace, splatterControlFlowAnalyzer));
 
             fileInputStream.close();
             fileOutputStream.flush();

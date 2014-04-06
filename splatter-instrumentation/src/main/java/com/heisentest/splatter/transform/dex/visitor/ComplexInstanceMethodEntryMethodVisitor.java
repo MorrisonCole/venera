@@ -1,9 +1,11 @@
 package com.heisentest.splatter.transform.dex.visitor;
 
 import com.heisentest.splatter.instrumentation.logging.JsonLogger;
-import com.heisentest.splatter.utility.DalvikTypeDescriptor;
+import com.heisentest.splatter.instrumentation.point.JumpInstrumentationPoint;
+import com.heisentest.splatter.transform.dex.InstrumentationSpy;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.MethodVisitor;
+import org.ow2.asmdex.structureCommon.Label;
 import org.ow2.asmdex.structureWriter.Method;
 
 import java.lang.reflect.Field;
@@ -16,10 +18,25 @@ public class ComplexInstanceMethodEntryMethodVisitor extends SplatterRegisterAll
 
     private final Logger logger = Logger.getLogger(ComplexInstanceMethodEntryMethodVisitor.class);
     private final String methodName;
+    private final String className;
+    private final InstrumentationSpy instrumentationSpy;
 
-    public ComplexInstanceMethodEntryMethodVisitor(int api, MethodVisitor methodVisitor, String desc, String methodName, boolean isStatic) {
+    public ComplexInstanceMethodEntryMethodVisitor(int api, MethodVisitor methodVisitor, String desc, String methodName, boolean isStatic, String className, InstrumentationSpy instrumentationSpy) {
         super(api, methodVisitor, desc, isStatic);
         this.methodName = methodName;
+        this.className = className;
+        this.instrumentationSpy = instrumentationSpy;
+    }
+
+    @Override
+    public void visitJumpInsn(int opcode, Label label, int registerA, int registerB) {
+        final JumpInstrumentationPoint jumpInstrumentationPoint = instrumentationSpy.getJumpInstrumentationPoint(className, methodName, label.getLine());
+        if (jumpInstrumentationPoint != null) {
+            // TODO: insert instrumentation!
+            // We don't care if it's unconditional; only on branches.
+        }
+
+        super.visitJumpInsn(opcode, label, registerA, registerB);
     }
 
     @Override

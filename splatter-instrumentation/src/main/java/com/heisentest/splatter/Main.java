@@ -40,17 +40,22 @@ public class Main {
         } catch (ParseException e) {
             logger.fatal("Failed to parse command line arguments.", e);
 
-            final HelpFormatter helpFormatter = new HelpFormatter();
-            helpFormatter.printHelp("Splatter", options, PRINT_AUTO_USAGE);
+            printUsage();
 
             System.exit(ERROR_STATUS);
         }
 
+        // TODO: Maybe we can do without SOOT!
         final SplatterControlFlowAnalyzer splatterControlFlowAnalyzer = new SplatterControlFlowAnalyzer(applicationApkPath, applicationTestApkPath, androidJars);
-        splatterControlFlowAnalyzer.loadApks();
+//        splatterControlFlowAnalyzer.loadApks();
 
-        instrumentApk(applicationApkPath, HEISENTEST_SKELETON_APP_NAMESPACE);
-        instrumentApk(applicationTestApkPath, HEISENTEST_SKELETON_APP_TEST_NAMESPACE);
+        final SplatterApkInstrumenter splatterApkInstrumenter = new SplatterApkInstrumenter(splatterControlFlowAnalyzer, applicationApkPath, applicationTestApkPath, HEISENTEST_SKELETON_APP_NAMESPACE, HEISENTEST_SKELETON_APP_TEST_NAMESPACE, ASM_API_LEVEL);
+        try {
+            splatterApkInstrumenter.instrumentApks();
+        } catch (IOException e) {
+            logger.error(e);
+            System.exit(ERROR_STATUS);
+        }
     }
 
     private static void addDefaultOptions() {
@@ -83,20 +88,12 @@ public class Main {
         options.addOption(androidPlatformsOption);
     }
 
+    private static void printUsage() {
+        final HelpFormatter helpFormatter = new HelpFormatter();
+        helpFormatter.printHelp("Splatter", options, PRINT_AUTO_USAGE);
+    }
+
     private static void instrumentApk(String apkLocation, String appNamespace) {
-        File inputApkFile = new File(apkLocation);
-        File outputApkFile = new File(inputApkFile.getAbsolutePath().replaceFirst("\\.apk", ".splatter.apk"));
 
-        try {
-            outputApkFile.createNewFile();
-        } catch (IOException e) {
-            logger.error(e);
-        }
-
-        SplatterApkProcessor splatterApkProcessor = new SplatterApkProcessor(ASM_API_LEVEL, appNamespace);
-        splatterApkProcessor.process(inputApkFile, outputApkFile);
-
-        inputApkFile.delete();
-        outputApkFile.renameTo(new File(apkLocation));
     }
 }

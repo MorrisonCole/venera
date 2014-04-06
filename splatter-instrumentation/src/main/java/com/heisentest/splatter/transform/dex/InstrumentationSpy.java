@@ -1,6 +1,9 @@
 package com.heisentest.splatter.transform.dex;
 
+import com.google.common.collect.Iterables;
 import com.heisentest.splatter.instrumentation.point.InstrumentationPoint;
+import com.heisentest.splatter.instrumentation.point.JumpInstrumentationPoint;
+import com.heisentest.splatter.instrumentation.point.MethodEntryInstrumentationPoint;
 
 import java.util.ArrayList;
 
@@ -14,6 +17,7 @@ public class InstrumentationSpy {
             new BaseTestCaseClassInfo("Lcom/heisentest/skeletonandroidapp/test/acceptance/SkeletonActivityUnitTestCase;", "setUp", "tearDown")
     };
     private final ArrayList<InstrumentationPoint> instrumentationPoints = new ArrayList<>();
+    private InstrumentationPoint[] methodInstrumentationPoints;
 
     public InstrumentationSpy(String applicationRootNamespace) {
         this.applicationRootNamespace = applicationRootNamespace;
@@ -72,16 +76,35 @@ public class InstrumentationSpy {
         return false;
     }
 
-    public InstrumentationPoint getInstrumentationPoint(String className, String methodName) {
-        for (InstrumentationPoint instrumentationPoint : instrumentationPoints) {
-            if (instrumentationPoint.matches(className, methodName)) {
-                return instrumentationPoint;
+    public void addInstrumentationPoint(InstrumentationPoint instrumentationPoint) {
+        instrumentationPoints.add(instrumentationPoint);
+    }
+
+    public MethodEntryInstrumentationPoint getMethodEntryInstrumentationPoint(String className, String methodName) {
+        for (MethodEntryInstrumentationPoint methodEntryInstrumentationPoint : getMethodEntryInstrumentationPoints()) {
+            if (methodEntryInstrumentationPoint.matches(className, methodName)) {
+                return methodEntryInstrumentationPoint;
             }
         }
+
         return null;
     }
 
-    public void addInstrumentationPoint(InstrumentationPoint instrumentationPoint) {
-        instrumentationPoints.add(instrumentationPoint);
+    private Iterable<MethodEntryInstrumentationPoint> getMethodEntryInstrumentationPoints() {
+        return Iterables.filter(instrumentationPoints, MethodEntryInstrumentationPoint.class);
+    }
+
+    public JumpInstrumentationPoint getJumpInstrumentationPoint(String className, String methodName, int lineNumber) {
+        for (JumpInstrumentationPoint jumpInstrumentationPoint : getJumpInstrumentationPoints()) {
+            if (jumpInstrumentationPoint.matches(className, methodName, lineNumber)) {
+                return jumpInstrumentationPoint;
+            }
+        }
+
+        return null;
+    }
+
+    public Iterable<JumpInstrumentationPoint> getJumpInstrumentationPoints() {
+        return Iterables.filter(instrumentationPoints, JumpInstrumentationPoint.class);
     }
 }

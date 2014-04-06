@@ -74,7 +74,7 @@ public class SplatterControlFlowAnalyzer {
         }
     }
 
-    public void runFlowAnalysis(SootClass sClass) {
+    private void runFlowAnalysis(SootClass sClass) {
         System.out.println("***************************************");
         System.out.println(sClass.getName());
         System.out.println("***************************************");
