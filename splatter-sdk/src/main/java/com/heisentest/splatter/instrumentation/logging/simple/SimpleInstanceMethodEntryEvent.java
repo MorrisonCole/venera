@@ -23,7 +23,7 @@ public class SimpleInstanceMethodEntryEvent extends MethodEntryEvent {
     public static class Builder {
         private String className;
         private String methodName;
-        private String eventName;
+        private String eventName = "Simple Instance Method Entry";
         private long eventTime;
         private long eventThreadId;
 

@@ -26,7 +26,7 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
     // Ignoring 'run' since runnables seem to generate bad dex files for some reason. need to fix this.
     // Ignoring 'toString' since calling 'this.toString' then causes a stack overflow :D
     // Ignoring 'hashCode' as it's causing stack overflows for some reason.
-    private final ArrayList<String> blacklistedNames = new ArrayList<String>(Arrays.asList("<init>", "<clinit>", "run", "toString", "hashCode", "wakeUpDevice"));
+    private final ArrayList<String> blacklistedNames = new ArrayList<>(Arrays.asList("<init>", "<clinit>", "run", "toString", "hashCode", "wakeUpDevice"));
 
     /**
      * We don't want to instrument any auto-generated enclosing accessor methods (signature access$0,
@@ -45,28 +45,38 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
     public MethodVisitor visitMethod(int access, String name, String desc, String[] signature, String[] exceptions) {
         MethodVisitor methodVisitor = cv.visitMethod(access, name, desc, signature, exceptions);
 
-        // TODO: Document this whitelist.
+        // TODO: Document this whitelist. Should be moved into InstrumentationSpy.
         boolean instrument = false;
         ArrayList<String> allowedPrefixes = new ArrayList<>(Arrays.asList("get", "set", "tile", "on", "create", ""));
         for (String prefix : allowedPrefixes) {
-            final InstrumentationPoint instrumentationPoint = instrumentationSpy.getInstrumentationPoint(className, name);
-            if (name.startsWith(prefix) && instrumentationPoint != null && instrumentationPoint.getInstrumentationPolicy() == COMPLEX) {
-
+            if (name.startsWith(prefix)) {
                 instrument = true;
                 break;
             }
         }
 
         boolean isStatic = isStatic(access);
-        if (shouldInstrumentMethod(access, name, instrument)) {
-            logger.debug(String.format("Adding HeisentestLogger to method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
-            return new ComplexInstanceMethodEntryMethodVisitor(api, methodVisitor, desc, name, isStatic);
+
+        final InstrumentationPoint instrumentationPoint = instrumentationSpy.getInstrumentationPoint(className, name);
+
+        if (instrumentationPoint != null && shouldInstrumentMethod(access, name, instrument)) {
+            switch (instrumentationPoint.getInstrumentationPolicy()) {
+                case NONE:
+                    return new SplatterNoOpMethodVisitor(api, methodVisitor);
+                case SIMPLE:
+                    logger.debug(String.format("SIMPLE method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
+                    return new SimpleInstanceMethodEntryMethodVisitor(api, methodVisitor, desc, name, isStatic);
+                case COMPLEX:
+                    logger.debug(String.format("COMPLEX method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
+                    return new ComplexInstanceMethodEntryMethodVisitor(api, methodVisitor, desc, name, isStatic);
+            }
         }
 
         logger.debug(String.format("SKIPPING method (name: '%s') (desc: '%s') (class: '%s') (access (opcode): '%s')", name, desc, className, access));
         return new SplatterNoOpMethodVisitor(api, methodVisitor);
     }
 
+    // TODO: Should be moved into InstrumentationSpy
     private boolean shouldInstrumentMethod(int access, String name, boolean instrument) {
         return instrument && !isAbstract(access) && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter);
     }

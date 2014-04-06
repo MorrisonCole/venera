@@ -54,7 +54,6 @@ public class ComplexInstanceMethodEntryMethodVisitor extends SplatterRegisterAll
             }
         }
 
-
         mv.visitStringInsn(INSN_CONST_STRING, 1, methodName); // put our method name into register 1
 
         mv.visitVarInsn(INSN_CONST_4, 2, getTotalNumberParameters()); // Set register 2 to a value representing our total number of parameters
