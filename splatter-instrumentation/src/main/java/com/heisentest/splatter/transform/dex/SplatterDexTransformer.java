@@ -1,6 +1,5 @@
 package com.heisentest.splatter.transform.dex;
 
-import com.heisentest.splatter.controlflow.SplatterControlFlowAnalyzer;
 import com.heisentest.splatter.transform.dex.visitor.SplatterApplicationVisitor;
 import com.heisentest.splatter.transform.dex.visitor.firstpass.SplatterFirstPassApplicationVisitor;
 import org.apache.log4j.Logger;
@@ -18,12 +17,10 @@ public class SplatterDexTransformer {
     private final int asmApiLevel;
     private final Logger logger = Logger.getLogger(SplatterDexTransformer.class);
     private final String applicationRootNamespace;
-    private final SplatterControlFlowAnalyzer splatterControlFlowAnalyzer;
 
-    public SplatterDexTransformer(int asmApiLevel, String applicationRootNamespace, SplatterControlFlowAnalyzer splatterControlFlowAnalyzer) {
+    public SplatterDexTransformer(int asmApiLevel, String applicationRootNamespace) {
         this.asmApiLevel = asmApiLevel;
         this.applicationRootNamespace = applicationRootNamespace;
-        this.splatterControlFlowAnalyzer = splatterControlFlowAnalyzer;
     }
 
     public void transform(FileInputStream fileInputStream, ZipOutputStream zipOutputStream) throws IOException {
@@ -37,7 +34,7 @@ public class SplatterDexTransformer {
 
         // First pass in case we want to save any information before generating the new dex file
         InstrumentationSpy instrumentationSpy = new InstrumentationSpy(applicationRootNamespace);
-        SplatterFirstPassApplicationVisitor splatterFirstPassApplicationVisitor = new SplatterFirstPassApplicationVisitor(asmApiLevel, instrumentationSpy, splatterControlFlowAnalyzer);
+        SplatterFirstPassApplicationVisitor splatterFirstPassApplicationVisitor = new SplatterFirstPassApplicationVisitor(asmApiLevel, instrumentationSpy);
         applicationReader.accept(splatterFirstPassApplicationVisitor, 0);
 
         logger.debug(String.format("Found %s instrumentation points", instrumentationSpy.getAvailableInstrumentationPoints()));

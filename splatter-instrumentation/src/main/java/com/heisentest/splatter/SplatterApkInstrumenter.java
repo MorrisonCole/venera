@@ -1,21 +1,17 @@
 package com.heisentest.splatter;
 
-import com.heisentest.splatter.controlflow.SplatterControlFlowAnalyzer;
-
 import java.io.File;
 import java.io.IOException;
 
 public class SplatterApkInstrumenter {
 
-    private final SplatterControlFlowAnalyzer splatterControlFlowAnalyzer;
     private final String applicationApkPath;
     private final String testApplicationApkPath;
     private final String applicationNamespace;
     private final String testApplicationNamespace;
     private final int asmApiLevel;
 
-    public SplatterApkInstrumenter(SplatterControlFlowAnalyzer splatterControlFlowAnalyzer, String applicationApkPath, String testApplicationApkPath, String applicationNamespace, String testApplicationNamespace, int asmApiLevel) {
-        this.splatterControlFlowAnalyzer = splatterControlFlowAnalyzer;
+    public SplatterApkInstrumenter(String applicationApkPath, String testApplicationApkPath, String applicationNamespace, String testApplicationNamespace, int asmApiLevel) {
         this.applicationApkPath = applicationApkPath;
         this.testApplicationApkPath = testApplicationApkPath;
         this.applicationNamespace = applicationNamespace;
@@ -34,7 +30,7 @@ public class SplatterApkInstrumenter {
 
         outputApkFile.createNewFile();
 
-        SplatterApkProcessor splatterApkProcessor = new SplatterApkProcessor(asmApiLevel, appNamespace, splatterControlFlowAnalyzer);
+        SplatterApkProcessor splatterApkProcessor = new SplatterApkProcessor(asmApiLevel, appNamespace);
         splatterApkProcessor.process(inputApkFile, outputApkFile);
 
         inputApkFile.delete();
