@@ -9,7 +9,8 @@ import org.ow2.asmdex.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.ow2.asmdex.Opcodes.*;
+import static com.heisentest.splatter.utility.DalvikOpcodes.isAbstract;
+import static com.heisentest.splatter.utility.DalvikOpcodes.isStatic;
 
 public class SplatterLoggingClassVisitor extends ClassVisitor {
 
@@ -78,15 +79,5 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
     // TODO: Should be moved into InstrumentationSpy
     private boolean shouldInstrumentMethod(int access, String name, boolean instrument) {
         return instrument && !isAbstract(access) && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter);
-    }
-
-    // TODO: Should be in a helper class somewhere else
-    private boolean isStatic(int access) {
-        return (access & ACC_STATIC) > 0;
-    }
-
-    // TODO: Check this returns correctly. Also as above.
-    private boolean isAbstract(int access) {
-        return (access & Opcodes.ACC_ABSTRACT) != 0;
     }
 }

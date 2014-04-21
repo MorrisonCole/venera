@@ -4,7 +4,6 @@ import com.heisentest.splatter.instrumentation.logging.JsonLogger;
 import com.heisentest.splatter.sdk.Splatter;
 import com.heisentest.splatter.transform.dex.InstrumentationSpy;
 import com.heisentest.splatter.transform.dex.visitor.noop.SplatterNoOpMethodVisitor;
-import com.heisentest.splatter.utility.DalvikTypeDescriptor;
 import org.apache.log4j.Logger;
 import org.ow2.asmdex.ClassVisitor;
 import org.ow2.asmdex.FieldVisitor;
@@ -12,6 +11,7 @@ import org.ow2.asmdex.MethodVisitor;
 import org.ow2.asmdex.structureCommon.Label;
 
 import static com.heisentest.splatter.sdk.Splatter.InstrumentationPolicy;
+import static com.heisentest.splatter.utility.DalvikOpcodes.isStatic;
 import static com.heisentest.splatter.utility.DalvikTypeDescriptor.typeDescriptorForClass;
 import static org.ow2.asmdex.Opcodes.*;
 
@@ -50,11 +50,6 @@ public class SplatterBaseTestCaseClassVisitor extends ClassVisitor {
         }
 
         return new SplatterNoOpMethodVisitor(api, methodVisitor);
-    }
-
-    // TODO: Should be in a helper class somewhere else
-    private boolean isStatic(int access) {
-        return (access & ACC_STATIC) > 0;
     }
 
     @Override
