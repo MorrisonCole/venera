@@ -1,5 +1,6 @@
 package com.heisentest.splatter;
 
+import com.heisentest.splatter.transform.dex.InstrumentationSpy;
 import com.heisentest.splatter.transform.dex.SplatterDexTransformer;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -25,7 +26,8 @@ public class SplatterApkProcessor {
             FileInputStream fileInputStream = new FileInputStream(inputApkFile);
             FileOutputStream fileOutputStream = new FileOutputStream(outputApkFile);
 
-            processApk(fileInputStream, fileOutputStream, new SplatterDexTransformer(asmApiLevel, applicationRootNamespace));
+            final InstrumentationSpy instrumentationSpy = new InstrumentationSpy(applicationRootNamespace);
+            processApk(fileInputStream, fileOutputStream, new SplatterDexTransformer(asmApiLevel, instrumentationSpy));
 
             fileInputStream.close();
             fileOutputStream.flush();

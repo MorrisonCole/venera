@@ -10,25 +10,20 @@ import java.util.ArrayList;
 public class InstrumentationSpy {
 
     private final String applicationRootNamespace;
-    private int availableInstrumentationPoints = 0;
     // TODO: This should not be hardcoded.
     private static final BaseTestCaseClassInfo[] baseTestCaseClassInfos = {
             new BaseTestCaseClassInfo("Lcom/heisentest/skeletonandroidapp/test/acceptance/SkeletonActivityInstrumentationTestCase;", "setUp", "tearDown"),
             new BaseTestCaseClassInfo("Lcom/heisentest/skeletonandroidapp/test/acceptance/SkeletonActivityUnitTestCase;", "setUp", "tearDown")
     };
+
+    public ArrayList<InstrumentationPoint> getInstrumentationPoints() {
+        return instrumentationPoints;
+    }
+
     private final ArrayList<InstrumentationPoint> instrumentationPoints = new ArrayList<>();
-    private InstrumentationPoint[] methodInstrumentationPoints;
 
     public InstrumentationSpy(String applicationRootNamespace) {
         this.applicationRootNamespace = applicationRootNamespace;
-    }
-
-    public int getAvailableInstrumentationPoints() {
-        return availableInstrumentationPoints;
-    }
-
-    public void setAvailableInstrumentationPoints(int availableInstrumentationPoints) {
-        this.availableInstrumentationPoints = availableInstrumentationPoints;
     }
 
     public boolean shouldClassBeInstrumented(String name) {

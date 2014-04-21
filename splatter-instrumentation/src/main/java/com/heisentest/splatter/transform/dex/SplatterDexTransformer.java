@@ -16,15 +16,16 @@ public class SplatterDexTransformer {
     private static final boolean TRANSFORM_DISABLED = false;
     private final int asmApiLevel;
     private final Logger logger = Logger.getLogger(SplatterDexTransformer.class);
-    private final String applicationRootNamespace;
+    private InstrumentationSpy instrumentationSpy;
 
-    public SplatterDexTransformer(int asmApiLevel, String applicationRootNamespace) {
+    public SplatterDexTransformer(int asmApiLevel, InstrumentationSpy instrumentationSpy) {
         this.asmApiLevel = asmApiLevel;
-        this.applicationRootNamespace = applicationRootNamespace;
+        this.instrumentationSpy = instrumentationSpy;
     }
 
     public void transform(FileInputStream fileInputStream, ZipOutputStream zipOutputStream) throws IOException {
         ApplicationReader applicationReader = new ApplicationReader(asmApiLevel, fileInputStream);
+        ApplicationWriter applicationWriter = new ApplicationWriter(applicationReader);
 
         if (TRANSFORM_DISABLED) {
             logger.info("Dex transform disabled, using original bytecode!");
@@ -32,20 +33,23 @@ public class SplatterDexTransformer {
             return;
         }
 
-        // First pass in case we want to save any information before generating the new dex file
-        InstrumentationSpy instrumentationSpy = new InstrumentationSpy(applicationRootNamespace);
-        SplatterFirstPassApplicationVisitor splatterFirstPassApplicationVisitor = new SplatterFirstPassApplicationVisitor(asmApiLevel, instrumentationSpy);
-        applicationReader.accept(splatterFirstPassApplicationVisitor, 0);
+        performFirstPass(applicationReader);
 
-        logger.debug(String.format("Found %s instrumentation points", instrumentationSpy.getAvailableInstrumentationPoints()));
-
-        // Second pass
-        ApplicationWriter applicationWriter = new ApplicationWriter(applicationReader);
-        ApplicationVisitor splatterApplicationVisitor = new SplatterApplicationVisitor(asmApiLevel, applicationWriter, instrumentationSpy);
-
-        applicationReader.accept(splatterApplicationVisitor, 0);
+        performSecondPass(applicationReader, applicationWriter);
 
         byte[] bytes = applicationWriter.toByteArray();
         zipOutputStream.write(bytes);
+    }
+
+    private void performFirstPass(ApplicationReader applicationReader) {
+        SplatterFirstPassApplicationVisitor splatterFirstPassApplicationVisitor = new SplatterFirstPassApplicationVisitor(asmApiLevel, instrumentationSpy);
+        applicationReader.accept(splatterFirstPassApplicationVisitor, 0);
+
+        logger.debug(String.format("Found %s instrumentation points", instrumentationSpy.getInstrumentationPoints().size()));
+    }
+
+    private void performSecondPass(ApplicationReader applicationReader, ApplicationWriter applicationWriter) {
+        ApplicationVisitor splatterApplicationVisitor = new SplatterApplicationVisitor(asmApiLevel, applicationWriter, instrumentationSpy);
+        applicationReader.accept(splatterApplicationVisitor, 0);
     }
 }
