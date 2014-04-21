@@ -38,7 +38,9 @@ run {
         args project.args.split('\\s+')
     } else {
         args "--applicationApk=${project(':skeleton-android-app').buildDir}/apk/skeleton-android-app-debug-unaligned.apk",
-             "--testApk=${project(':skeleton-android-app').buildDir}/apk/skeleton-android-app-debug-test-unaligned.apk"
+             "--testApk=${project(':skeleton-android-app').buildDir}/apk/skeleton-android-app-debug-test-unaligned.apk",
+             "--baseTestCaseInfo=com.heisentest.skeletonandroidapp.test.acceptance.SkeletonActivityInstrumentationTestCase,setUp,tearDown," +
+                     "com.heisentest.skeletonandroidapp.test.acceptance.SkeletonActivityUnitTestCase,setUp,tearDown"
     }
 }
 

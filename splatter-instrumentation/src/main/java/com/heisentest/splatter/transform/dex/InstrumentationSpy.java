@@ -10,21 +10,18 @@ import java.util.ArrayList;
 public class InstrumentationSpy {
 
     private final String applicationRootNamespace;
-    // TODO: This should not be hardcoded.
-    private static final BaseTestCaseClassInfo[] baseTestCaseClassInfos = {
-            new BaseTestCaseClassInfo("Lcom/heisentest/skeletonandroidapp/test/acceptance/SkeletonActivityInstrumentationTestCase;", "setUp", "tearDown"),
-            new BaseTestCaseClassInfo("Lcom/heisentest/skeletonandroidapp/test/acceptance/SkeletonActivityUnitTestCase;", "setUp", "tearDown")
-    };
+    private final ArrayList<BaseTestCaseClassInfo> baseTestCaseClassInfos;
+
+    public InstrumentationSpy(String applicationRootNamespace, ArrayList<BaseTestCaseClassInfo> baseTestCaseClassInfos) {
+        this.applicationRootNamespace = applicationRootNamespace;
+        this.baseTestCaseClassInfos = baseTestCaseClassInfos;
+    }
 
     public ArrayList<InstrumentationPoint> getInstrumentationPoints() {
         return instrumentationPoints;
     }
 
     private final ArrayList<InstrumentationPoint> instrumentationPoints = new ArrayList<>();
-
-    public InstrumentationSpy(String applicationRootNamespace) {
-        this.applicationRootNamespace = applicationRootNamespace;
-    }
 
     public boolean shouldClassBeInstrumented(String name) {
         return name.startsWith(applicationRootNamespace);

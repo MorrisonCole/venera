@@ -3,8 +3,12 @@ package com.heisentest.splatter.utility;
 public class DalvikTypeDescriptor {
 
     public static String typeDescriptorForClass(Class<?> clazz) {
-        String clazzName = clazz.getName();
+        String className = clazz.getName();
 
-        return String.format("L%s;", clazzName.replace(".", "/"));
+        return typeDescriptorForClassWithName(className);
+    }
+
+    public static String typeDescriptorForClassWithName(String className) {
+        return String.format("L%s;", className.replace(".", "/"));
     }
 }

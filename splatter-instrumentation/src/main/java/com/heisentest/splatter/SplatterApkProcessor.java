@@ -1,11 +1,14 @@
 package com.heisentest.splatter;
 
+import com.heisentest.splatter.transform.dex.BaseTestCaseClassInfo;
 import com.heisentest.splatter.transform.dex.InstrumentationSpy;
 import com.heisentest.splatter.transform.dex.SplatterDexTransformer;
+import com.heisentest.splatter.utility.DalvikTypeDescriptor;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -15,10 +18,12 @@ public class SplatterApkProcessor {
     private final Logger logger = Logger.getLogger(SplatterApkProcessor.class);
     private final int asmApiLevel;
     private final String applicationRootNamespace;
+    private final ArrayList<BaseTestCaseClassInfo> baseTestCaseClassInfos;
 
-    public SplatterApkProcessor(int asmApiLevel, String applicationRootNamespace) {
+    public SplatterApkProcessor(int asmApiLevel, String applicationRootNamespace, ArrayList<BaseTestCaseClassInfo> baseTestCaseClassInfos) {
         this.asmApiLevel = asmApiLevel;
         this.applicationRootNamespace = applicationRootNamespace;
+        this.baseTestCaseClassInfos = baseTestCaseClassInfos;
     }
 
     public void process(File inputApkFile, File outputApkFile) {
@@ -26,7 +31,7 @@ public class SplatterApkProcessor {
             FileInputStream fileInputStream = new FileInputStream(inputApkFile);
             FileOutputStream fileOutputStream = new FileOutputStream(outputApkFile);
 
-            final InstrumentationSpy instrumentationSpy = new InstrumentationSpy(applicationRootNamespace);
+            final InstrumentationSpy instrumentationSpy = new InstrumentationSpy(applicationRootNamespace, baseTestCaseClassInfos);
             processApk(fileInputStream, fileOutputStream, new SplatterDexTransformer(asmApiLevel, instrumentationSpy));
 
             fileInputStream.close();
