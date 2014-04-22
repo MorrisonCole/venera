@@ -41,7 +41,7 @@ public class ComplexInstanceMethodEntryMethodVisitor extends SplatterRegisterAll
 
     @Override
     protected int requiredExtraRegisters() {
-        return 5;
+        return 8;
     }
 
     @Override
@@ -56,34 +56,38 @@ public class ComplexInstanceMethodEntryMethodVisitor extends SplatterRegisterAll
             logger.debug(e);
         }
 
-        mv.visitVarInsn(INSN_CONST_4, 4, 0); // Set register 4 (our array index) to a value of 0
-        mv.visitVarInsn(INSN_CONST_4, 1, getTotalNumberParameters()); // Set register 1 to a value representing our total number of parameters
-        mv.visitTypeInsn(INSN_NEW_ARRAY, 0, 0, 1, "[Ljava/lang/String;"); // Initialize a String[] at register 0 with size whatever value is at 1
+        mv.visitVarInsn(INSN_CONST_4, 0, getTotalNumberParameters()); // Set register 0 to a value representing our total number of parameters
+        mv.visitTypeInsn(INSN_NEW_ARRAY, 4, 0, 0, "[Ljava/lang/String;"); // Initialize a String[] at register 4 with size whatever value is at 0
 
         int currentParamNumber = 0;
         if (parameters != null) {
             for (String parameterName : parameters) {
-                mv.visitVarInsn(INSN_CONST_4, 4, currentParamNumber); // Set our index register to the current parameter number
+                mv.visitVarInsn(INSN_CONST_4, 7, currentParamNumber); // Set our index register to the current parameter number
 
-                mv.visitStringInsn(INSN_CONST_STRING, 1, parameterName);
-                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 1, 0, 4); // Put the value at register 1 into the array at register 0 at index value[4]
+                mv.visitStringInsn(INSN_CONST_STRING, 0, parameterName);
+                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 0, 4, 7); // Put the value at register 0 into the array at register 4 at index value[7]
                 currentParamNumber++;
             }
         }
 
-        mv.visitStringInsn(INSN_CONST_STRING, 1, methodName); // put our method name into register 1
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Ljava/lang/System;", "currentTimeMillis", "J", new int[] {  });
+        mv.visitIntInsn(INSN_MOVE_RESULT_WIDE, 0);
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Ljava/lang/Thread;", "currentThread", "Ljava/lang/Thread;", new int[] {  });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 2);
 
-        mv.visitVarInsn(INSN_CONST_4, 2, getTotalNumberParameters()); // Set register 2 to a value representing our total number of parameters
-        mv.visitTypeInsn(INSN_NEW_ARRAY, 2, 0, 2, "[Ljava/lang/Object;"); // Initialize an Object[] at register 2 with size whatever value is at 2
+        mv.visitStringInsn(INSN_CONST_STRING, 3, methodName); // put our method name into register 3
+
+        mv.visitVarInsn(INSN_CONST_4, 5, getTotalNumberParameters()); // Set register 5 to a value representing our total number of parameters
+        mv.visitTypeInsn(INSN_NEW_ARRAY, 6, 0, 5, "[Ljava/lang/Object;"); // Initialize an Object[] at register 6 with size whatever value is at 5
 
         int parametersStartRegister = firstParameterRegister();
         currentParamNumber = 0;
         for (Map.Entry<Character, Integer> entry : getParameterMap().entries()) {
             int currentParameterRegister = parametersStartRegister + entry.getValue();
 
-            mv.visitVarInsn(INSN_CONST_4, 3, currentParamNumber); // Set register 3 to a value of 0
+            mv.visitVarInsn(INSN_CONST_4, 7, currentParamNumber); // Set register 7 (our array index) to the current parameter number
             if (entry.getKey() == 'L' || entry.getKey() == '[') {
-                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, currentParameterRegister, 2, 3); // Put the value at the currentParameterRegister into the array at register 2 at the current parameter index (value[3])
+                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, currentParameterRegister, 6, 7); // Put the value at the currentParameterRegister into the array at register 6 at the current parameter index (value[7])
             } else {
                 // Convert our primitive param to an object.
                 Character argumentCharacter = entry.getKey();
@@ -115,12 +119,13 @@ public class ComplexInstanceMethodEntryMethodVisitor extends SplatterRegisterAll
                     default:
                         logger.error(String.format("Unsupported primitive argument: %s", argumentCharacter));
                 }
-                mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4); // Put our int object in register 4
-                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 4, 2, 3); // Put the value at register 4 into the array at register 2 at index (value of register 3)
+                mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 5); // Put our int object in register 5
+                mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 5, 6, 7); // Put the value at register 5 into the array at register 6 at index (value of register 7)
             }
             currentParamNumber++;
         }
 
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, typeDescriptorForClass(JsonLogger.class), "complexLogInstanceMethodEntry", "VLjava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", new int[] { 1, 0, thisRegister(), 2 });
+        mv.visitVarInsn(INSN_MOVE_OBJECT, 5, thisRegister());
+        mv.visitMethodInsn(INSN_INVOKE_STATIC_RANGE, typeDescriptorForClass(JsonLogger.class), "complexLogInstanceMethodEntry", "VJLjava/lang/Thread;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", new int[] { 0, 1, 2, 3, 4, 5, 6 });
     }
 }

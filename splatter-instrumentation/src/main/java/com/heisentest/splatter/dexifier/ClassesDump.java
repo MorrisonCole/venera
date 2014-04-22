@@ -12555,20 +12555,25 @@ public static void dumpMainActivity(ApplicationWriter aw) {
 	{
 		mv = cv.visitMethod(ACC_PRIVATE, "aComplexInstanceMethod", "V", null, null);
 		mv.visitCode();
-		mv.visitMaxs(6, 0);
-		mv.visitVarInsn(INSN_CONST_4, 2, 1);
-		mv.visitVarInsn(INSN_CONST_4, 4, 0);
-		mv.visitVarInsn(INSN_CONST_4, 1, 2);
-		mv.visitTypeInsn(INSN_NEW_ARRAY, 0, 0, 1, "[Ljava/lang/String;");
-		mv.visitStringInsn(INSN_CONST_STRING, 1, "string 1");
-		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 1, 0, 4);
-		mv.visitStringInsn(INSN_CONST_STRING, 1, "string 2");
-		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 1, 0, 2);
-		mv.visitStringInsn(INSN_CONST_STRING, 1, "method name");
-		mv.visitTypeInsn(INSN_NEW_ARRAY, 2, 0, 2, "[Ljava/lang/Object;");
-		mv.visitStringInsn(INSN_CONST_STRING, 3, "a parameter");
-		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 3, 2, 4);
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/splatter/instrumentation/logging/JsonLogger;", "complexLogInstanceMethodEntry", "VLjava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", new int[] { 1, 0, 5, 2 });
+		mv.visitMaxs(9, 0);
+		mv.visitVarInsn(INSN_CONST_4, 5, 1);
+		mv.visitVarInsn(INSN_CONST_4, 7, 0);
+		mv.visitVarInsn(INSN_CONST_4, 0, 2);
+		mv.visitTypeInsn(INSN_NEW_ARRAY, 4, 0, 0, "[Ljava/lang/String;");
+		mv.visitStringInsn(INSN_CONST_STRING, 0, "string 1");
+		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 0, 4, 7);
+		mv.visitStringInsn(INSN_CONST_STRING, 0, "string 2");
+		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 0, 4, 5);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Ljava/lang/System;", "currentTimeMillis", "J", new int[] {  });
+		mv.visitIntInsn(INSN_MOVE_RESULT_WIDE, 0);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Ljava/lang/Thread;", "currentThread", "Ljava/lang/Thread;", new int[] {  });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 2);
+		mv.visitStringInsn(INSN_CONST_STRING, 3, "method name");
+		mv.visitTypeInsn(INSN_NEW_ARRAY, 6, 0, 5, "[Ljava/lang/Object;");
+		mv.visitStringInsn(INSN_CONST_STRING, 5, "a parameter");
+		mv.visitArrayOperationInsn(INSN_APUT_OBJECT, 5, 6, 7);
+		mv.visitVarInsn(INSN_MOVE_OBJECT, 5, 8);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC_RANGE, "Lcom/heisentest/splatter/instrumentation/logging/JsonLogger;", "complexLogInstanceMethodEntry", "VJLjava/lang/Thread;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", new int[] { 0, 1, 2, 3, 4, 5, 6 });
 		mv.visitInsn(INSN_RETURN_VOID);
 		mv.visitEnd();
 	}
@@ -12788,7 +12793,7 @@ public static void dumpJsonLogger(ApplicationWriter aw) {
 	cv.visit(0, ACC_PUBLIC + ACC_FINAL, "Lcom/heisentest/splatter/instrumentation/logging/JsonLogger;", null, "Ljava/lang/Object;", new String[] { "Ljava/lang/Runnable;" });
 	cv.visitSource("JsonLogger.java", null);
 	{
-		fv = cv.visitField(ACC_PRIVATE + ACC_STATIC + ACC_FINAL, "DEFAULT_QUEUE_CAPACITY", "I", null, 10);
+		fv = cv.visitField(ACC_PRIVATE + ACC_STATIC + ACC_FINAL, "DEFAULT_QUEUE_CAPACITY", "I", null, 20);
 		fv.visitEnd();
 	}
 	{
@@ -12834,7 +12839,7 @@ public static void dumpJsonLogger(ApplicationWriter aw) {
 		mv.visitVarInsn(INSN_CONST_4, 0, 0);
 		mv.visitFieldInsn(INSN_SPUT_BOOLEAN, "Lcom/heisentest/splatter/instrumentation/logging/JsonLogger;", "currentlyLogging", "Z", 0, 0);
 		mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Ljava/util/concurrent/ArrayBlockingQueue;");
-		mv.visitVarInsn(INSN_CONST_16, 1, 10);
+		mv.visitVarInsn(INSN_CONST_16, 1, 20);
 		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/util/concurrent/ArrayBlockingQueue;", "<init>", "VI", new int[] { 0, 1 });
 		mv.visitFieldInsn(INSN_SPUT_OBJECT, "Lcom/heisentest/splatter/instrumentation/logging/JsonLogger;", "blockingQueue", "Ljava/util/concurrent/BlockingQueue;", 0, 0);
 		mv.visitInsn(INSN_RETURN_VOID);
@@ -12926,7 +12931,7 @@ public static void dumpJsonLogger(ApplicationWriter aw) {
 		mv.visitTryCatchBlock(l0, l1, l2, "Ljava/io/IOException;");
 		mv.visitStringInsn(INSN_CONST_STRING, 1, "HeisentestLogger");
 		mv.visitStringInsn(INSN_CONST_STRING, 2, "Trying to begin log...");
-		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "i", "ILjava/lang/String;Ljava/lang/String;", new int[] { 1, 2 });
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Landroid/util/Log;", "d", "ILjava/lang/String;Ljava/lang/String;", new int[] { 1, 2 });
 		mv.visitFieldInsn(INSN_SGET_OBJECT, "Lcom/heisentest/splatter/instrumentation/logging/JsonLogger;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 1, 0);
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "beginArray", "Lcom/google/gson/stream/JsonWriter;", new int[] { 1 });
 		mv.visitVarInsn(INSN_CONST_4, 1, 1);
@@ -13021,9 +13026,9 @@ public static void dumpJsonLogger(ApplicationWriter aw) {
 		mv.visitEnd();
 	}
 	{
-		mv = cv.visitMethod(ACC_PUBLIC + ACC_STATIC + ACC_TRANSIENT, "complexLogInstanceMethodEntry", "VLjava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", null, null);
+		mv = cv.visitMethod(ACC_PUBLIC + ACC_STATIC + ACC_TRANSIENT, "complexLogInstanceMethodEntry", "VJLjava/lang/Thread;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/Object;[Ljava/lang/Object;", null, null);
 		mv.visitCode();
-		mv.visitMaxs(7, 0);
+		mv.visitMaxs(11, 0);
 		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/splatter/instrumentation/logging/JsonLogger;", "warnIfNotLogging", "Z", new int[] {  });
 		mv.visitIntInsn(INSN_MOVE_RESULT, 1);
 		Label l0 = new Label();
@@ -13034,19 +13039,25 @@ public static void dumpJsonLogger(ApplicationWriter aw) {
 		mv.visitLabel(l0);
 		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;", "complexInstanceMethodEntryEvent", "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;", new int[] {  });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;", "withMethodName", "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;Ljava/lang/String;", new int[] { 1, 3 });
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;", "withMethodName", "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;Ljava/lang/String;", new int[] { 1, 7 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "getClass", "Ljava/lang/Class;", new int[] { 5 });
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "getClass", "Ljava/lang/Class;", new int[] { 9 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 2);
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "getName", "Ljava/lang/String;", new int[] { 2 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 2);
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;", "withClassName", "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;Ljava/lang/String;", new int[] { 1, 2 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;", "withCallee", "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;Ljava/lang/Object;", new int[] { 1, 5 });
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;", "withCallee", "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;Ljava/lang/Object;", new int[] { 1, 9 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;", "withParameters", "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;[Ljava/lang/Object;", new int[] { 1, 6 });
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;", "withParameters", "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;[Ljava/lang/Object;", new int[] { 1, 10 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;", "withParameterNames", "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;[Ljava/lang/String;", new int[] { 1, 4 });
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;", "withParameterNames", "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;[Ljava/lang/String;", new int[] { 1, 8 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Thread;", "getId", "J", new int[] { 6 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_WIDE, 2);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;", "withEventThreadId", "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;J", new int[] { 1, 2, 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;", "withEventTime", "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;J", new int[] { 1, 4, 5 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent$Builder;", "build", "Lcom/heisentest/splatter/instrumentation/logging/complex/ComplexInstanceMethodEntryEvent;", new int[] { 1 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
@@ -13334,16 +13345,30 @@ public static void dumpLogEventWriter(ApplicationWriter aw) {
 	{
 		mv = cv.visitMethod(ACC_PRIVATE, "beginEvent", "VLcom/heisentest/splatter/instrumentation/logging/LogEvent;", null, new String[] { "Ljava/io/IOException;" });
 		mv.visitCode();
-		mv.visitMaxs(4, 0);
-		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/splatter/instrumentation/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 0, 2);
+		mv.visitMaxs(5, 0);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/splatter/instrumentation/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 0, 3);
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "beginObject", "Lcom/google/gson/stream/JsonWriter;", new int[] { 0 });
-		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/splatter/instrumentation/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 0, 2);
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/splatter/instrumentation/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 0, 3);
 		mv.visitStringInsn(INSN_CONST_STRING, 1, "eventType");
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 0, 1 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
-		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/LogEvent;", "getEventName", "Ljava/lang/String;", new int[] { 3 });
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/LogEvent;", "getEventName", "Ljava/lang/String;", new int[] { 4 });
 		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
 		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "value", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 0, 1 });
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/splatter/instrumentation/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 0, 3);
+		mv.visitStringInsn(INSN_CONST_STRING, 1, "threadId");
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 0, 1 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/LogEvent;", "getEventThreadId", "J", new int[] { 4 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_WIDE, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "value", "Lcom/google/gson/stream/JsonWriter;J", new int[] { 0, 1, 2 });
+		mv.visitFieldInsn(INSN_IGET_OBJECT, "Lcom/heisentest/splatter/instrumentation/logging/LogEventWriter;", "jsonWriter", "Lcom/google/gson/stream/JsonWriter;", 0, 3);
+		mv.visitStringInsn(INSN_CONST_STRING, 1, "time");
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "name", "Lcom/google/gson/stream/JsonWriter;Ljava/lang/String;", new int[] { 0, 1 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/heisentest/splatter/instrumentation/logging/LogEvent;", "getEventTime", "J", new int[] { 4 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_WIDE, 1);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Lcom/google/gson/stream/JsonWriter;", "value", "Lcom/google/gson/stream/JsonWriter;J", new int[] { 0, 1, 2 });
 		mv.visitInsn(INSN_RETURN_VOID);
 		mv.visitEnd();
 	}

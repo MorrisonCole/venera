@@ -20,13 +20,9 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
 
     // We ignore the constructors for now, since they are special (i.e. 'this' is not yet initialized).
     // See: http://stackoverflow.com/a/8517155
-    // TODO: Is there a way to figure out the runtime type name of the object at this point?
-    // TODO: If not, we could probably deal with these similarly to static methods (don't rely on 'this'
-    // TODO: for the class name (although that would suck a bit).
-    // Ignoring 'run' since runnables seem to generate bad dex files for some reason. need to fix this.
-    // Ignoring 'toString' since calling 'this.toString' then causes a stack overflow :D
-    // Ignoring 'hashCode' as it's causing stack overflows for some reason.
-    private final ArrayList<String> blacklistedNames = new ArrayList<>(Arrays.asList("<init>", "<clinit>", "run", "toString", "hashCode", "wakeUpDevice"));
+    // Ignoring 'run' since runnables seem to generate bad dex files for some reason. TODO: need to fix this.
+    // Ignoring 'toString' and 'hashCode' since we use them in our instrumentation, so they cause stack overflows!
+    private final ArrayList<String> blacklistedMethodNames = new ArrayList<>(Arrays.asList("<init>", "<clinit>", "run", "toString", "hashCode"));
 
     /**
      * We don't want to instrument any auto-generated enclosing accessor methods (signature access$0,
@@ -78,6 +74,6 @@ public class SplatterLoggingClassVisitor extends ClassVisitor {
 
     // TODO: Should be moved into InstrumentationSpy
     private boolean shouldInstrumentMethod(int access, String name, boolean instrument) {
-        return instrument && !isAbstract(access) && !blacklistedNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter);
+        return instrument && !isAbstract(access) && !blacklistedMethodNames.contains(name) && !name.contains(bannedAutoAccessMethodCharacter);
     }
 }

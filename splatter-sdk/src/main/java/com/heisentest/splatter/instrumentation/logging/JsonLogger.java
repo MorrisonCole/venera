@@ -19,7 +19,7 @@ import static com.heisentest.splatter.instrumentation.logging.simple.SimpleInsta
 public final class JsonLogger implements Runnable {
 
     public static final String HEISENTEST_LOGGER_TAG = "HeisentestLogger";
-    private static final int DEFAULT_QUEUE_CAPACITY = 10;
+    private static final int DEFAULT_QUEUE_CAPACITY = 20;
     private static FileWriter fileWriter;
     private static StringWriter stringWriter;
     private static File outputFile;
@@ -54,7 +54,7 @@ public final class JsonLogger implements Runnable {
 
     private void beginLogging() {
         try {
-            Log.i(HEISENTEST_LOGGER_TAG, "Trying to begin log...");
+            Log.d(HEISENTEST_LOGGER_TAG, "Trying to begin log...");
 
             jsonWriter.beginArray();
             currentlyLogging = true;
@@ -80,7 +80,7 @@ public final class JsonLogger implements Runnable {
         queueLogEvent(simpleInstanceMethodEntryEvent);
     }
 
-    public static void complexLogInstanceMethodEntry(String calleeMethodName, String[] parameterNames, Object callee, Object... parameters) {
+    public static void complexLogInstanceMethodEntry(long currentTime, Thread currentThread, String calleeMethodName, String[] parameterNames, Object callee, Object... parameters) {
         if (warnIfNotLogging()) return;
 
         final ComplexInstanceMethodEntryEvent complexInstanceMethodEntryEvent = complexInstanceMethodEntryEvent()
@@ -89,6 +89,8 @@ public final class JsonLogger implements Runnable {
                 .withCallee(callee)
                 .withParameters(parameters)
                 .withParameterNames(parameterNames)
+                .withEventThreadId(currentThread.getId())
+                .withEventTime(currentTime)
                 .build();
 
         queueLogEvent(complexInstanceMethodEntryEvent);

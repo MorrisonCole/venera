@@ -96,6 +96,8 @@ public class LogEventWriter {
         jsonWriter.beginObject();
 
         jsonWriter.name("eventType").value(logEvent.getEventName());
+        jsonWriter.name("threadId").value(logEvent.getEventThreadId());
+        jsonWriter.name("time").value(logEvent.getEventTime());
     }
 
     private void endEvent() throws IOException {

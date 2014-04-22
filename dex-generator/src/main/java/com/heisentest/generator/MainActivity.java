@@ -11,7 +11,7 @@ public class MainActivity extends Activity {
 
     private void aComplexInstanceMethod() {
         String[] parameterNames = new String[] { "string 1", "string 2" };
-        JsonLogger.complexLogInstanceMethodEntry("method name", parameterNames, this, "a parameter");
+        JsonLogger.complexLogInstanceMethodEntry(System.currentTimeMillis(), Thread.currentThread(), "method name", parameterNames, this, "a parameter");
     }
 
     private void aSimpleInstanceMethod() {
