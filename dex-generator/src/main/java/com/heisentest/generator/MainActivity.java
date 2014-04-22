@@ -15,6 +15,6 @@ public class MainActivity extends Activity {
     }
 
     private void aSimpleInstanceMethod() {
-        JsonLogger.simpleLogInstanceMethodEntry("method name", this.getClass().getName());
+        JsonLogger.simpleLogInstanceMethodEntry(System.currentTimeMillis(), Thread.currentThread(), "method name", this.getClass().getName());
     }
 }

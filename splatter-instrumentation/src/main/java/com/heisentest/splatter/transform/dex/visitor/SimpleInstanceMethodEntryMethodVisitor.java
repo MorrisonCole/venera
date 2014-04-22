@@ -24,16 +24,20 @@ public class SimpleInstanceMethodEntryMethodVisitor extends SplatterRegisterAllo
 
     @Override
     protected int requiredExtraRegisters() {
-        return 3;
+        return 5;
     }
 
     @Override
     protected void addInstrumentation() {
-        mv.visitStringInsn(INSN_CONST_STRING, 0, methodName);
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Ljava/lang/System;", "currentTimeMillis", "J", new int[] {  });
+        mv.visitIntInsn(INSN_MOVE_RESULT_WIDE, 0);
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, "Ljava/lang/Thread;", "currentThread", "Ljava/lang/Thread;", new int[] {  });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 2);
+        mv.visitStringInsn(INSN_CONST_STRING, 3, methodName);
         mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Object;", "getClass", "Ljava/lang/Class;", new int[] { thisRegister() });
-        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
-        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "getName", "Ljava/lang/String;", new int[] { 1 });
-        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 1);
-        mv.visitMethodInsn(INSN_INVOKE_STATIC, typeDescriptorForClass(JsonLogger.class), "simpleLogInstanceMethodEntry", "VLjava/lang/String;Ljava/lang/String;", new int[] { 1, 0 });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4);
+        mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/Class;", "getName", "Ljava/lang/String;", new int[] { 4 });
+        mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 4);
+        mv.visitMethodInsn(INSN_INVOKE_STATIC, typeDescriptorForClass(JsonLogger.class), "simpleLogInstanceMethodEntry", "VJLjava/lang/Thread;Ljava/lang/String;Ljava/lang/String;", new int[] { 0, 1, 2, 3, 4 });
     }
 }

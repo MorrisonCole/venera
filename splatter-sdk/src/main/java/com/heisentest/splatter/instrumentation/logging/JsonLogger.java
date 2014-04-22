@@ -69,12 +69,14 @@ public final class JsonLogger implements Runnable {
         currentlyLogging = false;
     }
 
-    public static void simpleLogInstanceMethodEntry(String calleeClassName, String calleeMethodName) {
+    public static void simpleLogInstanceMethodEntry(long currentTime, Thread currentThread, String calleeClassName, String calleeMethodName) {
         if (warnIfNotLogging()) return;
 
         SimpleInstanceMethodEntryEvent simpleInstanceMethodEntryEvent = simpleInstanceMethodEntryEvent()
                 .withClassName(calleeClassName)
                 .withMethodName(calleeMethodName)
+                .withEventThreadId(currentThread.getId())
+                .withEventTime(currentTime)
                 .build();
 
         queueLogEvent(simpleInstanceMethodEntryEvent);
