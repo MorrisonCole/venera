@@ -15,4 +15,12 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
     public void testAlwaysSucceeds() {
         assertTrue(true);
     }
+
+//    private String anExampleMethod(String firstArg, int secondArg) {
+//        return appendIntToString(firstArg, secondArg);
+//    }
+//
+//    private static String appendIntToString(String baseString, int number) {
+//        return baseString + number;
+//    }
 }

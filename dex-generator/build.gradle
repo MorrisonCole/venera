@@ -34,7 +34,7 @@ android {
 
 dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
-    compile project(':splatter-sdk')
+    compile project(':venera-sdk')
 }
 
 task dexify(type: Exec, dependsOn: 'build') {
@@ -46,8 +46,8 @@ task dexify(type: Exec, dependsOn: 'build') {
     standardOutput = new ByteArrayOutputStream()
 
     doLast {
-        ext.dexifyOutputFile = new File("${project(':splatter-instrumentation').projectDir}/src/main/java/com/heisentest/splatter/dexifier", "ClassesDump.java")
-        dexifyOutputFile.text = "package com.heisentest.splatter.dexifier;\n\n" + standardOutput.toString()
+        ext.dexifyOutputFile = new File("${project(':venera-instrumentation').projectDir}/src/main/java/com/heisentest/venera/dexifier", "ClassesDump.java")
+        dexifyOutputFile.text = "package com.heisentest.venera.dexifier;\n\n" + standardOutput.toString()
     }
 }
 

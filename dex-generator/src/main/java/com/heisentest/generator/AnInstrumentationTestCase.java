@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.os.Environment;
 import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
-import com.heisentest.splatter.instrumentation.logging.JsonLogger;
-import com.heisentest.splatter.sdk.Splatter;
+import com.heisentest.venera.instrumentation.logging.JsonLogger;
+import com.heisentest.venera.sdk.Venera;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -33,8 +33,8 @@ public class AnInstrumentationTestCase<T extends Activity> extends ActivityInstr
         try {
             method = getClass().getMethod(getName(), (Class[]) null);
 
-            final Splatter splatter = method.getAnnotation(Splatter.class);
-            if (splatter != null && splatter.instrumentationPolicy() == Splatter.InstrumentationPolicy.NONE) {
+            final Venera venera = method.getAnnotation(Venera.class);
+            if (venera != null && venera.instrumentationPolicy() == Venera.InstrumentationPolicy.NONE) {
                 return;
             }
 

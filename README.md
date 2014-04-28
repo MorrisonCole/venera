@@ -1,4 +1,4 @@
-Splatter needs to know your top-level 'Set Up' and 'Tear Down' methods, along with the name of the Type where they are defined in order to insert initial instrumentation.
+Venera needs to know your top-level 'Set Up' and 'Tear Down' methods, along with the name of the Type where they are defined in order to insert initial instrumentation.
 
 It also needs to know the location of your test / debug APKs.
 

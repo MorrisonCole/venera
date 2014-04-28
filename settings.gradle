@@ -1,5 +1,5 @@
 include 'dex-generator'
+include 'venera-instrumentation'
+include 'venera-sdk'
 include 'dexifier'
 include 'skeleton-android-app'
-include 'splatter-instrumentation'
-include 'splatter-sdk'

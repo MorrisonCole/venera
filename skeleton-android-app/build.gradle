@@ -38,7 +38,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.google.guava:guava:17.0-rc2'
-    compile project(':splatter-sdk')
+    compile project(':venera-sdk')
 
     androidTestCompile files('libs/espresso-contrib-1.1-bundled.jar')
 }
@@ -56,13 +56,13 @@ task pullResults(type: Exec) {
     commandLine 'scripts/pull-results.sh', "${project.buildDir}/androidTest-results/connected"
 }
 
-evaluationDependsOn(':splatter-instrumentation')
+evaluationDependsOn(':venera-instrumentation')
 
 afterEvaluate {
-    // Properties are passed to Gradle from the command line (e.g., gradle clean connectedAndroidTest -Psplatter)
-    if (project.hasProperty('splatter')) {
-        installDebug.dependsOn project(':splatter-instrumentation').tasks.run
-        connectedAndroidTest.dependsOn project(':splatter-instrumentation').tasks.run
+    // Properties are passed to Gradle from the command line (e.g., gradle clean connectedAndroidTest -Pvenera)
+    if (project.hasProperty('venera')) {
+        installDebug.dependsOn project(':venera-instrumentation').tasks.run
+        connectedAndroidTest.dependsOn project(':venera-instrumentation').tasks.run
         connectedAndroidTest.dependsOn removeStaleResults
         connectedAndroidTest.finalizedBy pullResults
     }
