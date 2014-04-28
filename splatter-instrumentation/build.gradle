@@ -22,7 +22,9 @@ compileJava.dependsOn project(':dex-generator').tasks.dexify
 task dumpDex(type: Exec) {
     workingDir project.projectDir
 
-    commandLine 'scripts/dump.sh', "${project(':skeleton-android-app').buildDir}/apk"
+    commandLine 'scripts/dump.sh',
+            "${project(':skeleton-android-app').buildDir}/apk",
+            "skeleton-android-app-debug-unaligned.apk"
 
     //store the output instead of printing to the console:
     standardOutput = new ByteArrayOutputStream()

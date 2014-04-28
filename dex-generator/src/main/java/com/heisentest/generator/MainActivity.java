@@ -17,4 +17,12 @@ public class MainActivity extends Activity {
     private void aSimpleInstanceMethod() {
         JsonLogger.simpleLogInstanceMethodEntry(System.currentTimeMillis(), Thread.currentThread(), "method name", this.getClass().getName());
     }
+
+    private String anExampleMethod(String firstArg, int secondArg) {
+        return appendIntToString(firstArg, secondArg);
+    }
+
+    private static String appendIntToString(String baseString, int number) {
+        return baseString + number;
+    }
 }

@@ -12609,6 +12609,30 @@ public static void dumpMainActivity(ApplicationWriter aw) {
 		mv.visitInsn(INSN_RETURN_VOID);
 		mv.visitEnd();
 	}
+	{
+		mv = cv.visitMethod(ACC_PRIVATE, "anExampleMethod", "Ljava/lang/String;Ljava/lang/String;I", null, null);
+		mv.visitCode();
+		mv.visitMaxs(4, 0);
+		mv.visitMethodInsn(INSN_INVOKE_STATIC, "Lcom/heisentest/generator/MainActivity;", "appendIntToString", "Ljava/lang/String;Ljava/lang/String;I", new int[] { 2, 3 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
+	{
+		mv = cv.visitMethod(ACC_PRIVATE + ACC_STATIC, "appendIntToString", "Ljava/lang/String;Ljava/lang/String;I", null, null);
+		mv.visitCode();
+		mv.visitMaxs(3, 0);
+		mv.visitTypeInsn(INSN_NEW_INSTANCE, 0, 0, 0, "Ljava/lang/StringBuilder;");
+		mv.visitMethodInsn(INSN_INVOKE_DIRECT, "Ljava/lang/StringBuilder;", "<init>", "V", new int[] { 0 });
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/StringBuilder;", "append", "Ljava/lang/StringBuilder;Ljava/lang/String;", new int[] { 0, 1 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/StringBuilder;", "append", "Ljava/lang/StringBuilder;I", new int[] { 0, 2 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitMethodInsn(INSN_INVOKE_VIRTUAL, "Ljava/lang/StringBuilder;", "toString", "Ljava/lang/String;", new int[] { 0 });
+		mv.visitIntInsn(INSN_MOVE_RESULT_OBJECT, 0);
+		mv.visitIntInsn(INSN_RETURN_OBJECT, 0);
+		mv.visitEnd();
+	}
 	cv.visitEnd();
 }
 
